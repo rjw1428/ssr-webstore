@@ -1,0 +1,16 @@
+.item-image {
+    width: 500px;
+    height: auto;
+}
+
+@media(max-width: 992px) {
+    .item-image {
+        width: 100%
+    }
+}
+
+.sold-out{
+    color: red;
+    font-size: larger;
+    font-weight: bold;
+}

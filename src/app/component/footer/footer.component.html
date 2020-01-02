@@ -1,0 +1,32 @@
+<div class="container-fluid bottom px-0">
+  <mat-toolbar>
+    <mat-toolbar-row class="background">
+      <span>Facebook Link</span>
+      <span>IG Link</span>
+      <span>Contact Us</span>
+      <span>Email</span>
+    </mat-toolbar-row>
+    <mat-toolbar-row class="secondary">
+      <!-- LARGE SCREEN FORMAT -->
+      <div class="container d-none d-lg-block">
+        <div class="row">
+          <div class="col-12 px-0">
+            <p class="text-center">© {{year}} {{company}} | <span><a routerLink="/info/terms">Terms &
+                  Conditions</a></span> | <span><a routerLink="/info/privacy">Privacy Policy</a></span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SMALL SCREEN FORMAT -->
+      <div class="container d-lg-none">
+        <div class="row">
+          <div class="col-12 px-0">
+            <p class="text-center mb-0">© {{year}} {{company}} </p>
+            <div class="text-center"><a routerLink="/info/terms">Terms & Conditions</a></div>
+            <div class="text-center"><a routerLink="/info/privacy">Privacy Policy</a></div>
+          </div>
+        </div>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>

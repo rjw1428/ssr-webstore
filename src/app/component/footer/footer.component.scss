@@ -1,0 +1,40 @@
+$primary: rgb(24,96,48);
+$accent: rgb(144,192,144);
+$color1: rgb(119, 105, 77);
+$color2: rgb(192,168,120);
+$color3: rgb(96,144,72);
+$color4: rgb(88, 79, 60);
+
+.background {
+    background-color: $color1;
+    margin-top: 25px;
+}
+
+.secondary {
+    background-color: $color4;
+    padding: 0;
+    height: 100%;
+}
+
+.bottom {
+    position: relative;
+    bottom: 0
+}
+
+
+a, p {
+    color: $color2;
+    font-size: 18px;
+}
+
+a:hover {
+    color: $color3;
+    text-decoration: none;
+}
+
+
+@media only screen and (max-width: 992px) {
+    a, p {
+        font-size: 14px;
+    }
+}

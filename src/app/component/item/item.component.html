@@ -1,0 +1,8 @@
+<div class="container item">
+    <div class="row" *ngIf="item.image.length>0">
+        <div class="col-12 px-0">
+            <img class="icon" [src]="item.image[0].url" (click)="openDialog()" [ngStyle]="{'transform': 'rotate('+item.image[0].rotation+'deg)', 'opacity': item.isSold?'.6':'1'}">
+            <p class="sold-out" *ngIf="item.isSold">SOLD OUT</p>
+        </div>
+    </div>
+</div>

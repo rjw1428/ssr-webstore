@@ -1,0 +1,20 @@
+<section-title [sectionTitle]="sectionTitle"></section-title>
+
+<!-- LARGE SCREEN FORMAT -->
+<div class="container d-none d-lg-block">
+    <div class="row">
+        <div class="col-3" *ngFor="let item of items">
+            <item [item]="item"></item>
+        </div>
+    </div>
+</div>
+
+
+<!-- SMALL SCREEN FORMAT -->
+<div class="container d-lg-none">
+    <div class="row">
+        <div class="col-4" *ngFor="let item of items">
+            <item [item]="item"></item>
+        </div>
+    </div>
+</div>

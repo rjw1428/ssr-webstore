@@ -1,0 +1,94 @@
+import { Component, OnInit } from '@angular/core';
+import { DataService } from 'src/app/data.service';
+import { Item } from 'src/app/models/item';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { SortOption } from 'src/app/models/sort-option';
+import { Option } from 'src/app/models/option';
+
+@Component({
+  selector: 'shop',
+  templateUrl: './shop.component.html',
+  styleUrls: ['./shop.component.scss']
+})
+export class ShopComponent implements OnInit {
+  items: Item[] = []
+  filters = []
+  sorts: SortOption[] = []
+  selectedSort: SortOption
+  selectedFilterCategory: { id: string, label: string, options: Option[] }
+  filteredItems: Item[] = []
+  filtersForm: FormGroup
+  selectedFilters: { id: string, label: string, options: string }[]
+  constructor(
+    private dataService: DataService,
+    private formBuilder: FormBuilder
+  ) {
+    this.filtersForm = this.formBuilder.group({})
+  }
+
+  ngOnInit() {
+    this.dataService.getBackendData('shop').valueChanges().subscribe(resp => {
+      this.sorts = resp['sort'] as SortOption[]
+      this.selectedSort = this.sorts[0]
+      this.filters = resp['filter']
+      this.items = resp['inventory']
+        .filter((item: Item) => item.active)
+        .sort((a, b) => this.sortItems(a, b, this.sorts[0]))
+      this.filteredItems = this.items
+      this.filtersForm = this.initializeFilterFormGroup(this.filters)
+      
+      //FILTER ON VALUE CHANGES
+      this.filtersForm.valueChanges.subscribe(vals => {
+        // GET SELECTED FILTES
+        this.selectedFilters = Object.keys(vals).filter(key => vals[key]).map((filterObj: string) => {
+          return {
+            id: filterObj,
+            label: filterObj.substr(0, 1).toUpperCase() + filterObj.substr(1),
+            options: vals[filterObj].id
+          }
+        })
+        if (this.selectedFilters.length > 0)
+          this.filteredItems = this.items.filter(item => {
+            return this.selectedFilters.map(filter=>filter.options==item.tags[filter.id]).reduce((acc, cur) => cur && cur == acc)
+          })
+        else this.filteredItems = this.items
+      })
+    })
+    window.scrollTo(0, 0)
+  }
+
+  clearFilterValue(filterId) {
+    this.filtersForm.get(filterId).setValue('')
+  }
+
+  clearChip(filter: {id: string, label: string, options: string}) {
+    this.clearFilterValue(filter.id)
+  }
+
+  displayFilter(filter?: { id: string, label: string, options: any[] }) {
+    return filter ? filter.label : undefined
+  }
+
+  setFilterListCategory(category: { value: any }) {
+    this.selectedFilterCategory = category.value.id
+  }
+
+  initializeFilterFormGroup(filters) {
+    let formsList = {}
+    filters.forEach(filter => formsList[filter.id] = [''])
+    return this.formBuilder.group(formsList)
+  }
+
+  sortList(sort: { value: SortOption }) {
+    this.filteredItems.sort((a, b) => this.sortItems(a, b, sort.value))
+  }
+
+  sortItems(a: Item, b: Item, sort: SortOption) {
+    sort.param.forEach(p => a = a[p])
+    sort.param.forEach(p => b = b[p])
+    if (sort.order == "desc")
+      return +b - +a
+    return +a - +b
+  }
+
+}

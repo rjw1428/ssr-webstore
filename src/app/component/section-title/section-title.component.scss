@@ -1,0 +1,19 @@
+.section-title {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.section-title::before, .section-title::after {
+    content: '';
+    flex: 1;
+    opacity: .1;
+    border-bottom: 2px solid #000;
+}
+
+.section-title::before {
+    margin-right: .25em;
+}
+.section-title::after {
+    margin-left: .25em;
+}

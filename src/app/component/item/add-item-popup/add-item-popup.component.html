@@ -1,0 +1,104 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h4 mat-dialog-title>Add Inventory</h4>
+      <mat-dialog-content>
+        <div class="col-12">
+          <form [formGroup]="dataForm">
+            <div class="row">
+              <div class="col-8">
+                <mat-form-field class="w-100">
+                  <mat-label>Title:</mat-label>
+                  <input formControlName="name" matInput>
+                </mat-form-field>
+                <p><strong>Description:</strong></p>
+                <div class="row w-100 px-3" formArrayName="description"
+                  *ngFor="let line of dataForm.get('description')['controls']; let n=index">
+                  <div class="col-10" [formGroupName]="n">
+                    <mat-form-field class="w-100">
+                      <mat-label>Paragraph {{n+1}}:</mat-label>
+                      <input matInput [formControl]="line">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-2 d-flex align-items-center px-0" *ngIf="dataForm.get('description').value.length>1">
+                    <button mat-raised-button color="warn" (click)="onDeleteDescriptionParagraph(n)">X</button>
+                  </div>
+                </div>
+                <button mat-raised-button color="accent" (click)="onAddDescriptionParagraph()">+</button>
+                <mat-form-field class="w-100 my-3">
+                  <mat-label>Price ($):</mat-label>
+                  <input formControlName="price" matInput type="number" placeholder="0.00">
+                  <mat-error *ngIf="dataForm.get('price').invalid">Dont forget the price!</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="picture-containter col-4">
+                <p><strong>Pictures:</strong></p>
+                <div *ngIf="data.item.image" cdkDropList (cdkDropListDropped)="dropPicture($event)">
+                  <div class="pic-icon m-2" *ngFor="let pic of data.item.image; let n=index"
+                    (click)="setSelectedImage(n)" cdkDrag cdkDragBoundary=".picture-containter">
+                    <div class="picture-placeholder" *cdkDragPlaceholder></div>
+                    <img class="img-thumbnail" *ngIf="pic.url" [ngClass]="{'item-img-selected':n==selectedPicture}"
+                      [src]="pic.url"
+                      [ngStyle]="{'transform': 'rotate('+pic.rotation+'deg)'}">
+                    <div *ngIf="!pic.url" class="picture-placeholder d-flex align-items-end">
+                      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                    </div>
+                  </div>
+                </div>
+                <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput multiple>
+                <div class="row">
+                  <div class="col-12 d-flex justify-content-around my-2">
+                    <button class="pic-button" mat-raised-button (click)="fileInput.click()">+</button>
+                    <button class="pic-button" mat-raised-button color="warn" (click)="onDeleteSelectedPicture()"
+                      *ngIf="selectedPicture>-1">X</button>
+                  </div>
+                </div>
+                <div class="row py-3">
+                  <div class="col-12 d-flex justify-content-around">
+                    <button class="pic-button" mat-raised-button (click)="onRotatePictureRight()"
+                      *ngIf="selectedPicture>-1">
+                      <mat-icon>rotate_right</mat-icon>
+                    </button>
+                    <button class="pic-button" mat-raised-button (click)="onRotatePictureLeft()"
+                      *ngIf="selectedPicture>-1">
+                      <mat-icon>rotate_left</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="row w-100">
+              <div class="col-12 my-3">
+                <mat-slide-toggle color="primary" formControlName="isFeatured">Feature on Hompage</mat-slide-toggle>
+              </div>
+            </div>
+            <div class="row w-100">
+              <div class="col-12 my-3">
+                <mat-slide-toggle color="warn" formControlName="isSold">Sold</mat-slide-toggle>
+              </div>
+            </div>
+          </form>
+          <p class="pb-0 mb-0"><strong>Filters:</strong></p>
+          <mat-form-field [formGroup]="filterForm" *ngFor="let filter of data.filters">
+            <mat-label>{{filter.label}}</mat-label>
+            <mat-select [formControlName]="filter.id">
+              <mat-option *ngFor="let option of filter.options" [value]="option.id">{{option.label}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="filterForm.get(filter.id).invalid">Filter value must be set.</mat-error>
+          </mat-form-field>
+        </div>
+      </mat-dialog-content>
+    </div>
+  </div>
+  <mat-dialog-actions>
+    <div class="row w-100">
+      <div class="col-lg-4 offset-lg-4 col-12 d-flex justify-content-around">
+        <button mat-raised-button mat-dialog-close>Cancel</button>
+        <button mat-raised-button color="primary" [disabled]="!filterForm.valid || !dataForm.valid"
+          [mat-dialog-close]="onClose()" (click)="onSubmit()">Ok</button>
+      </div>
+    </div>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,28 @@
+$primary: rgb(24,96,48);
+$accent: rgb(144,192,144);
+$color1: rgb(144,120,72);
+$color2: rgb(192,168,120);
+$color3: rgb(96,144,72);
+
+.icon {
+    max-width: 100%;
+}
+
+.item {
+    background-color: white;
+    box-shadow: 5px 5px 15px rgb(50,50,50);
+}
+
+// .item:hover {
+//     transform: scale(1.1);
+//     background-color: $accent;
+// }
+
+.sold-out {
+    font-weight: bold;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    color: red;
+    text-shadow: 2px 2px 2px black;
+}

@@ -1,0 +1,86 @@
+$primary: rgb(24,96,48);
+$accent: rgb(144,192,144);
+$color1: rgb(144,120,72);
+$color2: rgb(192,168,120);
+$color3: rgb(96,144,72);
+$navbarHeight: 64px;
+
+.background {
+    background-color: $primary;
+    box-shadow: 5px 5px 15px black;
+    position: fixed;
+    top:0;
+    z-index: 2;
+    height: $navbarHeight;
+}
+
+.logo {
+    width: 75px;
+    height: 75px;
+}
+
+.title {
+    // font-style: italic;
+    color: white;
+    margin-left: 30px;
+}
+
+.material-icons {
+    font-size: 36px;
+}
+
+.banner a {
+    color: white;
+    text-decoration: none;
+}
+
+.menu-item {
+    font-size: 18px;
+}
+
+.sidenav-item {
+    border: 1px solid gray;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 25px;
+    margin: 0;
+    font-size: larger;
+    font-style: italic;
+}
+
+.sidenav-item p {
+    color: rgb(75,75,75);
+    text-decoration: none;
+}
+
+.menu {
+    position: fixed;
+    width: 250px;
+    margin-top: $navbarHeight;
+    height: calc(100vh - $navbarHeight);
+}
+
+.menu-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.side-content {
+    height: calc(100vh - $navbarHeight);
+    background-color: whitesmoke;
+}
+
+.bottom-item {
+    position: absolute; 
+    bottom: 0;
+}
+
+@media only screen and (max-width: 600px) {
+    .menu {
+        width:100%
+    }
+}
+
+a:hover {
+    text-decoration: none;
+}

@@ -1,0 +1,106 @@
+<div class="content-page">
+  <div class="container-fluid fill-page">
+    <div class="row">
+      <div class="col-12 mx-0 px-0 banner">
+        <img height="150" width="100%" src="../../../assets/img/shop-banner.jpg">
+      </div>
+    </div>
+    <div class="row my-4 mx-5">
+      <div class="col-2 d-none d-lg-block filter-area">
+        <h4>Filter By:</h4>
+        <ng-container *ngTemplateOutlet="filterBig"></ng-container>
+      </div>
+      <div class="col-lg-10 col-12">
+        <div class="row d-lg-none">
+          <div class="col-7">
+            <ng-container *ngTemplateOutlet="filterSmall"></ng-container>
+          </div>
+          <div class="col-5">
+            <ng-container *ngTemplateOutlet="sort"></ng-container>
+          </div>
+          <ng-container *ngTemplateOutlet="chipList"></ng-container>
+        </div>
+        <div class="row">
+          <div class="col-8 d-none d-lg-block">
+            <ng-container *ngTemplateOutlet="chipList"></ng-container>
+          </div>
+          <div class="col-3 d-none d-lg-block">
+            <ng-container *ngTemplateOutlet="sort"></ng-container>
+          </div>
+        </div>
+       
+        <div class="row pr-5">
+          <div class="col-12">
+            <ul class="transition-group" [transition-group]="'flip-list'">
+              <li class="item" *ngFor="let item of filteredItems" transition-group-item>
+                <item [item]="item"></item>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #sort>
+  <mat-form-field style="width: 100%">
+    <mat-label>Sort By:</mat-label>
+    <mat-select [(ngModel)]="selectedSort" name="sort" (selectionChange)="sortList($event)">
+      <mat-option *ngFor="let sort of sorts" [value]="sort">
+        {{sort.label}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #filterSmall>
+  <mat-form-field style="width: 50%">
+    <mat-label>Fliter By:</mat-label>
+    <mat-select name="filter" (selectionChange)="setFilterListCategory($event)">
+      <mat-option *ngFor="let filter of filters" [value]="filter">
+        {{filter.label}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <span *ngFor="let filter of filters">
+    <mat-form-field [formGroup]="filtersForm" *ngIf="filter.id==selectedFilterCategory" style="width: 50%">
+      <input matInput type="text" [formControlName]="filter.id" [placeholder]="filter.label" [matAutocomplete]="auto">
+      <button mat-button *ngIf="this.filtersForm.get(filter.id).value" matSuffix mat-icon-button
+        (click)="clearFilterValue(filter.id)">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFilter">
+        <mat-option *ngFor="let option of filter.options" [value]="option">
+          {{option.label}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </span>
+</ng-template>
+
+
+<ng-template #filterBig>
+  <mat-form-field [formGroup]="filtersForm" *ngFor="let filter of filters; let i=index" style="width: 100%">
+    <input matInput type="text" [formControlName]="filter.id" [placeholder]="filter.label" [matAutocomplete]="auto">
+    <button mat-button *ngIf="this.filtersForm.get(filter.id).value" matSuffix mat-icon-button
+      (click)="clearFilterValue(filter.id)">
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFilter">
+      <mat-option *ngFor="let option of filter.options" [value]="option">
+        {{option.label}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #chipList>
+  <mat-chip-list>
+    <mat-chip *ngFor="let f of selectedFilters">
+      <strong>{{f.label}}:</strong> &nbsp; {{f.options}}
+      <mat-icon matChipRemove (click)="clearChip(f)">cancel</mat-icon>
+    </mat-chip>
+  </mat-chip-list>
+</ng-template>

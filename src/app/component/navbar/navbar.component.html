@@ -1,0 +1,91 @@
+<mat-toolbar class="background" color="primary">
+  <div class="container-fluid ">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-none d-lg-block">
+          <div class="row d-flex align-items-center banner">
+            <a routerLink="">
+              <div class="col-3 title">
+                <img class="logo" src="../../assets/img/logo.svg">
+                <span>{{title | uppercase}}</span>
+              </div>
+            </a>
+            <div class="col-2 text-center menu-item">
+              <a routerLink="shop">SHOP</a>
+            </div>
+            <div class="col-2 text-center menu-item">
+              <a [href]="galleryLink">GALLERY</a>
+            </div>
+            <div class="col-2 text-center menu-item">
+              <a routerLink="about">ABOUT</a>
+            </div>
+            <div class="col-1 text-center menu-item">
+              <a routerLink="checkout"><mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);">shopping_cart</mat-icon></a>
+            </div>
+          </div>
+        </div>
+        <div class="float-left d-lg-none h-100 d-flex align-items-center">
+          <mat-icon style="position: relative; top: -5px" (click)="drawer.toggle()">menu</mat-icon>
+        </div>
+        <a routerLink="">
+          <div class="text-center d-lg-none title">
+            <img class="logo" src="../../assets/img/logo.svg">
+            <span>{{title | uppercase}}</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</mat-toolbar>
+<mat-drawer-container hasBackdrop="true">
+  <mat-drawer #drawer mode="side" class="menu">
+    <div class="container-fluid menu-content">
+      <a routerLink=""  (click)="drawer.close()">
+        <div class="row">
+          <div class="col-12 sidenav-item">
+            <p class="text-center">HOME</p>
+          </div>
+        </div>
+      </a>
+      <a routerLink="shop"  (click)="drawer.close()">
+        <div class="row">
+          <div class="col-12 sidenav-item">
+            <p class="text-center">SHOP</p>
+          </div>
+        </div>
+      </a>
+      <a [href]="galleryLink" (click)="drawer.close()">
+        <div class="row">
+          <div class="col-12 sidenav-item">
+            <p class="text-center">GALLERY</p>
+          </div>
+        </div>
+      </a>
+      <a routerLink="about"  (click)="drawer.close()">
+        <div class="row">
+          <div class="col-12 sidenav-item">
+            <p class="text-center">ABOUT</p>
+          </div>
+        </div>
+      </a>
+      <a routerLink="checkout"  (click)="drawer.close()">
+        <div class="row">
+          <div class="col-12 sidenav-item">
+            <p class="text-center"><mat-icon style="position: relative; top: 8px; font-size: 30px; margin-right: 10px;">shopping_cart</mat-icon>CHECKOUT</p>
+          </div>
+        </div>
+      </a>
+      <div class="row bottom-item">
+        <div class="col-12"  (click)="drawer.toggle()">
+          <div class="text-center">
+            <a routerLink="/info/terms">Terms & Conditions</a>
+            <a routerLink="info/privacy">Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content class="side-content">
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

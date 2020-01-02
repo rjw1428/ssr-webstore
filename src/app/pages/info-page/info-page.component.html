@@ -1,0 +1,20 @@
+<div class="container content-page pt-5">
+    <div class="row">
+        <div class="col-12">
+            <ng-container *ngTemplateOutlet="page=='terms'?terms:privacy"></ng-container>
+            <div *ngFor="let content of contentList">
+                <h4>{{content.label}}</h4>
+                <p *ngFor="let paragraph of content.content">{{paragraph | companyName: company}}</p>
+            </div>
+        </div>
+    </div>
+</div>  
+
+
+<ng-template #terms>
+    <h2>Terms And Conditions</h2>
+ </ng-template>
+
+<ng-template #privacy>
+    <h2>Privacy Policy</h2>
+</ng-template>

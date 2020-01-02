@@ -1,0 +1,25 @@
+.transition-group {
+    list-style: none;
+}
+
+.item {
+    display: inline-block;
+    margin: 32px;
+    width: 200px;
+    box-sizing: border-box;
+}
+
+.fill-page {
+    min-height: 90vh;
+}
+
+.filter-area {
+    border-right: 2px solid rgba(100, 100, 100, 0.5);
+}
+
+@media (max-width:720px) {
+    .transition-group {
+        padding: 0;
+        text-align: center;
+    }
+}

@@ -1,0 +1,55 @@
+<section-title [sectionTitle]="sectionTitle"></section-title>
+
+<!-- LARGE SCREEN FORMAT -->
+<div class="container d-none d-lg-block">
+  <div class="row">
+    <div class="col-4" *ngFor="let quote of quotes">
+      <quote [quote]="quote"></quote>
+    </div>
+  </div>
+</div>
+
+<!-- SMALL SCREEN FORMAT -->
+<div class="container d-lg-none">
+  <div class="row">
+    <div class="col-12  my-3`" *ngFor="let quote of quotes">
+      <quote [quote]="quote"></quote>
+    </div>
+
+    <!-- <div class="col-12" *ngIf="quotes.length">
+      <div id="carousel" class="carousel slide" data-ride="carousel" data-interval="500">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="row">
+              <div class="col-6">
+                <quote class="w-100" [quote]="quotes[0]"></quote>
+              </div>
+              <div class="col-6">
+                <quote class="w-100" [quote]="quotes[1]"></quote>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-6">
+                <quote class="w-100" [quote]="quotes[2]"></quote>
+              </div>
+              <div class="col-6">
+                <quote class="w-100" [quote]="quotes[0]"></quote>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+  </div> -->
+  </div>
+</div>
