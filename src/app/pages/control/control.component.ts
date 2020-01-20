@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService, Upload } from 'src/app/data.service';
+import { DataService } from 'src/app/data.service';
 import { Quote } from 'src/app/models/quote';
 import { MatDialog } from '@angular/material/dialog';
 import { AddQuoteComponent } from 'src/app/component/quotes/add-quote/add-quote.component';
@@ -8,6 +8,7 @@ import { Item } from 'src/app/models/item';
 import { Option } from 'src/app/models/option';
 import { AddItemPopupComponent } from 'src/app/component/item/add-item-popup/add-item-popup.component';
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Upload } from 'src/app/models/upload';
 
 @Component({
   selector: 'app-control',

@@ -1,5 +1,5 @@
 import { Option } from 'src/app/models/option';
-import { Upload } from '../data.service';
+import { Upload } from './upload';
 
 export class Item {
     id: string;

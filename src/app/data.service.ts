@@ -4,21 +4,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Item } from './models/item';
-
-export class Upload {
-
-  $key: string;
-  file: File;
-  name: string;
-  url: string;
-  progress: number;
-  createdAt: Date = new Date();
-  rotation: number;
-
-  constructor(file: File) {
-    this.file = file;
-  }
-}
+import { Upload } from './models/upload';
 
 @Injectable({
   providedIn: 'root'

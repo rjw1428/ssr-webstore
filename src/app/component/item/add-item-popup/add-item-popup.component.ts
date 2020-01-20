@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Item } from 'src/app/models/item';
 import { Option } from 'src/app/models/option';
-import { DataService, Upload } from 'src/app/data.service';
+import { DataService } from 'src/app/data.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Upload } from 'src/app/models/upload';
 
 @Component({
   selector: 'app-add-item-popup',
