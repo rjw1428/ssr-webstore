@@ -12,19 +12,21 @@
                   <input formControlName="name" matInput>
                 </mat-form-field>
                 <p><strong>Description:</strong></p>
-                <div class="row w-100 px-3" formArrayName="description"
+                <div class="row w-100" formArrayName="description"
                   *ngFor="let line of dataForm.get('description')['controls']; let n=index">
                   <div class="col-10" [formGroupName]="n">
                     <mat-form-field class="w-100">
                       <mat-label>Paragraph {{n+1}}:</mat-label>
-                      <input matInput [formControl]="line">
+                      <textarea matInput [formControl]="line" cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
+                      </textarea>
                     </mat-form-field>
                   </div>
                   <div class="col-2 d-flex align-items-center px-0" *ngIf="dataForm.get('description').value.length>1">
-                    <button mat-raised-button color="warn" (click)="onDeleteDescriptionParagraph(n)">X</button>
+                    <button class="small-button" mat-raised-button color="warn" (click)="onDeleteDescriptionParagraph(n)">X</button>
                   </div>
                 </div>
-                <button mat-raised-button color="accent" (click)="onAddDescriptionParagraph()">+</button>
+                <button class="small-button" mat-raised-button color="accent" (click)="onAddDescriptionParagraph()">+</button>
                 <mat-form-field class="w-100 my-3">
                   <mat-label>Price ($):</mat-label>
                   <input formControlName="price" matInput type="number" placeholder="0.00">
@@ -49,18 +51,18 @@
                 <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput multiple>
                 <div class="row">
                   <div class="col-12 d-flex justify-content-around my-2">
-                    <button class="pic-button" mat-raised-button (click)="fileInput.click()">+</button>
-                    <button class="pic-button" mat-raised-button color="warn" (click)="onDeleteSelectedPicture()"
+                    <button class="small-button" mat-raised-button (click)="fileInput.click()">+</button>
+                    <button class="small-button" mat-raised-button color="warn" (click)="onDeleteSelectedPicture()"
                       *ngIf="selectedPicture>-1">X</button>
                   </div>
                 </div>
                 <div class="row py-3">
                   <div class="col-12 d-flex justify-content-around">
-                    <button class="pic-button" mat-raised-button (click)="onRotatePictureRight()"
+                    <button class="small-button" mat-raised-button (click)="onRotatePictureRight()"
                       *ngIf="selectedPicture>-1">
                       <mat-icon>rotate_right</mat-icon>
                     </button>
-                    <button class="pic-button" mat-raised-button (click)="onRotatePictureLeft()"
+                    <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()"
                       *ngIf="selectedPicture>-1">
                       <mat-icon>rotate_left</mat-icon>
                     </button>

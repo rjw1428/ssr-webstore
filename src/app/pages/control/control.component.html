@@ -91,30 +91,36 @@
                 <input formControlName="name" matInput>
               </mat-form-field>
               <p><strong>Description:</strong></p>
-              <div class="row w-100 px-3" formArrayName="description"
+              <div class="row w-100" formArrayName="description"
                 *ngFor="let line of item.get('description').controls; let n=index">
                 <div class="col-10" [formGroupName]="n">
                   <mat-form-field class="w-100">
                     <mat-label>Paragraph {{n+1}}:</mat-label>
-                    <input matInput [formControl]="line">
+                    <textarea matInput [formControl]="line" cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
+                    </textarea>
                   </mat-form-field>
                 </div>
                 <div class="col-2 d-flex align-items-center px-0" *ngIf="item.get('description')['controls'].length>1">
-                  <button mat-raised-button color="warn" (click)="onDeleteDescriptionParagraph(i,n)">X</button>
+                  <button class="small-button" mat-raised-button color="warn" (click)="onDeleteDescriptionParagraph(i,n)">X</button>
                 </div>
               </div>
-              <button mat-raised-button color="accent" (click)="onAddDescriptionParagraph(i)">+</button>
-              <mat-form-field class="w-100 my-3">
-                <mat-label>Price ($):</mat-label>
-                <input formControlName="price" matInput type="number" placeholder="0.00">
-                <mat-error *ngIf="item.get('price').invalid">Dont forget the price!</mat-error>
-              </mat-form-field>
-              <div class="row w-100">
+              <button class="small-button" mat-raised-button color="accent" (click)="onAddDescriptionParagraph(i)">+</button>
+              <div class="row">
+                <div class="col-4 my-3">
+                  <mat-form-field class="">
+                    <mat-label>Price ($):</mat-label>
+                    <input formControlName="price" matInput type="number" placeholder="0.00">
+                    <mat-error *ngIf="item.get('price').invalid">Dont forget the price!</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
                 <div class="col-12 my-3">
                   <mat-slide-toggle color="primary" formControlName="isFeatured">Feature on Hompage</mat-slide-toggle>
                 </div>
               </div>
-              <div class="row w-100">
+              <div class="row">
                 <div class="col-12 my-3">
                   <mat-slide-toggle color="warn" formControlName="isSold">Sold</mat-slide-toggle>
                 </div>
@@ -147,18 +153,18 @@
             <input style="display: none" type="file" (change)="onFileSelected($event, i)" #fileInput multiple>
             <div class="row my-2">
               <div class="col-12 d-flex justify-content-around">
-                <button class="pic-button" mat-raised-button (click)="fileInput.click()">+</button>
-                <button class="pic-button" mat-raised-button color="warn" (click)="onDeleteSelectedPicture()"
+                <button class="small-button" mat-raised-button (click)="fileInput.click()">+</button>
+                <button class="small-button" mat-raised-button color="warn" (click)="onDeleteSelectedPicture()"
                   *ngIf="i==selectedPicture.itemNum">X</button>
               </div>
             </div>
             <div class="row py-3">
               <div class="col-12 d-flex justify-content-around">
-                <button class="pic-button" mat-raised-button (click)="onRotatePictureRight()"
+                <button class="small-button" mat-raised-button (click)="onRotatePictureRight()"
                   *ngIf="i==selectedPicture.itemNum">
                   <mat-icon>rotate_right</mat-icon>
                 </button>
-                <button class="pic-button" mat-raised-button (click)="onRotatePictureLeft()"
+                <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()"
                   *ngIf="i==selectedPicture.itemNum">
                   <mat-icon>rotate_left</mat-icon>
                 </button>
@@ -191,16 +197,16 @@
       <mat-card class="my-3 mat-elevation-z8" cdkDrag cdkDragLockAxis="y" *ngFor="let quote of quotesForm; let i=index">
         <div class="container">
           <div class="row">
-            <div class="col-1 d-flex justify-content-center align-items-center" cdkDragHandle>
+            <div class="col-1 px-0 mx-0 d-flex justify-content-start align-items-center" cdkDragHandle>
               <mat-icon> drag_indicator</mat-icon>
             </div>
-            <div class="col-9">
+            <div class="col-10 px-0 mx-0">
               <div class="container">
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 px-1">
                     <form [formGroup]="quote">
                       <div class="row">
-                        <div class="col-6">
+                        <div class="col-6 px-1">
                           <div class="row">
                             <div class="col-12">
                               <mat-form-field class="w-100">
@@ -218,7 +224,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 px-1">
                           <mat-form-field class="w-100">
                             <mat-label>Statement:</mat-label>
                             <textarea matInput formControlName="quote" cdkTextareaAutosize
@@ -232,8 +238,8 @@
                 </div>
               </div>
             </div>
-            <div class="col-2 d-flex align-items-center px-0">
-              <button mat-raised-button color="warn" (click)="onDeleteQuote(i)">X</button>
+            <div class="col-1 d-flex justify-content-end align-items-center px-2">
+              <button class="small-button" mat-raised-button color="warn" (click)="onDeleteQuote(i)">X</button>
             </div>
           </div>
         </div>
@@ -264,7 +270,7 @@
     <mat-card class="my-3 mat-elevation-z8">
       <p><strong>Opening Paragraph:</strong></p>
       <div class="row w-100" *ngFor="let topSection of aboutFormTop; let i=index">
-        <div class="col-10">
+        <div class="col-11">
           <div class="container">
             <div class="row">
               <div class="col-12">
@@ -272,7 +278,9 @@
                   <div class="row">
                     <mat-form-field class="w-100">
                       <mat-label>Paragraph {{i+1}}:</mat-label>
-                      <input formControlName="paragraph" matInput>
+                      <textarea matInput formControlName="paragraph" cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
+                      </textarea>
                     </mat-form-field>
                   </div>
                 </div>
@@ -280,11 +288,11 @@
             </div>
           </div>
         </div>
-        <div class="col-2 d-flex align-items-center px-0" *ngIf="aboutFormTop.length>1">
-          <button mat-raised-button color="warn" (click)="onDeleteAbout(aboutFormTop, i)">X</button>
+        <div class="col-1 d-flex align-items-center px-0" *ngIf="aboutFormTop.length>1">
+          <button class="small-button" mat-raised-button color="warn" (click)="onDeleteAbout(aboutFormTop, i)">X</button>
         </div>
       </div>
-      <button mat-raised-button color="accent" (click)="onAddParagraph(aboutFormTop)">+</button>
+      <button class="small-button" mat-raised-button color="accent" (click)="onAddParagraph(aboutFormTop)">+</button>
     </mat-card>
     <mat-card class="my-3 mat-elevation-z8">
       <div class="row w-100">
@@ -321,7 +329,9 @@
                   <div class="row">
                     <mat-form-field class="w-100">
                       <mat-label>Paragraph {{i+1}}:</mat-label>
-                      <input formControlName="paragraph" matInput>
+                      <textarea matInput formControlName="paragraph" cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
+                      </textarea>
                     </mat-form-field>
                   </div>
                 </div>
