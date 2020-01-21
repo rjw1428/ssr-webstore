@@ -106,7 +106,7 @@
               <button mat-raised-button color="accent" (click)="onAddDescriptionParagraph(i)">+</button>
               <mat-form-field class="w-100 my-3">
                 <mat-label>Price ($):</mat-label>
-                <input formControlName="price" matInput>
+                <input formControlName="price" matInput type="number" placeholder="0.00">
                 <mat-error *ngIf="item.get('price').invalid">Dont forget the price!</mat-error>
               </mat-form-field>
               <div class="row w-100">
