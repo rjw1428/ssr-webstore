@@ -15,14 +15,29 @@ export class DataService {
     id: "alpineKnives"
   }
   igLink = "https://www.instagram.com/alpine_custom_knives/"
+  shoppingCart: Item[]=[]
   constructor(
     private afs: AngularFirestore,
     private snackBar: MatSnackBar
   ) { }
 
-
   getBackendData(doc: string) {
     return this.afs.collection(this.company.id).doc(doc)
+  }
+
+  addToShoppingCart(item: Item) {
+    this.shoppingCart.push(item)
+    localStorage['shoppingCart']=JSON.stringify(this.shoppingCart)
+  }
+
+  clearShoppingCart() {
+    localStorage['shoppingCart']=JSON.stringify([])
+  }
+
+  getShoppingCart() {
+    if(localStorage['shoppingCart'])
+      this.shoppingCart=JSON.parse(localStorage['shoppingCart'])
+    return this.shoppingCart
   }
 
   uploadItemImage(upload: Upload, items: Item[], index: number) {
@@ -60,7 +75,7 @@ export class DataService {
     );
   }
 
-  private saveFileData(upload: Upload, items: Item[], index: number, dataLocation: string) {
+  saveFileData(upload: Upload, items: Item[], index: number, dataLocation: string) {
     if (!items[index].image) {
       items[index].image = []
     }

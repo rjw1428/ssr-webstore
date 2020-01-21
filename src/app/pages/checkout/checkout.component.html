@@ -1,3 +1,50 @@
 <div class="content-page">
-  <h1>Checkout</h1>
+  <div class="container">
+    <h3>Shopping Cart</h3>
+    <mat-card class="my-3 mat-elevation-z8">
+      <div *ngIf="cart.length>0">
+        <div *ngFor="let item of cart; let i=index">
+          <div class="row my-3">
+            <div class="col-lg-2 col-4">
+              <item [item]="item"></item>
+            </div>
+            <div class="col-lg-8 col-6 d-flex flex-column align-items-stretch">
+              <div class="row">
+                <div class="col-12">
+                  <p *ngFor="let desc of item.description">{{desc}}</p>
+                </div>
+              </div>
+              <div class="row h-100">
+                <div class="col-12 h-100 d-flex justify-content-end align-items-end">
+                  <div (click)="removeItem(i)">Remove</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-2 d-flex justify-content-end align-items-center">
+              <p><strong>Price:</strong> &nbsp; {{item.price | currency}}</p>
+            </div>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <div *ngIf="cart.length==0">
+        <div class="row">
+          <div class="col-12">
+            <h4 class="no-items text-center">There are no items in you cart.</h4>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+    <mat-card class="my-3 mat-elevation-z8" *ngIf="cart.length>0">
+      <div class="row">
+        <div class="col-10 d-flex justify-content-around align-items-center">
+          <button mat-raised-button color="accent" (click)="onClearCart()">Clear Cart</button>
+          <button mat-raised-button color="primary" (click)="onCheckout()">Proceed to Checkout</button>
+        </div>
+        <div class="col-2">
+          <p><strong>Subtotal:</strong> &nbsp; {{totalPrice | currency}}</p>
+        </div>
+      </div>
+    </mat-card>
+  </div>
 </div>
