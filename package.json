@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "analyze": "ng build --prod --stats-json && webpack-bundle-analyzer dist/stats.json"
+    "analyze": "ng build --prod --stats-json && webpack-bundle-analyzer dist/stats.json",
+    "ngrok": "%userprofile%/Downloads/ngrok http --host-header=rewrite 4200"
   },
   "private": true,
   "dependencies": {
@@ -25,9 +26,12 @@
     "@angular/router": "~8.2.7",
     "bootstrap": "^4.4.1",
     "firebase": "^7.7.0",
+    "firebase-admin": "^8.9.1",
+    "firebase-functions": "^3.3.0",
     "jquery": "^3.4.1",
     "popper.js": "^1.16.0",
     "rxjs": "~6.4.0",
+    "stripe": "^8.6.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },

@@ -11,19 +11,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ItemComponent implements OnInit {
   @Input() item: Item
-  popupWidth='900px';
-  screenHeight: number;
-  screenWidth: number;
+  popupWidth = '900px';
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
-    this.screenHeight = window.innerHeight;
-    this.screenWidth = window.innerWidth;
-    this.popupWidth=(this.screenWidth<992)?"100vw":"900px"
+    this.popupWidth = (window.innerWidth < 992) ? "100vw" : "900px"
   }
   constructor(
     public dialog: MatDialog,
-    private snackBar: MatSnackBar
-    ) { }
+    private snackBar: MatSnackBar,
+  ) { }
 
   ngOnInit() {
   }
@@ -36,9 +32,9 @@ export class ItemComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-          this.snackBar.open("Item was added to your cart", "OK", {
-            duration: 2500,
-          });
+        this.snackBar.open("Item was added to your cart", "OK", {
+          duration: 2500,
+        });
       }
     });
   }

@@ -46,5 +46,21 @@
         </div>
       </div>
     </mat-card>
+    <mat-card class="my-3 mat-elevation-z8" *ngIf="(user | async) as u">
+      <div class="row">
+        <div class="col-12">
+          <p>{{u.stripeCustomerId}}</p>
+          <p>{{u.uid}}</p>
+          <!-- <div *ngIf="u.sources">
+            <p *ngFor="let source of use.sources">{{source.id}}</p>
+          </div> -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 d-flex justify-content-center align-items-center">
+          <button mat-raised-button color="warn" (click)="onSignOut()">Sign Out</button>
+        </div>
+      </div>
+    </mat-card>
   </div>
 </div>

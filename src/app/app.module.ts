@@ -48,6 +48,9 @@ import { AddItemPopupComponent } from './component/item/add-item-popup/add-item-
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { HttpClientModule } from '@angular/common/http';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { PurchaseFormComponent } from './component/purchase-form/purchase-form.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +78,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     CheckoutComponent,
     AddQuoteComponent,
     AddItemPopupComponent,
+    PurchaseFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,6 +86,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     MatToolbarModule,
     MatSidenavModule,
     MatCardModule,
@@ -100,6 +105,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     DragDropModule,
     MatListModule,
     MatProgressBarModule,
+    AngularFireAuthModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
   ],
@@ -107,6 +113,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     EnterItemPopupComponent,
     AddQuoteComponent,
     AddItemPopupComponent,
+    PurchaseFormComponent
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
