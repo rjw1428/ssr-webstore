@@ -8,6 +8,7 @@ import { Upload } from './models/upload';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { switchMap, map } from 'rxjs/operators';
 import { defer, Observable, of, merge } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 // export const orderBuilder = (
 //   afs: AngularFirestore
@@ -29,27 +30,33 @@ import { defer, Observable, of, merge } from 'rxjs';
   providedIn: 'root'
 })
 export class DataService {
-  company = {
-    name: "Alpine Custom Knives",
-    id: "alpineKnives"
-  }
-  igLink = "https://www.instagram.com/alpine_custom_knives/"
+  companyId: string
   shoppingCart: Item[] = []
   constructor(
     private afs: AngularFirestore,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    this.companyId = environment.company.id
+  }
+
+  getCompanyInfo() {
+   return this.afs.collection(environment.company.id).doc("companyInfo").valueChanges().pipe(
+      map((companyInfo: {}) => {
+        return { ...companyInfo, id: environment.company.id }
+      }))
+  }
 
   getBackendData(doc: string) {
-    return this.afs.collection(this.company.id).doc(doc)
+    return this.afs.collection(this.companyId).doc(doc)
   }
 
   getOrders() {
-    let orders = this.afs.collection(this.company.id).doc('orders').collection("orders", ref=>ref.orderBy("dateCreated", "desc")).valueChanges()
-    let users = this.afs.collection(this.company.id).doc("customerInfo").collection('accounts').valueChanges()
-    let inventory = this.afs.collection(this.company.id).doc("inventory").collection('knives').valueChanges()
+    let orders = this.afs.collection(this.companyId).doc('orders').collection("orders", ref => ref.orderBy("dateCreated", "desc")).valueChanges()
+    let users = this.afs.collection(this.companyId).doc("customerInfo").collection('accounts').valueChanges()
+    let inventory = this.afs.collection(this.companyId).doc("inventory").collection('knives').valueChanges()
     return combineLatest(orders, users, inventory).pipe(
       map(([orders, users, inventory]) => {
+        console.log(inventory)
         users as []
         inventory as []
         orders = orders.map(order => {
@@ -60,13 +67,12 @@ export class DataService {
           order['dateCreated'] = new Date(order.dateCreated.seconds * 1000)
           return order
         })
-        console.log(orders)
         return orders
       }))
   }
 
   getInventory(itemType) {
-    return this.afs.collection(this.company.id).doc('inventory')
+    return this.afs.collection(this.companyId).doc('inventory')
       .collection(itemType, ref => ref.where("active", "==", true))
   }
 
@@ -137,10 +143,10 @@ export class DataService {
   }
 
   saveInventory(itemCategory: string, item: Item) {
-    this.afs.collection(this.company.id).doc('inventory').collection(itemCategory).add(item)
+    this.afs.collection(this.companyId).doc('inventory').collection(itemCategory).add(item)
       .then(resp => {
         console.log(resp)
-        this.afs.collection(this.company.id).doc('inventory').collection(itemCategory).doc(resp.id).update({ id: resp.id })
+        this.afs.collection(this.companyId).doc('inventory').collection(itemCategory).doc(resp.id).update({ id: resp.id })
         this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
       })
       .catch(err => {
@@ -151,7 +157,7 @@ export class DataService {
 
   updateInventory(itemCategory: string, item: Item) {
     console.log(item)
-    this.afs.collection(this.company.id).doc('inventory').collection(itemCategory).doc(item.id).set(item)
+    this.afs.collection(this.companyId).doc('inventory').collection(itemCategory).doc(item.id).set(item)
       .then(resp => {
         this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
       })
@@ -159,6 +165,11 @@ export class DataService {
         console.log(err)
         this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
       })
+  }
+
+  deleteInventoryItem(itemCategory, itemId) {
+    this.afs.collection(this.companyId).doc('inventory').collection(itemCategory).doc(itemId)
+      .set({ active: 'false' }, { merge: true })
   }
 
   saveToBackend(loc, obj) {

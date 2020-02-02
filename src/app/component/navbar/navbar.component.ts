@@ -7,11 +7,13 @@ import { DataService } from 'src/app/data.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  title="Title"
-  galleryLink=""
-  constructor(private dataService: DataService) { 
-    this.title=this.dataService.company.name
-    this.galleryLink=this.dataService.igLink
+  title = "Title"
+  galleryLink = ""
+  constructor(private dataService: DataService) {
+    this.dataService.getCompanyInfo().subscribe(companyInfo => {
+      this.title = companyInfo['name']
+      this.galleryLink = companyInfo['instagram']
+    })
   }
 
   ngOnInit() {

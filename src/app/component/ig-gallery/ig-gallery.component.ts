@@ -18,7 +18,9 @@ export class IgGalleryComponent implements OnInit {
   ]
   igLink=""
   constructor(private dataService: DataService) { 
-    this.igLink=this.dataService.igLink
+    this.dataService.getCompanyInfo().subscribe(companyInfo=>{
+      this.igLink=companyInfo['instagram']
+    })
   }
 
   ngOnInit() {

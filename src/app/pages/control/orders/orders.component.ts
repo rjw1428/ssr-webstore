@@ -16,5 +16,4 @@ export class OrdersComponent implements OnInit {
   ngOnInit() {
     this.orders=this.dataService.getOrders()
   }
-
 }

@@ -2,29 +2,39 @@
   <h1>Control Room</h1>
   <mat-tab-group>
     <mat-tab label="Orders">
-      <orders-list></orders-list>
+      <ng-template matTabContent>
+        <orders-list></orders-list>
+      </ng-template>
     </mat-tab>
     <mat-tab label="Inventory">
-      <ng-container *ngTemplateOutlet="editableInventory"></ng-container>
+      <ng-template matTabContent>
+        <ng-container *ngTemplateOutlet="editableInventory"></ng-container>
+      </ng-template>
     </mat-tab>
     <mat-tab label="Quotes">
-      <ng-container *ngTemplateOutlet="editableQuote"></ng-container>
-      <div class="row w-100">
-        <div class="col-12 text-center pb-3">
-          <button mat-raised-button color="primary" (click)="onSaveQuotes()">Save</button>
+      <ng-template matTabContent>
+        <ng-container *ngTemplateOutlet="editableQuote"></ng-container>
+        <div class="row w-100">
+          <div class="col-12 text-center pb-3">
+            <button mat-raised-button color="primary" (click)="onSaveQuotes()">Save</button>
+          </div>
         </div>
-      </div>
+      </ng-template>
     </mat-tab>
     <mat-tab label="About Page Content">
-      <ng-container *ngTemplateOutlet="editableAbout"></ng-container>
-      <div class="row w-100">
-        <div class="col-12 text-center">
-          <button mat-raised-button color="primary" (click)="onSaveAbout()">Save</button>
+      <ng-template matTabContent>
+        <ng-container *ngTemplateOutlet="editableAbout"></ng-container>
+        <div class="row w-100">
+          <div class="col-12 text-center">
+            <button mat-raised-button color="primary" (click)="onSaveAbout()">Save</button>
+          </div>
         </div>
-      </div>
+      </ng-template>
     </mat-tab>
     <mat-tab label="Other Controls">
-      <ng-container *ngTemplateOutlet="miscContent"></ng-container>
+      <ng-template matTabContent>
+        <ng-container *ngTemplateOutlet="miscContent"></ng-container>
+      </ng-template>
     </mat-tab>
   </mat-tab-group>
 </div>

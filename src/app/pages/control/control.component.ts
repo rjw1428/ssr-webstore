@@ -87,10 +87,8 @@ export class ControlComponent implements OnInit {
 
   onDeleteItem(itemForm: FormGroup, index: number) {
     if (confirm("Are you sure you want to remove this item from your inventory?")) {
-      let fullItem = itemForm.value as Item
-      fullItem.image = this.inventory[index].image ? [...this.inventory[index].image] : []
-      fullItem.active = false
-      this.onUpdateItem(fullItem)
+      let item = itemForm.value as Item
+      this.dataService.deleteInventoryItem(this.inventoryCategoryName, item.id)
     }
   }
 

@@ -1,17 +1,24 @@
 <div class="container-fluid bottom px-0">
   <mat-toolbar>
     <mat-toolbar-row class="background">
-      <span>Facebook Link</span>
-      <span>IG Link</span>
-      <span>Contact Us</span>
-      <span>Email</span>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12 d-flex justify-content-start">
+            <p class="my-0">Contact Us:
+            <a [href]="'mailto:'+(companyInfo | async)?.email"><i class="far fa-envelope fa-lg px-1" style="color: white; text-decoration: none;"></i></a>
+            <a [href]="(companyInfo | async)?.instagram"><i class="fab fa-instagram fa-lg px-1" style="color: white; text-decoration: none;"></i></a>
+            </p>
+          </div>
+        </div>
+      </div>
     </mat-toolbar-row>
     <mat-toolbar-row class="secondary">
       <!-- LARGE SCREEN FORMAT -->
       <div class="container d-none d-lg-block">
         <div class="row">
           <div class="col-12 px-0">
-            <p class="text-center">© {{year}} {{company}} | <span><a routerLink="/info/terms">Terms &
+            <p class="text-center">© {{year}} {{ (companyInfo | async)?.name }} | <span><a
+                  routerLink="/info/terms">Terms &
                   Conditions</a></span> | <span><a routerLink="/info/privacy">Privacy Policy</a></span></p>
           </div>
         </div>
@@ -21,7 +28,7 @@
       <div class="container d-lg-none">
         <div class="row">
           <div class="col-12 px-0">
-            <p class="text-center mb-0">© {{year}} {{company}} </p>
+            <p class="text-center mb-0">© {{year}} {{ (companyInfo | async)?.name }} </p>
             <div class="text-center"><a routerLink="/info/terms">Terms & Conditions</a></div>
             <div class="text-center"><a routerLink="/info/privacy">Privacy Policy</a></div>
           </div>

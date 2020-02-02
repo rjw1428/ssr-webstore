@@ -31,32 +31,32 @@ export class ShopComponent implements OnInit {
     this.dataService.getInventory('knives').valueChanges()
       .subscribe((items: Item[]) => {
         this.items = items
-      })
 
-    this.dataService.getBackendData('shop').valueChanges().subscribe(resp => {
-      this.sorts = resp['sort'] as SortOption[]
-      this.selectedSort = this.sorts[0]
-      this.filters = resp['filter']
-      this.filteredItems = this.items.sort((a: Item, b: Item) => this.sortItems(a, b, this.sorts[0]))
-      this.filtersForm = this.initializeFilterFormGroup(this.filters)
+        this.dataService.getBackendData('shop').valueChanges().subscribe(resp => {
+          this.sorts = resp['sort'] as SortOption[]
+          this.selectedSort = this.sorts[0]
+          this.filters = resp['filter']
+          this.filteredItems = this.items.sort((a: Item, b: Item) => this.sortItems(a, b, this.sorts[0]))
+          this.filtersForm = this.initializeFilterFormGroup(this.filters)
 
-      //FILTER ON VALUE CHANGES
-      this.filtersForm.valueChanges.subscribe(vals => {
-        // GET SELECTED FILTES
-        this.selectedFilters = Object.keys(vals).filter(key => vals[key]).map((filterObj: string) => {
-          return {
-            id: filterObj,
-            label: filterObj.substr(0, 1).toUpperCase() + filterObj.substr(1),
-            options: vals[filterObj].id
-          }
-        })
-        if (this.selectedFilters.length > 0)
-          this.filteredItems = this.items.filter(item => {
-            return this.selectedFilters.map(filter => filter.options == item.tags[filter.id]).reduce((acc, cur) => cur && cur == acc)
+          //FILTER ON VALUE CHANGES
+          this.filtersForm.valueChanges.subscribe(vals => {
+            // GET SELECTED FILTES
+            this.selectedFilters = Object.keys(vals).filter(key => vals[key]).map((filterObj: string) => {
+              return {
+                id: filterObj,
+                label: filterObj.substr(0, 1).toUpperCase() + filterObj.substr(1),
+                options: vals[filterObj].id
+              }
+            })
+            if (this.selectedFilters.length > 0)
+              this.filteredItems = this.items.filter(item => {
+                return this.selectedFilters.map(filter => filter.options == item.tags[filter.id]).reduce((acc, cur) => cur && cur == acc)
+              })
+            else this.filteredItems = this.items
           })
-        else this.filteredItems = this.items
+        })
       })
-    })
     window.scrollTo(0, 0)
   }
 
