@@ -51,6 +51,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { PurchaseFormComponent } from './component/purchase-form/purchase-form.component';
+import { OrdersComponent } from './pages/control/orders/orders.component';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 @NgModule({
   declarations: [
@@ -79,6 +81,7 @@ import { PurchaseFormComponent } from './component/purchase-form/purchase-form.c
     AddQuoteComponent,
     AddItemPopupComponent,
     PurchaseFormComponent,
+    OrdersComponent,
   ],
   imports: [
     BrowserModule,
@@ -108,6 +111,7 @@ import { PurchaseFormComponent } from './component/purchase-form/purchase-form.c
     AngularFireAuthModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    AngularFireFunctionsModule
   ],
   entryComponents: [
     EnterItemPopupComponent,

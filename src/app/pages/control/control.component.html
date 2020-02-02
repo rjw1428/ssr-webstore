@@ -1,19 +1,17 @@
 <div class="content-page">
   <h1>Control Room</h1>
   <mat-tab-group>
-    <mat-tab label="Quotes">
-      <ng-container *ngTemplateOutlet="editableQuote"></ng-container>
-      <div class="row w-100">
-        <div class="col-12 text-center">
-          <button mat-raised-button color="primary" (click)="onSaveQuotes()">Save</button>
-        </div>
-      </div>
+    <mat-tab label="Orders">
+      <orders-list></orders-list>
     </mat-tab>
     <mat-tab label="Inventory">
       <ng-container *ngTemplateOutlet="editableInventory"></ng-container>
+    </mat-tab>
+    <mat-tab label="Quotes">
+      <ng-container *ngTemplateOutlet="editableQuote"></ng-container>
       <div class="row w-100">
-        <div class="col-12 text-center">
-          <button mat-raised-button color="primary" (click)="onSaveInventory()">Save</button>
+        <div class="col-12 text-center pb-3">
+          <button mat-raised-button color="primary" (click)="onSaveQuotes()">Save</button>
         </div>
       </div>
     </mat-tab>
@@ -96,16 +94,18 @@
                 <div class="col-10" [formGroupName]="n">
                   <mat-form-field class="w-100">
                     <mat-label>Paragraph {{n+1}}:</mat-label>
-                    <textarea matInput [formControl]="line" cdkTextareaAutosize
-                    #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
+                    <textarea matInput [formControl]="line" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
                     </textarea>
                   </mat-form-field>
                 </div>
                 <div class="col-2 d-flex align-items-center px-0" *ngIf="item.get('description')['controls'].length>1">
-                  <button class="small-button" mat-raised-button color="warn" (click)="onDeleteDescriptionParagraph(i,n)">X</button>
+                  <button class="small-button" mat-raised-button color="warn"
+                    (click)="onDeleteDescriptionParagraph(i,n)">X</button>
                 </div>
               </div>
-              <button class="small-button" mat-raised-button color="accent" (click)="onAddDescriptionParagraph(i)">+</button>
+              <button class="small-button" mat-raised-button color="accent"
+                (click)="onAddDescriptionParagraph(i)">+</button>
               <div class="row">
                 <div class="col-4 my-3">
                   <mat-form-field class="">
@@ -176,7 +176,12 @@
               <p class="date-footer mx-3">Date Added: {{item.value.dateAdded | date : 'short'}}</p>
             </div>
             <div class="col-2 d-flex align-items-end">
-              <button mat-raised-button color="warn" (click)="onDeleteItem(i)">X</button>
+              <button mat-raised-button color="warn" (click)="onDeleteItem(item, i)">X</button>
+            </div>
+          </div>
+          <div class="row w-100">
+            <div class="col-12 text-center pb-3">
+              <button mat-raised-button color="primary" (click)="onSaveInventory(item, i)">Save</button>
             </div>
           </div>
         </div>
@@ -278,8 +283,8 @@
                   <div class="row">
                     <mat-form-field class="w-100">
                       <mat-label>Paragraph {{i+1}}:</mat-label>
-                      <textarea matInput formControlName="paragraph" cdkTextareaAutosize
-                      #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
+                      <textarea matInput formControlName="paragraph" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
                       </textarea>
                     </mat-form-field>
                   </div>
@@ -289,7 +294,8 @@
           </div>
         </div>
         <div class="col-1 d-flex align-items-center px-0" *ngIf="aboutFormTop.length>1">
-          <button class="small-button" mat-raised-button color="warn" (click)="onDeleteAbout(aboutFormTop, i)">X</button>
+          <button class="small-button" mat-raised-button color="warn"
+            (click)="onDeleteAbout(aboutFormTop, i)">X</button>
         </div>
       </div>
       <button class="small-button" mat-raised-button color="accent" (click)="onAddParagraph(aboutFormTop)">+</button>
@@ -329,8 +335,8 @@
                   <div class="row">
                     <mat-form-field class="w-100">
                       <mat-label>Paragraph {{i+1}}:</mat-label>
-                      <textarea matInput formControlName="paragraph" cdkTextareaAutosize
-                      #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
+                      <textarea matInput formControlName="paragraph" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
                       </textarea>
                     </mat-form-field>
                   </div>

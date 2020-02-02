@@ -36,7 +36,7 @@ export class AddItemPopupComponent implements OnInit {
     let files = event.target.files as FileList
     for (let i = 0; i < files.length; i++) {
       this.data.item.image.push([] as any)
-      this.dataService.uploadTempItemImage(
+      this.dataService.uploadItemImage(
         new Upload(files.item(i)),
         this.data.item
       )

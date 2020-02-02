@@ -6,7 +6,7 @@
         <div *ngFor="let item of cart; let i=index">
           <div class="row my-3">
             <div class="col-lg-2 col-4">
-              <item [item]="item"></item>
+              <item [item]="item" [showCart]="false"></item>
             </div>
             <div class="col-lg-8 col-6 d-flex flex-column align-items-stretch">
               <div class="row">
@@ -51,9 +51,6 @@
         <div class="col-12">
           <p>{{u.stripeCustomerId}}</p>
           <p>{{u.uid}}</p>
-          <!-- <div *ngIf="u.sources">
-            <p *ngFor="let source of use.sources">{{source.id}}</p>
-          </div> -->
         </div>
       </div>
       <div class="row">

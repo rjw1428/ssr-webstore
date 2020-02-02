@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/data.service';
 import { Quote } from 'src/app/models/quote';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'quotes',
@@ -8,15 +9,15 @@ import { Quote } from 'src/app/models/quote';
   styleUrls: ['./quotes.component.scss']
 })
 export class QuotesComponent implements OnInit {
-  sectionTitle="Title"
-  quotes: Quote[]=[]
+  pageContent: Observable<any>
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
-    this.dataService.getBackendData('quotes').valueChanges().subscribe(resp=>{
-      this.sectionTitle=resp['sectionTitle']
-      this.quotes=resp['quotes'].filter((q: Quote) => q.active)
-    })
+    this.pageContent = this.dataService.getBackendData('quotes').valueChanges()
+    // .subscribe(resp=>{
+    //   this.sectionTitle=resp['sectionTitle']
+    //   this.quotes=resp['quotes']
+    // })
   }
 
 }

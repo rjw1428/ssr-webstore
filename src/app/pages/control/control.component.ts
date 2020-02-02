@@ -31,6 +31,7 @@ export class ControlComponent implements OnInit {
     picNum: -1
   }
   showTitle = false;
+  inventoryCategoryName = "knives"
   constructor(
     private dataService: DataService,
     public dialog: MatDialog,
@@ -38,11 +39,13 @@ export class ControlComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dataService.getBackendData('quotes').valueChanges().subscribe(resp => {
+    this.dataService.getBackendData('quotes').valueChanges()
+    .subscribe(resp => {
       this.quotesForm = resp['quotes']
         .filter((q: Quote) => q.active)
         .map(q => this.formBuilder.group(q))
     })
+
     this.dataService.getBackendData('about').valueChanges().subscribe(resp => {
       this.aboutFormTitle = this.formBuilder.group({ header: resp['header'] })
       this.aboutFormVideo = this.formBuilder.group({ videoUrl: resp['videoUrl'] })
@@ -50,10 +53,11 @@ export class ControlComponent implements OnInit {
       this.aboutFormTop = resp['topSection'].map(sect => this.formBuilder.group({ paragraph: sect }))
       this.aboutFormBottom = resp['bottomSection'].map(sect => this.formBuilder.group(({ paragraph: sect })))
     })
-    this.dataService.getBackendData('shop').valueChanges().subscribe(resp => {
-      this.inventory = resp['inventory']
-        .filter((item: Item) => item.active)
+
+    this.dataService.getInventory(this.inventoryCategoryName).valueChanges().subscribe((resp: Item[]) => {
+      this.inventory = resp
         .sort((a, b) => b.dateAdded.seconds - a.dateAdded.seconds)
+
       this.inventoryForms = JSON.parse(JSON.stringify(this.inventory))
         .map((item: any) => {
           item.description = this.formBuilder.array(item.description)
@@ -62,32 +66,36 @@ export class ControlComponent implements OnInit {
           item.price = [(+item.price), [Validators.required, Validators.pattern(/^\d*\.?\d*$/)]]
           return this.formBuilder.group(item)
         })
+    })
+    this.dataService.getBackendData('shop').valueChanges().subscribe(resp => {
       this.tagList = resp['filter'].filter(tag => tag.id !== 'price' && tag.id !== 'availability')
       this.featuredTitle = this.formBuilder.group({ featuredTitle: resp['featuredListTitle'] })
     })
   }
 
   //--------------------INVENTORY STUFF---------------
-  onSaveInventory() {
-    if (this.inventoryForms.map(form => form.valid).reduce((acc, cur) => cur && cur == acc)) {
-      let fullInventoryItems = this.inventoryForms.map((form, i) => {
-        let fullItem = form.value
-        fullItem.image = this.inventory[i].image ? [...this.inventory[i].image] : []
-        return fullItem
-      })
-      this.dataService.saveToBackend('shop', { inventory: fullInventoryItems })
+  onSaveInventory(itemForm: FormGroup, index: number) {
+    if (itemForm.valid) {
+      let fullItem=itemForm.value as Item
+      fullItem.image = this.inventory[index].image ? [...this.inventory[index].image] : []
+      this.onUpdateItem(fullItem)
     }
     else {
       alert("There is an error with information on this form. Either a value is missing or it is incorrect. Scroll through to find the issue.")
     }
   }
 
-  onDeleteItem(index: number) {
+  onDeleteItem(itemForm: FormGroup, index: number) {
     if (confirm("Are you sure you want to remove this item from your inventory?")) {
-      let item = this.inventoryForms[index].value as Item
-      item.active = false
-      this.onSaveInventory()
+      let fullItem = itemForm.value as Item
+      fullItem.image = this.inventory[index].image ? [...this.inventory[index].image] : []
+      fullItem.active = false
+      this.onUpdateItem(fullItem)
     }
+  }
+
+  onUpdateItem(item) {
+    this.dataService.updateInventory(this.inventoryCategoryName, item)
   }
 
   onAddItem() {
@@ -104,7 +112,7 @@ export class ControlComponent implements OnInit {
           description: this.formBuilder.array(result.description),
           tags: this.initializeFormGroup(result.tags),
         }))
-        this.onSaveInventory()
+        this.dataService.saveInventory(this.inventoryCategoryName, result)
       }
     });
   }
@@ -112,11 +120,13 @@ export class ControlComponent implements OnInit {
   onFileSelected(event, itemIndex: number) {
     let files = event.target.files as FileList
     for (let i = 0; i < files.length; i++) {
+      //Add temp loading image
       this.inventory[itemIndex].image.push([] as any)
+
+      //Upload Image to backend
       this.dataService.uploadItemImage(
         new Upload(files.item(i)),
-        this.inventory,
-        itemIndex
+        this.inventory[itemIndex]
       )
     }
   }
@@ -129,18 +139,19 @@ export class ControlComponent implements OnInit {
   }
 
   onRotatePictureLeft() {
-    this.inventory[this.selectedPicture.itemNum].image[this.selectedPicture.picNum].rotation-=90
+    this.inventory[this.selectedPicture.itemNum].image[this.selectedPicture.picNum].rotation -= 90
   }
 
   onRotatePictureRight() {
-    this.inventory[this.selectedPicture.itemNum].image[this.selectedPicture.picNum].rotation+=90
+    this.inventory[this.selectedPicture.itemNum].image[this.selectedPicture.picNum].rotation += 90
   }
 
   onDeleteSelectedPicture() {
     if (confirm("Are you sure you want to remove this picture from your item?")) {
-      this.inventory[this.selectedPicture.itemNum].image.splice(this.selectedPicture.picNum, 1)
+      let removedItem = this.inventory[this.selectedPicture.itemNum]
+      removedItem.image.splice(this.selectedPicture.picNum, 1)
       this.selectedPicture = { itemNum: -1, picNum: -1 }
-      this.onSaveInventory()
+      this.onUpdateItem(removedItem)
     }
   }
 

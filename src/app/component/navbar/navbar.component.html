@@ -20,7 +20,10 @@
               <a routerLink="about">ABOUT</a>
             </div>
             <div class="col-1 text-center menu-item">
-              <a routerLink="checkout"><mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);">shopping_cart</mat-icon></a>
+              <a routerLink="checkout">
+                <mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);">shopping_cart
+                </mat-icon>
+              </a>
             </div>
           </div>
         </div>
@@ -38,16 +41,16 @@
   </div>
 </mat-toolbar>
 <mat-drawer-container hasBackdrop="true">
-  <mat-drawer #drawer mode="side" class="menu">
+  <mat-drawer #drawer mode="push" class="menu">
     <div class="container-fluid menu-content">
-      <a routerLink=""  (click)="drawer.close()">
+      <a routerLink="" (click)="drawer.close()">
         <div class="row">
           <div class="col-12 sidenav-item">
             <p class="text-center">HOME</p>
           </div>
         </div>
       </a>
-      <a routerLink="shop"  (click)="drawer.close()">
+      <a routerLink="shop" (click)="drawer.close()">
         <div class="row">
           <div class="col-12 sidenav-item">
             <p class="text-center">SHOP</p>
@@ -61,26 +64,27 @@
           </div>
         </div>
       </a>
-      <a routerLink="about"  (click)="drawer.close()">
+      <a routerLink="about" (click)="drawer.close()">
         <div class="row">
           <div class="col-12 sidenav-item">
             <p class="text-center">ABOUT</p>
           </div>
         </div>
       </a>
-      <a routerLink="checkout"  (click)="drawer.close()">
+      <a routerLink="checkout" (click)="drawer.close()">
         <div class="row">
           <div class="col-12 sidenav-item">
-            <p class="text-center"><mat-icon style="position: relative; top: 8px; font-size: 30px; margin-right: 10px;">shopping_cart</mat-icon>CHECKOUT</p>
+            <p class="text-center">
+              <mat-icon style="position: relative; top: 8px; font-size: 30px; margin-right: 10px;">shopping_cart
+              </mat-icon>CHECKOUT
+            </p>
           </div>
         </div>
       </a>
       <div class="row bottom-item">
-        <div class="col-12"  (click)="drawer.toggle()">
-          <div class="text-center">
-            <a routerLink="/info/terms">Terms & Conditions</a>
-            <a routerLink="info/privacy">Privacy Policy</a>
-          </div>
+        <div class="col-12 d-flex justify-content-around" (click)="drawer.toggle()">
+          <a routerLink="/info/terms">Terms</a>
+          <a routerLink="/info/privacy">Privacy</a>
         </div>
       </div>
     </div>

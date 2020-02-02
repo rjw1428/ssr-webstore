@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
+:root {
+    --navbar-height: 64px;
+}
 
 html, body { height: 100%; }
 body { 
@@ -13,7 +16,8 @@ body {
 }
 
 .content-page {
-    margin-top: 64px;
+    margin-top: var(--navbar-height);
+    min-height: calc(100vh - 2*var(--navbar-height));
 }
 
 h5, h4, h3, h2, h1, p, a {

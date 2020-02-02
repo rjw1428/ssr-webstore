@@ -18,11 +18,11 @@ export class CheckoutComponent implements OnInit {
   paymentRequest: any;
   paymentRequestButton: any
 
-  popupWidth='900px';
+  popupWidth = '900px';
   @ViewChild('payElement', { static: false }) payElement: ElementRef
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
-    this.popupWidth=(window.innerWidth<992)?"100vw":"900px"
+    this.popupWidth = (window.innerWidth < 992) ? "100vw" : "900px"
   }
   constructor(
     private dataService: DataService,
@@ -39,33 +39,31 @@ export class CheckoutComponent implements OnInit {
   }
 
   removeItem(index: number) {
-    if (confirm("Are you sure you want to remove this item from your cart?"))
-      this.cart.splice(index, 1)
+    if (confirm("Are you sure you want to remove this item from your cart?")) {
+      this.dataService.removeShoppingCartItem(index)
+      this.cart = this.dataService.getShoppingCart()
+    }
   }
 
   onCheckout() {
-    console.log(this.popupWidth)
     const dialogRef = this.dialog.open(PurchaseFormComponent, {
-      data: this.totalPrice,
+      data: this.cart,
       width: this.popupWidth
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result)
-        this.snackBar.open("Checkout Happened", "OK", {
-          duration: 2500,
+        this.cart=this.dataService.clearShoppingCart()
+        this.snackBar.open("Thank you for your purchase!", "OK", {
+          duration: 2500
         });
-      } else {
-        // this.paymentService.signOut()
       }
     });
   }
 
   onClearCart() {
     if (confirm("Are you sure you want to remove all items from your cart?")) {
-      this.cart = []
-      this.dataService.clearShoppingCart()
+      this.cart = this.dataService.clearShoppingCart()
     }
   }
 

@@ -7,7 +7,9 @@ import { switchMap } from 'rxjs/operators'
 import { auth, User } from 'firebase/app';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import * as firebase from 'firebase/app';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { Item } from './models/item';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,40 +17,47 @@ import * as firebase from 'firebase/app';
 export class PaymentsService {
   stripe = Stripe(environment.stripe.apiKey)
   elements: any
-  user: Observable<any>
   api = "https://us-central1-ssr-shopping.cloudfunctions.net/date"
   constructor(
+    private fns: AngularFireFunctions,
     private auth: AngularFireAuth,
     private afs: AngularFirestore,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
   ) {
     this.elements = this.stripe.elements()
-    this.user = this.auth.authState.pipe(
-      switchMap((user: User) => {
-        if (user) {
-          return this.afs.collection('alpineKnives').doc('customerInfo').collection('accounts').doc(user.uid).valueChanges()
-        }
-        return of(null)
-      })
-    )
   }
 
-  signIn() {
-    // this.signInWithGoogle()
-    this.signInAnonymous()
-  }
+  // stripePaymentHandler(user, token, cart, amount) {
+  //   console.log(user)
+  //     let createCard = this.fns.httpsCallable('createSource')
+  //     createCard({ stripeId: user.stripeCustomerId, token: token })
+  //     .toPromise()
+  //     .then((cardResp: any) => {
+  //       console.log(cardResp)
+  //       let createCharge = this.fns.httpsCallable('createCharge')
+  //       let charge = createCharge({
+  //         customer: user.stripeCustomerId,
+  //         amount: amount * 100,
+  //       })
+  //       return charge.toPromise()
+  //       .then(resp => {
+  //         this.afs.collection('alpineKnives').doc('orders').collection('orders').add({
+  //           account: user.uid,
+  //           amount: amount,
+  //         })
+  //         return resp.data.status
+  //       })
+  //     })
+  // }
 
-  async stripeTokenHandler(customerId, token, amount): Promise<any> {
-    let createCard = firebase.functions().httpsCallable('createSource')
-    return createCard({ stripeId: customerId, token: token })
-    .then((cardResp: any) => {
-      console.log(cardResp)
-      let createCharge = firebase.functions().httpsCallable('createCharge')
-      return createCharge({ 
-        customer: customerId,
-        amount: amount*100,
-      })
+  saveOrder(userId: string, cart: Item[], amount: number) {
+    this.afs.collection('alpineKnives').doc("orders").collection("orders").add({
+      user: userId,
+      amount: amount,
+      items: cart.map(item=>item.id),
+      status: "New",
+      dateCreated: new Date()
     })
   }
 
@@ -59,10 +68,12 @@ export class PaymentsService {
       })
   }
 
-  async signInAnonymous() {
-    await this.auth.auth.signInAnonymously()
+  async signInAnonymous(userData) {
+    return await this.auth.auth.signInAnonymously()
       .then(credential => {
-        this.updateUserData(credential.user)
+        userData['uid'] = credential.user.uid
+        this.updateUserData(userData)
+        return userData
       })
   }
 
@@ -71,15 +82,21 @@ export class PaymentsService {
     return this.router.navigate(['/checkout'])
   }
 
-
-
   updateUserData(user) {
-    console.log("UPDATE USER")
     const userRef: AngularFirestoreDocument<any> = this.afs.collection('alpineKnives').doc('customerInfo').collection('accounts').doc(user.uid)
     const data = {
       uid: user.uid,
       email: user.email,
-      displayName: user.displayName,
+      name: {
+        firstName: user.firstName,
+        lastName: user.lastName
+      },
+      address: {
+        street: user.street,
+        city: user.city,
+        state: user.state,
+        zip: user.zip
+      },
       lastLogin: new Date()
     }
     return userRef.set(data, { merge: true })

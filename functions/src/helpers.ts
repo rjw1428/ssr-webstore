@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-// import { db } from './config'
+import { db } from './config'
 import * as admin from 'firebase-admin';
 import { tmpdir } from 'os';
 import { join, dirname } from 'path'
@@ -7,25 +7,31 @@ import * as sharp from 'sharp';
 import * as fs from 'fs-extra';
 
 
-// export const test =  functions.firestore.document('alpineKnives/customerInfo').onWrite(change=>{
-//     console.log(change.after.id)
-// })
+export const test = functions.https.onCall(async (object: any) => {
+    return db.collection('alpineKnives')
+        .doc('customerInfo')
+        .collection('accounts')
+        .doc(object.uid)
+        .get()
+        .then(doc=>{
+            return doc.data()
+        })
+})
 
-
-export const resizeImage = functions.storage.object().onFinalize(async (event: any) => {
-    const image = event.data;
-    const contentType = image.contentType;
-    const filePath = image.name;
+export const resizeImage = functions.storage.object().onFinalize(async (object: any) => {
+    console.log(object)
+    const contentType = object.contentType;
+    const filePath = object.name;
     const fileName = filePath.split('/').pop();
-    const destBucket = admin.storage().bucket(image.bucket)
+    const destBucket = admin.storage().bucket(object.bucket)
     const bucketDir = dirname(filePath)
-    const workingDir =  join(tmpdir(), 'thumbs');
+    const workingDir = join(tmpdir(), 'thumbs');
     const tmpFilePath = join(workingDir, 'source.png')
 
     if (fileName.includes('thumb@')) {
         console.log("Already Thumbnail")
         return false;
-    } else if (!contentType.includes('image') ) {
+    } else if (!contentType.includes('image')) {
         console.log("Not an Image")
         return false;
     } else {
@@ -36,9 +42,9 @@ export const resizeImage = functions.storage.object().onFinalize(async (event: a
             destination: tmpFilePath
         })
 
-        const sizes = [100,200];
+        const sizes = [100, 200];
 
-        const uploadPromises = sizes.map(async size =>{
+        const uploadPromises = sizes.map(async size => {
             const thumbName = `thumb@${size}_${fileName}`
             const thumbPath = join(workingDir, thumbName);
 

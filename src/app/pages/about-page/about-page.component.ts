@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DataService } from 'src/app/data.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { map } from 'rxjs/internal/operators/map';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'about-page',
@@ -9,24 +11,18 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class AboutPageComponent implements OnInit {
   @Input() editable=false
-  header=""
-  topSection=[]
-  bottomSectionTitle=""
-  bottomSection=[]
-  videoUrl=""
+  pageContent: Observable<any>
   constructor(private dataService: DataService, private sanitizer: DomSanitizer) { 
   }
 
   ngOnInit() {
     window.scrollTo(0, 0)
-    this.dataService.getBackendData('about').valueChanges().subscribe(resp=>{
-      this.header=resp['header']
-      this.topSection=resp['topSection']
-      this.bottomSectionTitle=resp['bottomSectionTitle']
-      this.bottomSection=resp['bottomSection']
-      this.videoUrl=this.sanitizer.bypassSecurityTrustResourceUrl(resp['videoUrl']) as string
-      console.log(this.videoUrl)
-    })
+    this.pageContent= this.dataService.getBackendData('about').valueChanges().pipe(
+      map((resp: any)=>{
+        resp.videoUrl=this.sanitizer.bypassSecurityTrustResourceUrl(resp['videoUrl']) as string
+        return resp
+      })
+    )
   }
 
 }

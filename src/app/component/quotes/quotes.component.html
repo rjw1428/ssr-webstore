@@ -1,9 +1,9 @@
-<section-title [sectionTitle]="sectionTitle"></section-title>
+<section-title [sectionTitle]="(pageContent | async)?.sectionTitle"></section-title>
 
 <!-- LARGE SCREEN FORMAT -->
 <div class="container d-none d-lg-block">
   <div class="row">
-    <div class="col-4" *ngFor="let quote of quotes">
+    <div class="col-4" *ngFor="let quote of (pageContent | async)?.quotes">
       <quote [quote]="quote"></quote>
     </div>
   </div>
@@ -12,7 +12,7 @@
 <!-- SMALL SCREEN FORMAT -->
 <div class="container d-lg-none">
   <div class="row">
-    <div class="col-12  my-3`" *ngFor="let quote of quotes">
+    <div class="col-12  my-3`" *ngFor="let quote of (pageContent | async)?.quotes">
       <quote [quote]="quote"></quote>
     </div>
 

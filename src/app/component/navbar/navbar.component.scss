@@ -53,6 +53,11 @@ $navbarHeight: 64px;
     text-decoration: none;
 }
 
+a {
+    color: rgb(75,75,75);
+    text-decoration: none;
+}
+
 .menu {
     position: fixed;
     width: 250px;
@@ -71,7 +76,8 @@ $navbarHeight: 64px;
 }
 
 .bottom-item {
-    position: absolute; 
+    position: absolute;
+    width: 100%; 
     bottom: 0;
 }
 

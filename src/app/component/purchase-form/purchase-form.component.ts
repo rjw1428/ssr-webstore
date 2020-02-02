@@ -3,6 +3,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EnterItemPopupComponent } from '../item/enter-item-popup/enter-item-popup.component';
 import { PaymentsService } from 'src/app/payments.service';
 import { Observable } from 'rxjs/internal/Observable';
+import { DataService } from 'src/app/data.service';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
   selector: 'app-purchase-form',
@@ -11,47 +14,46 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class PurchaseFormComponent implements OnInit {
   elements: any;
+  checkoutForm: FormGroup
   cardForm: any
   user: Observable<any>
   elementStyles = {
     base: {
-      lineHeight: '1.5',
       fontSize: '18px'
-      //   color: '#32325D',
-      //   fontWeight: 500,
-      //   fontFamily: 'Source Code Pro, Consolas, Menlo, monospace',
-      //   fontSize: '16px',
-      //   fontSmoothing: 'antialiased',
-
-      //   '::placeholder': {
-      //     color: '#CFD7DF',
-      //   },
-      //   ':-webkit-autofill': {
-      //     color: '#e39f48',
-      //   },
-      // },
-      // invalid: {
-      //   color: '#E25950',
-
-      //   '::placeholder': {
-      //     color: '#FFCCA5',
-      //   },
     },
   };
+  totalPrice: number
   @ViewChild('card', { static: true }) card: ElementRef
   constructor(
+    private fns: AngularFireFunctions,
+    private dataService: DataService,
+    private formBuilder: FormBuilder,
     private paymentService: PaymentsService,
     public dialogRef: MatDialogRef<EnterItemPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) public amount
+    @Inject(MAT_DIALOG_DATA) public cart
   ) { }
 
   ngOnInit() {
-    this.paymentService.signIn()
+    this.checkoutForm = this.formBuilder.group({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      street: '',
+      city: '',
+      state: '',
+      zip: '',
+    })
     this.elements = this.paymentService.stripe.elements()
-    this.user = this.paymentService.user
-    if (this.user) {
-      this.user.subscribe(u => console.log(u.uid))
-    }
+    this.totalPrice = this.cart.length > 0 ? this.cart
+      .map(item => item.price)
+      .reduce((acc: number, curr) => acc += curr) : 0
+
+    // const x=this.fns.httpsCallable('test')
+    // let doc=x({uid:"k9IGk8IoIUYDvCHJX7Lg82ztGx73"})
+    // doc.toPromise().then(doc=>
+    //   console.log(doc)
+    // )
   }
 
   ngAfterViewInit() {
@@ -63,19 +65,41 @@ export class PurchaseFormComponent implements OnInit {
   }
 
   triggerPayment() {
-    if (this.user) {
-      this.user.subscribe(user => {
-        this.paymentService.stripe.createToken(this.cardForm).then(result => {
-          if (result.error) {
-            console.log(result.error.message)
-          } else {
-            this.paymentService.stripeTokenHandler(user.stripeCustomerId, result.token, this.amount)
-              .then(resp => {
-                console.log(resp.data.status)
+    // CREATE ANONYMOUS USER
+    this.paymentService.signInAnonymous(this.checkoutForm.value)
+      .then(user => {
+        console.log(user)
+        const createStripeCustomer = this.fns.httpsCallable("addStripeCustomer")
+        createStripeCustomer(user).toPromise()
+          .then(stripeId => {
+            console.log(stripeId)
+            this.paymentService.stripe.createToken(this.cardForm)
+              .then(result => {
+                console.log(result.token)
+                let createCard = this.fns.httpsCallable('createSource')
+                createCard({ stripeId: stripeId, token: result.token }).toPromise()
+                  .then(cardResp => {
+                    console.log(cardResp)
+                    let createCharge = this.fns.httpsCallable('createCharge')
+                    createCharge({
+                      customer: stripeId,
+                      amount: this.totalPrice * 100,
+                    }).toPromise()
+                      .then(paymentReponse => {
+                        console.log(paymentReponse.status)
+                        if (paymentReponse.status == "succeeded") {
+                          this.paymentService.saveOrder(user.uid, this.cart, this.totalPrice)
+                          this.dialogRef.close(true)
+                        }
+                      })
+                      .catch(err => console.log("Unable to make the payment"))
+                  })
+                  .catch(err => console.log("Unable to save card"))
               })
-          }
-        })
+              .catch(err => console.log("Stripe token unable to be made"))
+          })
+          .catch(err => console.log("Unable to create stripe Id"))
       })
-    }
+      .catch(err => console.log("Unable to create user"))
   }
 }

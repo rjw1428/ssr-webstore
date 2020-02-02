@@ -11,14 +11,15 @@ import { DataService } from 'src/app/data.service';
 export class EnterItemPopupComponent implements OnInit {
   screenHeight: number
   screenWidth: number
-
+  item: Item
   constructor(
     private dataService: DataService,
     public dialogRef: MatDialogRef<EnterItemPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) public item: Item
+    @Inject(MAT_DIALOG_DATA) public data: {item: Item, showCartButton: Boolean}
     ) { }
 
   ngOnInit() {
+    this.item=this.data.item
   }
 
   addToCart() {

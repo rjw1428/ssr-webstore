@@ -4,6 +4,7 @@ import { Item } from 'src/app/models/item';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SortOption } from 'src/app/models/sort-option';
 import { Option } from 'src/app/models/option';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'shop',
@@ -27,16 +28,18 @@ export class ShopComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dataService.getInventory('knives').valueChanges()
+      .subscribe((items: Item[]) => {
+        this.items = items
+      })
+
     this.dataService.getBackendData('shop').valueChanges().subscribe(resp => {
       this.sorts = resp['sort'] as SortOption[]
       this.selectedSort = this.sorts[0]
       this.filters = resp['filter']
-      this.items = resp['inventory']
-        .filter((item: Item) => item.active)
-        .sort((a, b) => this.sortItems(a, b, this.sorts[0]))
-      this.filteredItems = this.items
+      this.filteredItems = this.items.sort((a: Item, b: Item) => this.sortItems(a, b, this.sorts[0]))
       this.filtersForm = this.initializeFilterFormGroup(this.filters)
-      
+
       //FILTER ON VALUE CHANGES
       this.filtersForm.valueChanges.subscribe(vals => {
         // GET SELECTED FILTES
@@ -49,7 +52,7 @@ export class ShopComponent implements OnInit {
         })
         if (this.selectedFilters.length > 0)
           this.filteredItems = this.items.filter(item => {
-            return this.selectedFilters.map(filter=>filter.options==item.tags[filter.id]).reduce((acc, cur) => cur && cur == acc)
+            return this.selectedFilters.map(filter => filter.options == item.tags[filter.id]).reduce((acc, cur) => cur && cur == acc)
           })
         else this.filteredItems = this.items
       })
@@ -61,7 +64,7 @@ export class ShopComponent implements OnInit {
     this.filtersForm.get(filterId).setValue('')
   }
 
-  clearChip(filter: {id: string, label: string, options: string}) {
+  clearChip(filter: { id: string, label: string, options: string }) {
     this.clearFilterValue(filter.id)
   }
 

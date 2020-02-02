@@ -11,13 +11,16 @@ import { map } from 'rxjs/internal/operators/map';
 })
 export class MostPopularComponent implements OnInit {
   sectionProperties: Observable<any>
+  topInventory: Observable<Item[]>
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
-    this.sectionProperties = this.dataService.getBackendData('shop').valueChanges().pipe(
-    map((resp: {featuredListTitle: string, inventory: Item[]}) => {
-      resp.inventory=resp.inventory.filter((item: Item)=>item.isFeatured)
-      return resp
-    }))
+    this.sectionProperties = this.dataService.getBackendData('shop').valueChanges()
+    this.topInventory = this.dataService.getInventory('knives').valueChanges()
+    .pipe(
+      map(resp=>{
+        return resp.filter((item: Item)=>item.isFeatured && item.active) as Item[]
+      })
+    )
   }
 }

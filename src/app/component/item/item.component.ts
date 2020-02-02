@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ItemComponent implements OnInit {
   @Input() item: Item
+  @Input() showCart: Boolean=true
   popupWidth = '900px';
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
@@ -27,7 +28,7 @@ export class ItemComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(EnterItemPopupComponent, {
       width: this.popupWidth,
-      data: this.item
+      data: {item: this.item, showCartButton: this.showCart}
     });
 
     dialogRef.afterClosed().subscribe(result => {

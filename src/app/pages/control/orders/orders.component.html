@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12  p-3">
+      <h4>Orders</h4>
+    </div>
+  </div>
+  <div *ngFor="let order of (orders | async); let i=index">
+    <mat-card class="my-3 mat-elevation-z8">
+      <div class="row">
+        <div class="col-12 d-flex justify-content-around mb-3">
+          <div><strong>Date Created: </strong>{{order.dateCreated | date : 'short'}}</div>
+          <div><strong>Total: </strong>{{order.amount | currency}}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <p><strong>{{order.user.name.firstName}} {{order.user.name.lastName}}</strong></p>
+          <p>{{order.user.email}}</p>
+          <p><small>{{order.user.address.street}}</small></p>
+          <p><small>{{order.user.address.city}}, {{order.user.address.state}} {{order.user.address.zip}}</small></p>
+        </div>
+        <div class="col-8">
+          <div class="row my-2" *ngFor="let item of order.items">
+            <div class="col-6">
+              <div style="width: 150px; height: 150px;">
+                <item [item]="item" [showCart]="false"></item>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="row">
+                <div class="col-12">
+                  <mat-form-field style="width: 100%">
+                    <input matInput placeholder="Notes">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                  <button mat-raised-button style="width: 50px">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-around">
+        <button mat-raised-button color="warn">Cancel</button>
+        <button mat-raised-button color="accent">Confirm</button>
+        <button mat-raised-button color="primary">Shipped</button>
+      </div>
+    </mat-card>
+  </div>

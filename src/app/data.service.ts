@@ -5,6 +5,25 @@ import 'firebase/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Item } from './models/item';
 import { Upload } from './models/upload';
+import { combineLatest } from 'rxjs/internal/observable/combineLatest';
+import { switchMap, map } from 'rxjs/operators';
+import { defer, Observable, of, merge } from 'rxjs';
+
+// export const orderBuilder = (
+//   afs: AngularFirestore
+// ) => {
+//   return source => {
+//     defer(() => {
+//       let rawOder: Observable<any>
+//       return source.pipe(
+//         switchMap(order=>{
+//           rawOder=order
+//         })
+//       )
+//     }
+//   }
+// }
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +34,7 @@ export class DataService {
     id: "alpineKnives"
   }
   igLink = "https://www.instagram.com/alpine_custom_knives/"
-  shoppingCart: Item[]=[]
+  shoppingCart: Item[] = []
   constructor(
     private afs: AngularFirestore,
     private snackBar: MatSnackBar
@@ -25,30 +44,59 @@ export class DataService {
     return this.afs.collection(this.company.id).doc(doc)
   }
 
+  getOrders() {
+    let orders = this.afs.collection(this.company.id).doc('orders').collection("orders", ref=>ref.orderBy("dateCreated", "desc")).valueChanges()
+    let users = this.afs.collection(this.company.id).doc("customerInfo").collection('accounts').valueChanges()
+    let inventory = this.afs.collection(this.company.id).doc("inventory").collection('knives').valueChanges()
+    return combineLatest(orders, users, inventory).pipe(
+      map(([orders, users, inventory]) => {
+        users as []
+        inventory as []
+        orders = orders.map(order => {
+          order['user'] = users.find(user => user.uid == order.user)
+          order['items'] = order['items'].map(item => {
+            return inventory.find(inventoryItem => inventoryItem.id == item)
+          })
+          order['dateCreated'] = new Date(order.dateCreated.seconds * 1000)
+          return order
+        })
+        console.log(orders)
+        return orders
+      }))
+  }
+
+  getInventory(itemType) {
+    return this.afs.collection(this.company.id).doc('inventory')
+      .collection(itemType, ref => ref.where("active", "==", true))
+  }
+
   addToShoppingCart(item: Item) {
     this.shoppingCart.push(item)
-    localStorage['shoppingCart']=JSON.stringify(this.shoppingCart)
+    localStorage['shoppingCart'] = JSON.stringify(this.shoppingCart)
+  }
+
+  removeShoppingCartItem(index: number) {
+    this.shoppingCart.splice(index, 1)
+    localStorage['shoppingCart'] = JSON.stringify(this.shoppingCart)
   }
 
   clearShoppingCart() {
-    localStorage['shoppingCart']=JSON.stringify([])
+    localStorage['shoppingCart'] = JSON.stringify([])
+    return []
   }
 
   getShoppingCart() {
-    if(localStorage['shoppingCart'])
-      this.shoppingCart=JSON.parse(localStorage['shoppingCart'])
+    if (localStorage['shoppingCart'])
+      this.shoppingCart = JSON.parse(localStorage['shoppingCart'])
     return this.shoppingCart
   }
 
-  uploadItemImage(upload: Upload, items: Item[], index: number) {
-    this.pushUpload(upload, items, index, "shop")
+  uploadItemImage(upload: Upload, item: Item) {
+    this.pushUpload(upload, item)
   }
 
-  uploadTempItemImage(upload: Upload, item: Item) {
-    this.pushUpload(upload, [item], 0, "temp")
-  }
-
-  pushUpload(upload: Upload, items: Item[], itemIndex: number, dataLocation: string) {
+  pushUpload(upload: Upload, item: Item) {
+    console.log(item)
     let storageRef = firebase.storage().ref();
     let uploadTask = storageRef.child(`inventory/${upload.file.name}`).put(upload.file);
 
@@ -64,31 +112,53 @@ export class DataService {
         console.log("UPLOAD COMPLETE")
         firebase.storage().ref(uploadTask.snapshot.ref.fullPath)
           .getDownloadURL().then(url => {
+            //Remove temp loading image
+            item.image.splice(item.image.findIndex(img => !img.name), 1)
+
+            //Save newly uploaded image
             upload.url = url
             upload.name = upload.file.name
             upload.rotation = 0
             delete upload.file
-            this.saveFileData(upload, items, itemIndex, dataLocation)
-            items[itemIndex].image.splice(items[itemIndex].image.findIndex(img => !img.name), 1)
+            this.saveFileData(upload, item)
           })
       }
     );
   }
 
-  saveFileData(upload: Upload, items: Item[], index: number, dataLocation: string) {
-    if (!items[index].image) {
-      items[index].image = []
+  saveFileData(upload: Upload, item: Item) {
+    if (!item.image) {
+      item.image = []
     }
-    items[index].image.push(Object.assign({}, upload))
+    item.image.push(Object.assign({}, upload))
 
-    let newItems=JSON.parse(JSON.stringify(items))
+    if (item.id)
+      this.updateInventory("knives", item)
+  }
 
-    this.saveToBackend(dataLocation, {
-      inventory: newItems.map(item => {
-        item.image = item.image.filter(img =>img.name)
-        return item
+  saveInventory(itemCategory: string, item: Item) {
+    this.afs.collection(this.company.id).doc('inventory').collection(itemCategory).add(item)
+      .then(resp => {
+        console.log(resp)
+        this.afs.collection(this.company.id).doc('inventory').collection(itemCategory).doc(resp.id).update({ id: resp.id })
+        this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
       })
-    })
+      .catch(err => {
+        console.log(err)
+        this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
+      })
+  }
+
+  updateInventory(itemCategory: string, item: Item) {
+    console.log(item)
+    this.afs.collection(this.company.id).doc('inventory').collection(itemCategory).doc(item.id).set(item)
+      .then(resp => {
+        this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
+      })
+      .catch(err => {
+        console.log(err)
+        this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
+      })
   }
 
   saveToBackend(loc, obj) {
