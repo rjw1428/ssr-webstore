@@ -9,8 +9,9 @@ $color3: rgb(96,144,72);
 }
 
 .item {
-    background-color: white;
     box-shadow: 5px 5px 15px rgb(50,50,50);
+    max-width: 200px;
+    max-height: 200px;
 }
 
 // .item:hover {

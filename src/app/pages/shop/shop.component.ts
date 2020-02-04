@@ -49,12 +49,26 @@ export class ShopComponent implements OnInit {
               return {
                 id: filterObj,
                 label: filterObj.substr(0, 1).toUpperCase() + filterObj.substr(1),
-                options: vals[filterObj].id
+                options_raw: vals[filterObj],
+                options: vals[filterObj].label
               }
             })
             if (this.selectedFilters.length > 0)
               this.filteredItems = this.items.filter(item => {
-                return this.selectedFilters.map(filter => filter.options == item.tags[filter.id]).reduce((acc, cur) => cur && cur == acc)
+                return this.selectedFilters.map(filter => {
+                  if (filter.id == "availability")
+                    return JSON.parse(filter['options_raw'].id) == !item.isSold
+                  if (filter.id == "price") {
+                    let range = filter['options_raw'].range
+                    if (range.hi && range.low)
+                      return item.price >= range.low && item.price < range.hi
+                    if (range.low)
+                      return item.price >= range.low
+                    if (range.hi)
+                      return item.price < range.hi
+                  }
+                  return filter['options_raw'].id == item.tags[filter.id]
+                }).reduce((acc, cur) => cur && cur == acc)
               })
             else this.filteredItems = this.items
           })
