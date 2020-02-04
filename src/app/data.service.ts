@@ -5,25 +5,8 @@ import 'firebase/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Item } from './models/item';
 import { Upload } from './models/upload';
-import { combineLatest } from 'rxjs/internal/observable/combineLatest';
-import { switchMap, map } from 'rxjs/operators';
-import { defer, Observable, of, merge } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-
-// export const orderBuilder = (
-//   afs: AngularFirestore
-// ) => {
-//   return source => {
-//     defer(() => {
-//       let rawOder: Observable<any>
-//       return source.pipe(
-//         switchMap(order=>{
-//           rawOder=order
-//         })
-//       )
-//     }
-//   }
-// }
 
 
 @Injectable({
@@ -39,8 +22,16 @@ export class DataService {
     this.companyId = environment.company.id
   }
 
+  getThumbnail(imageName: string) {
+    let part=imageName.split(".")
+    let name = part[0]
+    let ending = part[1]
+    let path = "/inventory/thumbnails/"+name+"_200x200."+ending
+    return firebase.storage().ref(path).getDownloadURL()
+  }
+
   getCompanyInfo() {
-   return this.afs.collection(environment.company.id).doc("companyInfo").valueChanges().pipe(
+    return this.afs.collection(environment.company.id).doc("companyInfo").valueChanges().pipe(
       map((companyInfo: {}) => {
         return { ...companyInfo, id: environment.company.id }
       }))
@@ -51,24 +42,14 @@ export class DataService {
   }
 
   getOrders() {
-    let orders = this.afs.collection(this.companyId).doc('orders').collection("orders", ref => ref.orderBy("dateCreated", "desc")).valueChanges()
-    let users = this.afs.collection(this.companyId).doc("customerInfo").collection('accounts').valueChanges()
-    let inventory = this.afs.collection(this.companyId).doc("inventory").collection('knives').valueChanges()
-    return combineLatest(orders, users, inventory).pipe(
-      map(([orders, users, inventory]) => {
-        console.log(inventory)
-        users as []
-        inventory as []
-        orders = orders.map(order => {
-          order['user'] = users.find(user => user.uid == order.user)
-          order['items'] = order['items'].map(item => {
-            return inventory.find(inventoryItem => inventoryItem.id == item)
-          })
-          order['dateCreated'] = new Date(order.dateCreated.seconds * 1000)
-          return order
-        })
-        return orders
-      }))
+    return this.afs.collection(this.companyId).doc('orders')
+    .collection("orders", ref => ref.where("active","==",true).orderBy("dateCreated", "desc"))
+    .valueChanges()
+  }
+
+  deleteOrder(orderId) {
+    return this.afs.collection('alpineKnives').doc("orders").collection("orders").doc(orderId)
+    .set({active: false}, {merge: true})
   }
 
   getInventory(itemType) {

@@ -6,6 +6,7 @@ import { AboutPageComponent } from './pages/about-page/about-page.component';
 import { ShopComponent } from './pages/shop/shop.component';
 import { ControlComponent } from './pages/control/control.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { SuccessPurchaseComponent } from './component/success-purchase/success-purchase.component';
 
 const routes: Routes = [
   { path:  'info/:page', component:  InfoPageComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path:  'shop', component:  ShopComponent},
   { path:  'about', component:  AboutPageComponent},
   { path:  'checkout', component:  CheckoutComponent},
+  { path: 'success', component: SuccessPurchaseComponent },
 
   { path: 'admin', component: ControlComponent},
   { path:  '', component:  HomeComponent}

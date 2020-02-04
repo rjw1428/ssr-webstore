@@ -28,36 +28,17 @@ export class PaymentsService {
     this.elements = this.stripe.elements()
   }
 
-  // stripePaymentHandler(user, token, cart, amount) {
-  //   console.log(user)
-  //     let createCard = this.fns.httpsCallable('createSource')
-  //     createCard({ stripeId: user.stripeCustomerId, token: token })
-  //     .toPromise()
-  //     .then((cardResp: any) => {
-  //       console.log(cardResp)
-  //       let createCharge = this.fns.httpsCallable('createCharge')
-  //       let charge = createCharge({
-  //         customer: user.stripeCustomerId,
-  //         amount: amount * 100,
-  //       })
-  //       return charge.toPromise()
-  //       .then(resp => {
-  //         this.afs.collection('alpineKnives').doc('orders').collection('orders').add({
-  //           account: user.uid,
-  //           amount: amount,
-  //         })
-  //         return resp.data.status
-  //       })
-  //     })
-  // }
-
-  saveOrder(userId: string, cart: Item[], amount: number) {
+  saveOrder(user: any, cart: Item[], amount: number) {
     this.afs.collection('alpineKnives').doc("orders").collection("orders").add({
-      user: userId,
+      user: user,
       amount: amount,
-      items: cart.map(item=>item.id),
+      items: cart,
       status: "New",
-      dateCreated: new Date()
+      dateCreated: new Date(),
+      active: true,
+    }).then(ref => {
+      this.afs.collection('alpineKnives').doc("orders").collection("orders").doc(ref.id)
+        .set({ id: ref.id }, { merge: true })
     })
   }
 

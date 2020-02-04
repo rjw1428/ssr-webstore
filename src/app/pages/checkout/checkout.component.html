@@ -41,23 +41,13 @@
           <button mat-raised-button color="accent" (click)="onClearCart()">Clear Cart</button>
           <button mat-raised-button color="primary" (click)="onCheckout()">Proceed to Checkout</button>
         </div>
-        <div class="col-2">
+        <div class="col-2 d-flex justify-content-end align-items-center">
           <p><strong>Subtotal:</strong> &nbsp; {{totalPrice | currency}}</p>
         </div>
       </div>
     </mat-card>
-    <mat-card class="my-3 mat-elevation-z8" *ngIf="(user | async) as u">
-      <div class="row">
-        <div class="col-12">
-          <p>{{u.stripeCustomerId}}</p>
-          <p>{{u.uid}}</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 d-flex justify-content-center align-items-center">
-          <button mat-raised-button color="warn" (click)="onSignOut()">Sign Out</button>
-        </div>
-      </div>
+    <mat-card class="my-3 mat-elevation-z8" *ngIf="cart.length && checkoutMode">
+      <purchase-form [cart]="cart"></purchase-form>
     </mat-card>
   </div>
 </div>

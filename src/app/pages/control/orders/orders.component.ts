@@ -14,6 +14,12 @@ export class OrdersComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.orders=this.dataService.getOrders()
+    this.orders = this.dataService.getOrders()
+  }
+
+  onCancelOrder(order) {
+    if (confirm("Are you sure you want to cancel this order?")) {
+      this.dataService.deleteOrder(order.id)
+    }
   }
 }

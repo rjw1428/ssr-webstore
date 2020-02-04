@@ -13,7 +13,6 @@ export class TransitionGroupItemDirective {
   constructor(elRef: ElementRef) { 
     this.el = elRef.nativeElement;
   }
-
 }
 
 @Component({

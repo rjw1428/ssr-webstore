@@ -30,8 +30,11 @@ export class ShopComponent implements OnInit {
   ngOnInit() {
     this.dataService.getInventory('knives').valueChanges()
       .subscribe((items: Item[]) => {
-        this.items = items
-
+        this.items = items.map(item => {
+          this.dataService.getThumbnail(item.image[0].name)
+            .then(url => item['thumbnail'] = url)
+          return item
+        })
         this.dataService.getBackendData('shop').valueChanges().subscribe(resp => {
           this.sorts = resp['sort'] as SortOption[]
           this.selectedSort = this.sorts[0]

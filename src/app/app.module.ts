@@ -53,6 +53,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { PurchaseFormComponent } from './component/purchase-form/purchase-form.component';
 import { OrdersComponent } from './pages/control/orders/orders.component';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { ConfirmPurchaseFormComponent } from './component/confirm-purchase-form/confirm-purchase-form.component';
+import { SuccessPurchaseComponent } from './component/success-purchase/success-purchase.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +84,8 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
     AddItemPopupComponent,
     PurchaseFormComponent,
     OrdersComponent,
+    ConfirmPurchaseFormComponent,
+    SuccessPurchaseComponent,
   ],
   imports: [
     BrowserModule,
@@ -117,7 +121,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
     EnterItemPopupComponent,
     AddQuoteComponent,
     AddItemPopupComponent,
-    PurchaseFormComponent
+    ConfirmPurchaseFormComponent
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

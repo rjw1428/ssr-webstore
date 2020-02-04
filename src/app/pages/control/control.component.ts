@@ -40,11 +40,11 @@ export class ControlComponent implements OnInit {
 
   ngOnInit() {
     this.dataService.getBackendData('quotes').valueChanges()
-    .subscribe(resp => {
-      this.quotesForm = resp['quotes']
-        .filter((q: Quote) => q.active)
-        .map(q => this.formBuilder.group(q))
-    })
+      .subscribe(resp => {
+        this.quotesForm = resp['quotes']
+          .filter((q: Quote) => q.active)
+          .map(q => this.formBuilder.group(q))
+      })
 
     this.dataService.getBackendData('about').valueChanges().subscribe(resp => {
       this.aboutFormTitle = this.formBuilder.group({ header: resp['header'] })
@@ -64,6 +64,10 @@ export class ControlComponent implements OnInit {
           item.tags = this.initializeFormGroup(item.tags)
           item.dateAdded = new Date(item.dateAdded.seconds * 1000)
           item.price = [(+item.price), [Validators.required, Validators.pattern(/^\d*\.?\d*$/)]]
+          item.image.map(img => {
+            this.dataService.getThumbnail(img.name)
+              .then(url => img['thumbnail'] = url)
+          })
           return this.formBuilder.group(item)
         })
     })
@@ -76,7 +80,7 @@ export class ControlComponent implements OnInit {
   //--------------------INVENTORY STUFF---------------
   onSaveInventory(itemForm: FormGroup, index: number) {
     if (itemForm.valid) {
-      let fullItem=itemForm.value as Item
+      let fullItem = itemForm.value as Item
       fullItem.image = this.inventory[index].image ? [...this.inventory[index].image] : []
       this.onUpdateItem(fullItem)
     }

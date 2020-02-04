@@ -17,10 +17,19 @@ export class MostPopularComponent implements OnInit {
   ngOnInit() {
     this.sectionProperties = this.dataService.getBackendData('shop').valueChanges()
     this.topInventory = this.dataService.getInventory('knives').valueChanges()
-    .pipe(
-      map(resp=>{
-        return resp.filter((item: Item)=>item.isFeatured && item.active) as Item[]
-      })
-    )
+      .pipe(
+        map(resp => {
+          return resp.filter((item: Item) => item.isFeatured && item.active) as Item[]
+        }),
+        map((items: Item[]) => {
+          return items = items.map(item => {
+            item.image.map(img => {
+              this.dataService.getThumbnail(img.name)
+                .then(url => item['thumbnail'] = url)
+            })
+            return item
+          })
+        })
+      )
   }
 }

@@ -13,7 +13,7 @@ import { PurchaseFormComponent } from 'src/app/component/purchase-form/purchase-
 export class CheckoutComponent implements OnInit {
   cart: Item[] = []
   totalPrice: number
-
+  checkoutMode: boolean = false
   elements: any;
   paymentRequest: any;
   paymentRequestButton: any
@@ -32,7 +32,11 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cart = this.dataService.getShoppingCart()
+    this.cart = this.dataService.getShoppingCart().map(item => {
+      this.dataService.getThumbnail(item.image[0].name)
+        .then(url => item['thumbnail'] = url)
+      return item
+    })
     this.totalPrice = this.cart.length > 0 ? this.cart
       .map(item => item.price)
       .reduce((acc: number, curr) => acc += curr) : 0
@@ -46,19 +50,20 @@ export class CheckoutComponent implements OnInit {
   }
 
   onCheckout() {
-    const dialogRef = this.dialog.open(PurchaseFormComponent, {
-      data: this.cart,
-      width: this.popupWidth
-    });
+    this.checkoutMode = true
+    // const dialogRef = this.dialog.open(PurchaseFormComponent, {
+    //   data: this.cart,
+    //   width: this.popupWidth
+    // });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.cart=this.dataService.clearShoppingCart()
-        this.snackBar.open("Thank you for your purchase!", "OK", {
-          duration: 2500
-        });
-      }
-    });
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result) {
+    //     this.cart = this.dataService.clearShoppingCart()
+    //     this.snackBar.open("Thank you for your purchase!", "OK", {
+    //       duration: 2500
+    //     });
+    //   }
+    // });
   }
 
   onClearCart() {

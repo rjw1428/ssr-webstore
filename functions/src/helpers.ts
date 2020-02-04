@@ -13,7 +13,7 @@ export const test = functions.https.onCall(async (object: any) => {
         .collection('accounts')
         .doc(object.uid)
         .get()
-        .then(doc=>{
+        .then(doc => {
             return doc.data()
         })
 })

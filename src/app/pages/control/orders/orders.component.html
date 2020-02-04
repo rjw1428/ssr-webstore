@@ -8,16 +8,16 @@
     <mat-card class="my-3 mat-elevation-z8">
       <div class="row">
         <div class="col-12 d-flex justify-content-around mb-3">
-          <div><strong>Date Created: </strong>{{order.dateCreated | date : 'short'}}</div>
+          <div><strong>Date Created: </strong>{{order.dateCreated.seconds*1000 | date : 'short'}}</div>
           <div><strong>Total: </strong>{{order.amount | currency}}</div>
         </div>
       </div>
       <div class="row">
         <div class="col-4">
-          <p><strong>{{order.user.name.firstName}} {{order.user.name.lastName}}</strong></p>
+          <p><strong>{{order.user.firstName}} {{order.user.lastName}}</strong></p>
           <p>{{order.user.email}}</p>
-          <p><small>{{order.user.address.street}}</small></p>
-          <p><small>{{order.user.address.city}}, {{order.user.address.state}} {{order.user.address.zip}}</small></p>
+          <p><small>{{order.user.street}}</small></p>
+          <p><small>{{order.user.city}}, {{order.user.state}} {{order.user.zip}}</small></p>
         </div>
         <div class="col-8">
           <div class="row my-2" *ngFor="let item of order.items">
@@ -44,7 +44,7 @@
         </div>
       </div>
       <div class="row d-flex justify-content-around">
-        <button mat-raised-button color="warn">Cancel</button>
+        <button mat-raised-button color="warn" (click)="onCancelOrder(order)">Cancel</button>
         <button mat-raised-button color="accent">Confirm</button>
         <button mat-raised-button color="primary">Shipped</button>
       </div>

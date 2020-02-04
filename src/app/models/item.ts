@@ -7,6 +7,8 @@ export class Item {
     description: string[];
     price: number;
     image: Upload[];
+    icon?: Upload[];
+    thumbnail?: Upload[];
     isSold: boolean;
     isFeatured: boolean;
     dateAdded: any;

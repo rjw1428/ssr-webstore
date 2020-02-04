@@ -151,10 +151,16 @@
             <div *ngIf="inventory[i].image" cdkDropList (cdkDropListDropped)="dropPicture($event)">
               <div class="pic-icon m-2" *ngFor="let pic of inventory[i].image; let n=index"
                 (mousedown)="setSelectedImage(i, n)" cdkDrag cdkDragBoundary=".picture-containter" [cdkDragData]="i">
+
+                <!-- Drag & Drop Place holder -->
                 <div class="picture-placeholder" *cdkDragPlaceholder></div>
+
+                <!-- Image -->
                 <img class="img-thumbnail" *ngIf="pic.url"
                   [ngClass]="{'item-img-selected': i==selectedPicture.itemNum && n==selectedPicture.picNum}"
                   [src]="pic.url" [ngStyle]="{'transform': 'rotate('+pic.rotation+'deg)'}">
+
+                <!-- Loading Image -->
                 <div *ngIf="!pic.url" class="picture-placeholder d-flex align-items-end">
                   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                 </div>

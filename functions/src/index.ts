@@ -8,6 +8,6 @@ exports.addStripeCustomer = customers.createStripeCustomer
 exports.createCharge = customers.createStripeCharge
 exports.createSource = customers.createStripeSource
 
-exports.resizeImage = helpers.resizeImage
+// exports.resizeImage = helpers.resizeImage
 
 exports.test = helpers.test

@@ -1,36 +1,43 @@
-import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EnterItemPopupComponent } from '../item/enter-item-popup/enter-item-popup.component';
+import { Component, OnInit, Inject, ViewChild, ElementRef, Input } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { PaymentsService } from 'src/app/payments.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { DataService } from 'src/app/data.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { Item } from 'src/app/models/item';
+import { ConfirmPurchaseFormComponent } from '../confirm-purchase-form/confirm-purchase-form.component';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-purchase-form',
+  selector: 'purchase-form',
   templateUrl: './purchase-form.component.html',
   styleUrls: ['./purchase-form.component.scss']
 })
 export class PurchaseFormComponent implements OnInit {
+  @Input() cart: Item[]
   elements: any;
   checkoutForm: FormGroup
   cardForm: any
   user: Observable<any>
   elementStyles = {
     base: {
-      fontSize: '18px'
+      fontSize: '14px'
     },
   };
   totalPrice: number
+  popupWidth: string = "900px"
   @ViewChild('card', { static: true }) card: ElementRef
+  onResize(event?) {
+    this.popupWidth = (window.innerWidth < 992) ? "100vw" : "900px"
+  }
   constructor(
+    public dialog: MatDialog,
     private fns: AngularFireFunctions,
     private dataService: DataService,
+    private router: Router,
     private formBuilder: FormBuilder,
     private paymentService: PaymentsService,
-    public dialogRef: MatDialogRef<EnterItemPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) public cart
   ) { }
 
   ngOnInit() {
@@ -64,41 +71,29 @@ export class PurchaseFormComponent implements OnInit {
     this.cardForm.mount(this.card.nativeElement)
   }
 
+  openDialog(user): void {
+    const dialogRef = this.dialog.open(ConfirmPurchaseFormComponent, {
+      width: this.popupWidth,
+      data: {cart: this.cart, user: user, card: this.cardForm, total: this.totalPrice}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log("DONE")
+        this.router.navigate(['success'])
+        // this.snackBar.open("Item was added to your cart", "OK", {
+        //   duration: 2500,
+        // });
+      }
+    });
+  }
+
   triggerPayment() {
     // CREATE ANONYMOUS USER
     this.paymentService.signInAnonymous(this.checkoutForm.value)
       .then(user => {
         console.log(user)
-        const createStripeCustomer = this.fns.httpsCallable("addStripeCustomer")
-        createStripeCustomer(user).toPromise()
-          .then(stripeId => {
-            console.log(stripeId)
-            this.paymentService.stripe.createToken(this.cardForm)
-              .then(result => {
-                console.log(result.token)
-                let createCard = this.fns.httpsCallable('createSource')
-                createCard({ stripeId: stripeId, token: result.token }).toPromise()
-                  .then(cardResp => {
-                    console.log(cardResp)
-                    let createCharge = this.fns.httpsCallable('createCharge')
-                    createCharge({
-                      customer: stripeId,
-                      amount: this.totalPrice * 100,
-                    }).toPromise()
-                      .then(paymentReponse => {
-                        console.log(paymentReponse.status)
-                        if (paymentReponse.status == "succeeded") {
-                          this.paymentService.saveOrder(user.uid, this.cart, this.totalPrice)
-                          this.dialogRef.close(true)
-                        }
-                      })
-                      .catch(err => console.log("Unable to make the payment"))
-                  })
-                  .catch(err => console.log("Unable to save card"))
-              })
-              .catch(err => console.log("Stripe token unable to be made"))
-          })
-          .catch(err => console.log("Unable to create stripe Id"))
+        this.openDialog(user)
       })
       .catch(err => console.log("Unable to create user"))
   }
