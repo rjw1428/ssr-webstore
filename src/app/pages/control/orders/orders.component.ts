@@ -22,4 +22,20 @@ export class OrdersComponent implements OnInit {
       this.dataService.deleteOrder(order.id)
     }
   }
+
+  onSaveNote(order) {
+    this.dataService.updateOrder(order, {notes: order.notes})
+  }
+
+  onConfirm(order) {
+    this.dataService.updateOrder(order, {status: "Confirmed"})
+  }
+
+  onShipped(order) {
+    this.dataService.updateOrder(order, {status: "Shipped"})
+  }
+
+  onFinish(order) {
+    this.dataService.updateOrder(order, {status: "Finished", active: false})
+  }
 }

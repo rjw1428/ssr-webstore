@@ -55,6 +55,9 @@ import { OrdersComponent } from './pages/control/orders/orders.component';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { ConfirmPurchaseFormComponent } from './component/confirm-purchase-form/confirm-purchase-form.component';
 import { SuccessPurchaseComponent } from './component/success-purchase/success-purchase.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { ReversePipe } from './pipes/reverse.pipe';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -86,6 +89,7 @@ import { SuccessPurchaseComponent } from './component/success-purchase/success-p
     OrdersComponent,
     ConfirmPurchaseFormComponent,
     SuccessPurchaseComponent,
+    ReversePipe,
   ],
   imports: [
     BrowserModule,
@@ -111,11 +115,13 @@ import { SuccessPurchaseComponent } from './component/success-purchase/success-p
     MatCardModule,
     DragDropModule,
     MatListModule,
+    MatBadgeModule,
     MatProgressBarModule,
     AngularFireAuthModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireFunctionsModule,
+    MatProgressSpinnerModule
   ],
   entryComponents: [
     EnterItemPopupComponent,

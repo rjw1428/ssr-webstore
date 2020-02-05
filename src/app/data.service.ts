@@ -7,6 +7,7 @@ import { Item } from './models/item';
 import { Upload } from './models/upload';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { of, Subject } from 'rxjs';
 
 
 @Injectable({
@@ -15,6 +16,8 @@ import { environment } from 'src/environments/environment';
 export class DataService {
   companyId: string
   shoppingCart: Item[] = []
+  onChangeCart = new Subject<number>()
+  orderId: string;
   constructor(
     private afs: AngularFirestore,
     private snackBar: MatSnackBar
@@ -47,6 +50,16 @@ export class DataService {
     .valueChanges()
   }
 
+  updateOrder(order, updateObj) {
+    return this.afs.collection(this.companyId).doc('orders').collection("orders").doc(order.id).set(updateObj, {merge: true})
+    .then(rep=>{
+      this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
+    })
+    .catch(err=>{
+      this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
+    })
+  }
+
   deleteOrder(orderId) {
     return this.afs.collection('alpineKnives').doc("orders").collection("orders").doc(orderId)
     .set({active: false}, {merge: true})
@@ -60,22 +73,31 @@ export class DataService {
   addToShoppingCart(item: Item) {
     this.shoppingCart.push(item)
     localStorage['shoppingCart'] = JSON.stringify(this.shoppingCart)
+    this.onChangeCart.next(this.shoppingCart.length)
   }
 
   removeShoppingCartItem(index: number) {
     this.shoppingCart.splice(index, 1)
     localStorage['shoppingCart'] = JSON.stringify(this.shoppingCart)
+    this.onChangeCart.next(this.shoppingCart.length)
   }
 
   clearShoppingCart() {
-    localStorage['shoppingCart'] = JSON.stringify([])
+    this.shoppingCart = []
+    localStorage['shoppingCart'] = JSON.stringify(this.shoppingCart)
+    this.onChangeCart.next(this.shoppingCart.length)
     return []
   }
 
   getShoppingCart() {
     if (localStorage['shoppingCart'])
       this.shoppingCart = JSON.parse(localStorage['shoppingCart'])
+    this.onChangeCart.next(this.shoppingCart.length)
     return this.shoppingCart
+  }
+
+  setOrderId(id: string) {
+    this.orderId=id
   }
 
   uploadItemImage(upload: Upload, item: Item) {

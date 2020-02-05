@@ -1,3 +1,48 @@
 <div class="content-page">
-  <h1>Payment Success</h1>
+  <div class="container">
+    <h1>Payment Success</h1>
+    <mat-card class="my-3 mat-elevation-z8">
+      <div *ngFor="let item of items; let i=index">
+        <div class="row my-3">
+          <div class="col-lg-2 col-4">
+            <item [item]="item" [showCart]="false"></item>
+          </div>
+          <div class="col-lg-8 col-6 d-flex flex-column align-items-stretch">
+            <div class="row">
+              <div class="col-12">
+                <p *ngFor="let desc of item.description">{{desc}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-2 d-flex justify-content-end align-items-center">
+            <p><strong>Price:</strong> &nbsp; {{item.price | currency}}</p>
+          </div>
+        </div>
+        <hr>
+      </div>
+      <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+          <p><strong>Total: </strong>{{total | currency}}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+          <p><strong>Order ID: </strong>{{orderId}}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+          <p>You will receive a confirmation email to confirm your order. Please save your order id for reference. Thank
+            you for ordering from {{(companyInfo | async)?.name}}</p>
+        </div>
+      </div>
+    </mat-card>
+    <mat-card class="my-3 mat-elevation-z8">
+      <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+          <button mat-raised-button color="primary" [routerLink]="['']" >Home</button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
 </div>

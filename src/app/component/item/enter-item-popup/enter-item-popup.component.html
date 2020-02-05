@@ -1,11 +1,11 @@
-<!-- LARGE SCREEN FORMAT -->
 <div class="container">
   <div class="row">
-    <div class="col-lg-8 col-12" *ngIf="item.image">
+    <div class="col-md-8 col-12" *ngIf="item.image">
       <div id="slide-show" class="carousel slide" data-ride="carousel" *ngIf="item.image.length>1">
         <!-- The slideshow -->
         <div class="carousel-inner">
-          <div class="carousel-item text-center" *ngFor="let img of item.image; let i=index" [ngClass]="{'active':i==0}">
+          <div class="carousel-item text-center" *ngFor="let img of item.image; let i=index"
+            [ngClass]="{'active':i==0}">
             <img class="item-image" [src]="img.url" [ngStyle]="{'transform': 'rotate('+img.rotation+'deg)'}">
           </div>
         </div>
@@ -19,28 +19,25 @@
         </a>
       </div>
     </div>
-    <img *ngIf="item.image.length==1" class="item-image" [src]="item.image[0].url" [ngStyle]="{'transform': 'rotate('+item.image[0].rotation+'deg)'}">
-    <div class="col-lg-4 col-12">
-      <ng-container *ngTemplateOutlet="description"></ng-container>
+    <img *ngIf="item.image.length==1" class="item-image" [src]="item.image[0].url"
+      [ngStyle]="{'transform': 'rotate('+item.image[0].rotation+'deg)'}">
+    <div class="col-md-4 col-12">
+      <div mat-dialog-content>
+        <h5>About This Knife:</h5>
+        <p *ngIf="item.name">{{item.name}}</p>
+        <p *ngFor="let desc of item.description">{{desc}}</p>
+        <p><strong>Price:</strong> &nbsp; {{item.price | currency}}</p>
+        <p *ngIf="item.isSold" class="sold-out text-center">SOLD OUT</p>
+      </div>
+      <div class="row" mat-dialog-actions>
+        <div class="col-12 d-flex justify-content-around">
+          <button mat-raised-button [mat-dialog-close]>Close</button>
+          <button mat-raised-button [mat-dialog-close]="true" *ngIf="data.showCartButton" [disabled]="item.isSold"
+            (click)="addToCart()">
+            <mat-icon>shopping_cart</mat-icon>Add to Cart
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
-<ng-template #description>
-  <h5>About This Knife:</h5>
-  <p *ngIf="item.name">{{item.name}}</p>
-  <p *ngFor="let desc of item.description">{{desc}}</p>
-  <p><strong>Price:</strong> &nbsp; {{item.price | currency}}</p>
-  <p *ngIf="item.isSold" class="sold-out text-center">SOLD OUT</p>
-  <div class="row">
-    <div class="col-12 d-flex justify-content-around">
-      <button mat-raised-button [mat-dialog-close]>Close</button>
-      <button mat-raised-button [mat-dialog-close]="true" 
-      *ngIf="data.showCartButton"
-      [disabled]="item.isSold" 
-      (click)="addToCart()">
-        <mat-icon>shopping_cart</mat-icon>Add to Cart
-      </button>
-    </div>
-  </div>
-</ng-template>

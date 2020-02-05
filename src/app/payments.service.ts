@@ -29,16 +29,18 @@ export class PaymentsService {
   }
 
   saveOrder(user: any, cart: Item[], amount: number) {
-    this.afs.collection('alpineKnives').doc("orders").collection("orders").add({
+    return this.afs.collection('alpineKnives').doc("orders").collection("orders").add({
       user: user,
       amount: amount,
       items: cart,
       status: "New",
       dateCreated: new Date(),
       active: true,
+      notes: ""
     }).then(ref => {
       this.afs.collection('alpineKnives').doc("orders").collection("orders").doc(ref.id)
         .set({ id: ref.id }, { merge: true })
+      return ref.id
     })
   }
 

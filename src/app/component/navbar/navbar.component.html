@@ -2,12 +2,13 @@
   <div class="container-fluid ">
     <div class="row">
       <div class="col-12">
+        <!-- LARGE SCREEN -->
         <div class="d-none d-lg-block">
           <div class="row d-flex align-items-center banner">
             <a routerLink="">
-              <div class="col-3 title">
+              <div class="col-3 title" style="margin-left: 30px;">
                 <img class="logo" src="../../assets/img/logo.svg">
-                <span>{{title | uppercase}}</span>
+                <span *ngIf="title">{{title | uppercase}}</span>
               </div>
             </a>
             <div class="col-2 text-center menu-item">
@@ -21,21 +22,24 @@
             </div>
             <div class="col-1 text-center menu-item">
               <a routerLink="checkout">
-                <mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);">shopping_cart
-                </mat-icon>
+                <mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);"
+                [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after">shopping_cart</mat-icon>
               </a>
             </div>
           </div>
         </div>
-        <div class="float-left d-lg-none h-100 d-flex align-items-center">
+        <!-- SMALL SCREEN -->
+        <div class="col-12 d-lg-none h-100 d-flex align-items-center justify-content-between">
           <mat-icon style="position: relative; top: -5px" (click)="drawer.toggle()">menu</mat-icon>
-        </div>
-        <a routerLink="">
           <div class="text-center d-lg-none title">
             <img class="logo" src="../../assets/img/logo.svg">
-            <span>{{title | uppercase}}</span>
+            <span *ngIf="title">{{title | uppercase}}</span>
           </div>
-        </a>
+          <a routerLink="checkout">
+            <mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);"
+            [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after" >shopping_cart</mat-icon>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -75,7 +79,8 @@
         <div class="row">
           <div class="col-12 sidenav-item">
             <p class="text-center">
-              <mat-icon style="position: relative; top: 8px; font-size: 30px; margin-right: 10px;">shopping_cart
+              <mat-icon style="position: relative; top: 8px; font-size: 30px; margin-right: 10px;"
+              [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after">shopping_cart
               </mat-icon>CHECKOUT
             </p>
           </div>

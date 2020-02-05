@@ -50,7 +50,7 @@ export class ShopComponent implements OnInit {
                 id: filterObj,
                 label: filterObj.substr(0, 1).toUpperCase() + filterObj.substr(1),
                 options_raw: vals[filterObj],
-                options: vals[filterObj].label
+                options: vals[filterObj].label,
               }
             })
             if (this.selectedFilters.length > 0)

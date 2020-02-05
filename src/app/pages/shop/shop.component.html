@@ -28,9 +28,9 @@
             <ng-container *ngTemplateOutlet="sort"></ng-container>
           </div>
         </div>
-       
-        <div class="row pr-5">
-          <div class="col-12">
+
+        <div class="row">
+          <div class="col-12 on-small">
             <ul class="transition-group" [transition-group]="'flip-list'">
               <li class="item" *ngFor="let item of filteredItems" transition-group-item>
                 <item [item]="item"></item>
@@ -66,16 +66,11 @@
 
   <span *ngFor="let filter of filters">
     <mat-form-field [formGroup]="filtersForm" *ngIf="filter.id==selectedFilterCategory" style="width: 50%">
-      <input matInput type="text" [formControlName]="filter.id" [placeholder]="filter.label" [matAutocomplete]="auto">
-      <button mat-button *ngIf="this.filtersForm.get(filter.id).value" matSuffix mat-icon-button
-        (click)="clearFilterValue(filter.id)">
-        <mat-icon>close</mat-icon>
-      </button>
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFilter">
+      <mat-select [formControlName]="filter.id" [placeholder]="filter.label">
         <mat-option *ngFor="let option of filter.options" [value]="option">
           {{option.label}}
         </mat-option>
-      </mat-autocomplete>
+      </mat-select>
     </mat-form-field>
   </span>
 </ng-template>

@@ -47,7 +47,11 @@
       </div>
     </mat-card>
     <mat-card class="my-3 mat-elevation-z8" *ngIf="cart.length && checkoutMode">
-      <purchase-form [cart]="cart"></purchase-form>
+      <div class="row">
+        <div class="col-md-6 col-12 mx-auto">
+          <purchase-form [cart]="cart"></purchase-form>
+        </div>
+      </div>
     </mat-card>
   </div>
 </div>
