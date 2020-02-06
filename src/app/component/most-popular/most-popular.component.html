@@ -13,7 +13,7 @@
 <!-- SMALL SCREEN FORMAT -->
 <div class="container d-lg-none">
     <div class="row">
-        <div class="col-4" *ngFor="let item of (topInventory | async)">
+        <div class="col-4 fadeInOut" *ngFor="let item of (topInventory | async)">
             <item [item]="item"></item>
         </div>
     </div>

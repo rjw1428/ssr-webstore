@@ -1,5 +1,6 @@
 .transition-group {
     list-style: none;
+    max-width: 1000px;
 }
 
 .item {
@@ -20,10 +21,10 @@
 @media (max-width:720px) {
     .transition-group {
         padding: 0;
-        text-align: center;
         margin: 0;
     }
     .on-small {
-       padding: 0; 
+        margin: 10px;
+        width: 150px;
     }
 }

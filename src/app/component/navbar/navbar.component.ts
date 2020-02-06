@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit, AfterViewInit {
-  title: String
+  title: string
   galleryLink = ""
   cartCount: number = 0
   constructor(private dataService: DataService) {

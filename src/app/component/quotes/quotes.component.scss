@@ -1,5 +1,32 @@
 .item {
-    display: block;
-    background-color: gray;
-    height: 300px;
+  display: block;
+  background-color: gray;
+  height: 300px;
+}
+
+
+.fadeInOut {
+  opacity: 0;
+  animation-name: fade;
+  animation-duration: 1000ms;
+  animation-delay: 100ms;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@for $i from 0 through 20 {
+  .fadeInOut:nth-child(#{$i + 1}) {
+    animation-delay: 0.3s * $i;
+  }
 }

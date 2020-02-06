@@ -67,9 +67,12 @@
    background-size: cover;
    clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
    transform: translate(-100%);
-   animation:  flyInLeft 700ms ease-in 2s;
-   animation-fill-mode: forwards;
    z-index: 0;
+}
+
+.animate-left {
+    animation:  flyInLeft 500ms ease-in;
+    animation-fill-mode: forwards;
 }
 
 .slant-right {
@@ -83,7 +86,10 @@
     background-size: cover;
     clip-path: polygon(25% 0, 90% 0, 90% 100%, 0 100%);
     transform: translate(100%);
-    animation:  flyInRight 700ms ease-in 2s;
-    animation-fill-mode: forwards;
     z-index: 1;
+ }
+
+ .animate-right {
+    animation:  flyInRight 500ms ease-in;
+    animation-fill-mode: forwards;
  }

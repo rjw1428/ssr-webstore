@@ -29,14 +29,14 @@
         <div class="col-12 opening my-4 d-lg-none">
             <p *ngFor="let section of bottomSection">{{section}}</p>
         </div>
-      <div class="slants">
-        <div class="slant-left"></div>
-        <div class="slant-right"></div>
+      <div class="slants" #slants>
+        <div [ngClass]="{'slant-left':true,'animate-left':animateSlats}"></div>
+        <div [ngClass]="{'slant-right':true,'animate-right':animateSlats}"></div>
       </div>
     </div>
     <div class="row">
-      <div class="col-12 mb-5">
-        <quotes></quotes>
+      <div class="col-12 mb-5" #quotes>
+        <quotes [animate]="animateQuotes"></quotes>
       </div>
     </div>
   </div>

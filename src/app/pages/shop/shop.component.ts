@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { SortOption } from 'src/app/models/sort-option';
 import { Option } from 'src/app/models/option';
 import { map } from 'rxjs/operators';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'shop',
@@ -19,10 +20,12 @@ export class ShopComponent implements OnInit {
   selectedFilterCategory: { id: string, label: string, options: Option[] }
   filteredItems: Item[] = []
   filtersForm: FormGroup
-  selectedFilters: { id: string, label: string, options: string }[]
+  selectedFilters: { id: string, label: string, options: string, options_raw: any }[] = []
   constructor(
     private dataService: DataService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.filtersForm = this.formBuilder.group({})
   }
@@ -44,16 +47,16 @@ export class ShopComponent implements OnInit {
 
           //FILTER ON VALUE CHANGES
           this.filtersForm.valueChanges.subscribe(vals => {
-            // GET SELECTED FILTES
-            this.selectedFilters = Object.keys(vals).filter(key => vals[key]).map((filterObj: string) => {
-              return {
-                id: filterObj,
-                label: filterObj.substr(0, 1).toUpperCase() + filterObj.substr(1),
-                options_raw: vals[filterObj],
-                options: vals[filterObj].label,
-              }
-            })
-            if (this.selectedFilters.length > 0)
+            Object.keys(vals).filter(key => vals[key])
+              .forEach((newFilter: string, i: number) => {
+                this.selectedFilters[i] = ({
+                  id: newFilter,
+                  label: newFilter.substr(0, 1).toUpperCase() + newFilter.substr(1),
+                  options_raw: vals[newFilter],
+                  options: vals[newFilter].label,
+                })
+              })
+            if (this.selectedFilters.length > 0) {
               this.filteredItems = this.items.filter(item => {
                 return this.selectedFilters.map(filter => {
                   if (filter.id == "availability")
@@ -70,7 +73,22 @@ export class ShopComponent implements OnInit {
                   return filter['options_raw'].id == item.tags[filter.id]
                 }).reduce((acc, cur) => cur && cur == acc)
               })
-            else this.filteredItems = this.items
+            }
+            else {
+              this.filteredItems = this.items
+            }
+            this.setUrl()
+          })
+
+          //GET FILTERS FROM URL
+          this.route.queryParamMap.subscribe((map: Params) => {
+            let appliedFilters = Object.keys(map.params).map(key => this.filters.find(filter => filter.id == key))
+            if (appliedFilters.length)
+              appliedFilters.forEach(filter => {
+                let matchingFilter= this.filters.find(f=>f.id==filter.id)
+                let optionValue=matchingFilter.options.find(option=>option.id==map.params[filter.id])
+                this.filtersForm.get(filter.id).setValue(optionValue)
+              })
           })
         })
       })
@@ -82,11 +100,20 @@ export class ShopComponent implements OnInit {
   }
 
   clearChip(filter: { id: string, label: string, options: string }) {
+    this.selectedFilters.splice(this.selectedFilters.findIndex(chips => chips.id == filter.id), 1)
     this.clearFilterValue(filter.id)
+    this.setUrl()
   }
 
   displayFilter(filter?: { id: string, label: string, options: any[] }) {
     return filter ? filter.label : undefined
+  }
+
+  setUrl() {
+    let paramsObj = this.selectedFilters.length > 0 ? this.selectedFilters
+      .map(val => ({ [val.id]: val['options_raw']['id'] }))
+      .reduce((obj, val) => ({ ...obj, [Object.keys(val).pop()]: Object.values(val).pop() })) : {}
+    this.router.navigate(["/shop"], { queryParams: paramsObj })
   }
 
   setFilterListCategory(category: { value: any }) {

@@ -27,6 +27,6 @@
 <div class="disable" *ngIf="loading"></div>
 <mat-progress-spinner class="loader" *ngIf="loading" color="primary" mode="indeterminate"></mat-progress-spinner>
 <div mat-dialog-actions class="d-flex justify-content-around">
-  <button mat-raised-button [mat-dialog-close]>Close</button>
-  <button mat-raised-button color="primary" (click)="makePayment()">Confirm Purchase</button>
+  <button mat-raised-button [disabled]=loading [mat-dialog-close]>Close</button>
+  <button mat-raised-button [disabled]=loading color="primary" (click)="makePayment()">Confirm Purchase</button>
 </div>

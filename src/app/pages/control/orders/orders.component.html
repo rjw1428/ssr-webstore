@@ -15,12 +15,12 @@
       </div>
       <div class="row">
         <div class="col-4">
-          <a [href]="'mailto:'+order.user.email" style="color: black">{{order.user.email}}</a>
-          <p class="my-1"><strong>{{order.user.firstName}} {{order.user.lastName}}</strong></p>
+          <p class="email" (click)="sendEmail(order.user.email)">{{order.user.email}}</p>
+          <p class="name my-1"><strong>{{order.user.firstName}} {{order.user.lastName}}</strong></p>
           <p class="mb-1"><small>{{order.user.street}}</small></p>
           <p><small>{{order.user.city}}, {{order.user.state}} {{order.user.zip}}</small></p>
         </div>
-        <div class="col-6">
+        <div class="col-md-6 col-5">
           <mat-form-field style="width: 100%">
             <textarea matInput 
               placeholder="Notes"
@@ -33,7 +33,7 @@
           </mat-form-field> 
           <button mat-raised-button style="width: 50px" (click)="onSaveNote(order)">Save</button>
         </div>
-        <div class="col-2">
+        <div class="col-md-2 col-3">
           <div class="row d-flex justify-content-center my-2">
             <button mat-raised-button color="warn" (click)="onCancelOrder(order)" style="width: 80px">Cancel</button>
           </div>
