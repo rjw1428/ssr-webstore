@@ -17,6 +17,20 @@ export class AboutPageComponent implements OnInit, AfterViewInit{
   viewLoaded: boolean = false;
   @ViewChild("slants", { static: false }) slants: ElementRef
   @ViewChild("quotes", { static: false }) quotes: ElementRef
+  @HostListener('window:scroll', ['$event'])
+  triggerImageAnimation(event) {
+    if (this.viewLoaded) {
+      const scrollPosition = window.pageYOffset+window.innerHeight
+      
+      //SLANTS ANIMATION
+      const slantPosition = this.slants.nativeElement.offsetTop
+      this.animateSlats = !(scrollPosition < slantPosition) 
+
+      //QUOTES FADE IN
+      const quotesPosition = this.quotes.nativeElement.offsetTop
+      this.animateQuotes = !(scrollPosition < quotesPosition)
+    }
+  }
   constructor(
     private dataService: DataService,
     private sanitizer: DomSanitizer
@@ -34,20 +48,5 @@ export class AboutPageComponent implements OnInit, AfterViewInit{
   }
   ngAfterViewInit() {
     this.viewLoaded = true
-  }
-
-  @HostListener('window:scroll', ['$event'])
-  triggerImageAnimation() {
-    if (this.viewLoaded) {
-      const scrollPosition = window.pageYOffset+window.innerHeight
-      
-      //SLANTS ANIMATION
-      const slantPosition = this.slants.nativeElement.offsetTop
-      this.animateSlats = !(scrollPosition < slantPosition) 
-
-      //QUOTES FADE IN
-      const quotesPosition = this.quotes.nativeElement.offsetTop
-      this.animateQuotes = !(scrollPosition < quotesPosition)
-    }
   }
 }

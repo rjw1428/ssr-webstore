@@ -3,3 +3,22 @@
     font-weight: bold;
     color: #363636
 }
+
+.fadeIn {
+    animation:  fadeIn .7s ease-in-out;
+    animation-fill-mode: forwards
+}
+
+@keyframes fadeIn {
+    0% {
+        transform: translateY(-50%);
+        opacity: 0;
+    }
+    80% {
+        opacity: .6
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1
+    }
+}

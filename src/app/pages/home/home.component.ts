@@ -10,6 +10,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
   viewLoaded = false
   animateQuotes = false
   @ViewChild("quotes", { static: false }) quotes: ElementRef
+  @HostListener('window:scroll', ['$event'])
+  triggerImageAnimation(event) {
+    if (this.viewLoaded) {
+      const scrollPosition = window.pageYOffset+window.innerHeight
+
+      //QUOTES FADE IN
+      const quotesPosition = this.quotes.nativeElement.offsetTop
+      this.animateQuotes = !(scrollPosition < quotesPosition)
+    }
+  }
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
@@ -20,14 +30,5 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.viewLoaded = true
   }
   
-  @HostListener('window:scroll', ['$event'])
-  triggerImageAnimation() {
-    if (this.viewLoaded) {
-      const scrollPosition = window.pageYOffset+window.innerHeight
 
-      //QUOTES FADE IN
-      const quotesPosition = this.quotes.nativeElement.offsetTop
-      this.animateQuotes = !(scrollPosition < quotesPosition)
-    }
-  }
 }

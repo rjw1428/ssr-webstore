@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { PaymentsService } from 'src/app/payments.service';
 import { Observable } from 'rxjs/internal/Observable';
@@ -18,6 +18,7 @@ import { ok } from 'assert';
 })
 export class PurchaseFormComponent implements OnInit {
   @Input() cart: Item[]
+  @Output() cancel = new EventEmitter()
   elements: any;
   checkoutForm: FormGroup
   cardForm: any
@@ -108,5 +109,9 @@ export class PurchaseFormComponent implements OnInit {
     } else {
       this.snackBar.open("Please check form values, some information is missing.", "OK")
     }
+  }
+
+  onCancel() {
+    this.cancel.emit()
   }
 }

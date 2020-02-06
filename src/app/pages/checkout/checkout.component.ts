@@ -72,4 +72,8 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
+  onPurchaseCancel() {
+    this.checkoutMode = false;
+  }
+
 }

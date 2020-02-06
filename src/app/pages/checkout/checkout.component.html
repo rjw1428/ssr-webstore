@@ -46,10 +46,10 @@
         </div>
       </div>
     </mat-card>
-    <mat-card class="my-3 mat-elevation-z8" *ngIf="cart.length && checkoutMode">
+    <mat-card class="my-3 mat-elevation-z8 fadeIn" *ngIf="cart.length && checkoutMode">
       <div class="row">
         <div class="col-md-6 col-12 mx-auto">
-          <purchase-form [cart]="cart"></purchase-form>
+          <purchase-form [cart]="cart" (cancel)="onPurchaseCancel()"></purchase-form>
         </div>
       </div>
     </mat-card>

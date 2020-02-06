@@ -84,7 +84,7 @@
     </div>
     <div class="row">
       <div class="col-12 d-flex justify-content-around">
-        <button mat-raised-button mat-dialog-close>Cancel</button>
+        <button mat-raised-button (click)="onCancel()">Cancel</button>
         <button mat-raised-button color="primary" (click)="triggerPayment()">Pay</button>
       </div>
     </div>
