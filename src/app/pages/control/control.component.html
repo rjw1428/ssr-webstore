@@ -1,4 +1,4 @@
-<navbar></navbar>
+<div class="content-page">
   <h1>Control Room</h1>
   <mat-tab-group>
     <mat-tab label="Orders">
@@ -33,53 +33,12 @@
     </mat-tab>
     <mat-tab label="Other Controls">
       <ng-template matTabContent>
-        <ng-container *ngTemplateOutlet="miscContent"></ng-container>
+        <other-settings-tab></other-settings-tab>
       </ng-template>
     </mat-tab>
   </mat-tab-group>
-<footer></footer>
-
-<ng-template #miscContent>
-  <div class="container">
-    <div class="row">
-      <div class="col-12  p-3">
-        <h4>Other Controls</h4>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <mat-card class="my-3 mat-elevation-z8">
-          <p><strong>Image Control:</strong></p>
-          <p>Homepage Images</p>
-          <p>About Us Homepage Image</p>
-          <p>About Us Header Image</p>
-          <p>Shop Header Image</p>
-        </mat-card>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <mat-card class="my-3 mat-elevation-z8">
-          <p><strong>Social Media Links:</strong></p>
-          <p>Instagram</p>
-          <p>Youtube</p>
-          <p>Facebook</p>
-        </mat-card>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <mat-card class="my-3 mat-elevation-z8">
-          <p><strong>Company Info:</strong></p>
-          <p>Company Name</p>
-          <p>Email</p>
-          <p>Phone Number</p>
-        </mat-card>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
+  <footer></footer>
+</div>
 
 <ng-template #editableInventory>
   <div class="container">

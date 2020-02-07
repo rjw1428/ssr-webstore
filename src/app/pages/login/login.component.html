@@ -19,7 +19,7 @@
                 </mat-error>
               </mat-form-field>
 
-              <mat-form-field [color]="email.valid && 'accent'" *ngIf="!isPasswordReset"  style="width: 100%">
+              <mat-form-field [color]="email.valid && 'accent'" style="width: 100%">
                 <input matInput formControlName="password" type="password" placeholder="Password" autocomplete="off" />
 
                 <mat-error *ngIf="password.invalid && password.dirty">

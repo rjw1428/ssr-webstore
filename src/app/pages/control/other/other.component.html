@@ -1,0 +1,114 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12  p-3">
+      <h4>Other Controls</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="my-3 mat-elevation-z8">
+        <form [formGroup]="imageForm">
+          <div class="row">
+            <div class="col-8">
+              <p><strong>Image Control:</strong></p>
+              <div class="row">
+                <div class="col-10">
+                  <mat-form-field class="w-100">
+                    <mat-label>Homepage Banner:</mat-label>
+                    <input matInput formArray="homePage">
+                  </mat-form-field>
+                </div>
+                <div class="col-2">
+                  <button class="small-button" mat-raised-button color="warn">X</button>
+                </div>
+              </div>
+              <button class="small-button" mat-raised-button color="accent">+</button>
+            </div>
+            <div class="col-4">
+              <p>img preview</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8">
+              <mat-form-field class="w-100">
+                <mat-label>About Homepage Icon:</mat-label>
+                <input matInput formControlName="aboutUsHomeIcon">
+              </mat-form-field>
+            </div>
+            <div class="col-4">
+              <p>img preview</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8">
+              <mat-form-field class="w-100">
+                <mat-label>About Us Header:</mat-label>
+                <input matInput formControlName="aboutUsHeader">
+              </mat-form-field>
+            </div>
+            <div class="col-4">
+              <p>img preview</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8">
+              <mat-form-field class="w-100">
+                <mat-label>Shop Header:</mat-label>
+                <input matInput formControlName="shopHeader">
+              </mat-form-field>
+            </div>
+            <div class="col-4">
+              <p>img preview</p>
+            </div>
+          </div>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="my-3 mat-elevation-z8">
+        <form [formGroup]="socialForm">
+          <p><strong>Social Media Links:</strong></p>
+          <mat-form-field class="w-100">
+            <mat-label>Instagram:</mat-label>
+            <input matInput formControlName="insta">
+          </mat-form-field>
+          <mat-form-field class="w-100">
+            <mat-label>Youtube:</mat-label>
+            <input matInput formControlName="youtube">
+          </mat-form-field>
+          <mat-form-field class="w-100">
+            <mat-label>Facebook:</mat-label>
+            <input matInput formControlName="fb">
+          </mat-form-field>
+          <mat-form-field class="w-100">
+            <mat-label>Twitter:</mat-label>
+            <input matInput formControlName="twitter">
+          </mat-form-field>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="my-3 mat-elevation-z8">
+        <form [formGroup]="companyForm">
+          <p><strong>Company Info:</strong></p>
+          <mat-form-field class="w-100">
+            <mat-label>Company Name:</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+          <mat-form-field class="w-100">
+            <mat-label>Email:</mat-label>
+            <input matInput formControlName="email">
+          </mat-form-field>
+          <mat-form-field class="w-100">
+            <mat-label>Contact Number:</mat-label>
+            <input matInput formControlName="phone">
+          </mat-form-field>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</div>

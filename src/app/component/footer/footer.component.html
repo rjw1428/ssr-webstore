@@ -5,8 +5,16 @@
         <div class="row">
           <div class="col-12 d-flex justify-content-start">
             <p class="my-0">Contact Us:
-            <a [href]="'mailto:'+(companyInfo | async)?.email"><i class="far fa-envelope fa-lg px-1" style="color: white; text-decoration: none;"></i></a>
-            <a [href]="(companyInfo | async)?.instagram"><i class="fab fa-instagram fa-lg px-1" style="color: white; text-decoration: none;"></i></a>
+              <a [href]="'mailto:'+(companyInfo | async)?.email"><i class="far fa-envelope fa-lg px-1"
+                  style="color: white; text-decoration: none;"></i></a>
+              <a *ngIf="(companyInfo | async)?.instagram as ig" [href]="ig"><i class="fab fa-instagram fa-lg px-1"
+                  style="color: white; text-decoration: none;"></i></a>
+              <a *ngIf="(companyInfo | async)?.facebook as fb" [href]="fb"><i class="fab fa-facebook fa-lg px-1"
+                  style="color: white; text-decoration: none;"></i></a>
+              <a *ngIf="(companyInfo | async)?.twitter as twit" [href]="twit"><i class="fab fa-twitter fa-lg px-1"
+                  style="color: white; text-decoration: none;"></i></a>
+              <a *ngIf="(companyInfo | async)?.youtube as yt"[href]="yt"><i class="fab fa-youtube fa-lg px-1"
+                  style="color: white; text-decoration: none;"></i></a>
             </p>
           </div>
         </div>
