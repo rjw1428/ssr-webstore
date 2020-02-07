@@ -7,17 +7,23 @@ import { ShopComponent } from './pages/shop/shop.component';
 import { ControlComponent } from './pages/control/control.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { SuccessPurchaseComponent } from './component/success-purchase/success-purchase.component';
+import { LoginComponent } from './pages/login/login.component';
+import { NavbarComponent } from './component/navbar/navbar.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-  { path:  'info/:page', component:  InfoPageComponent},
-  { path:  'info/:page', component:  InfoPageComponent},
-  { path:  'shop', component:  ShopComponent},
-  { path:  'about', component:  AboutPageComponent},
-  { path:  'checkout', component:  CheckoutComponent},
-  { path: 'success', component: SuccessPurchaseComponent },
-
-  { path: 'admin', component: ControlComponent},
-  { path:  '', component:  HomeComponent}
+  { path: 'login', component: LoginComponent },
+  { path: 'admin', component: ControlComponent, canActivate: [AuthGuard] },
+  { path: '', component: NavbarComponent, children: [
+      { path: 'info/:page', component: InfoPageComponent },
+      { path: 'info/:page', component: InfoPageComponent },
+      { path: 'shop', component: ShopComponent },
+      { path: 'about', component: AboutPageComponent },
+      { path: 'checkout', component: CheckoutComponent },
+      { path: 'success', component: SuccessPurchaseComponent },
+      { path: '', component: HomeComponent, pathMatch: 'full' },
+    ]
+  }
 ];
 
 @NgModule({

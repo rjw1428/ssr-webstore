@@ -58,6 +58,7 @@ import { SuccessPurchaseComponent } from './component/success-purchase/success-p
 import { MatBadgeModule } from '@angular/material/badge';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoginComponent } from './pages/login/login.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ConfirmPurchaseFormComponent,
     SuccessPurchaseComponent,
     ReversePipe,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

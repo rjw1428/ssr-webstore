@@ -12,16 +12,16 @@
               </div>
             </a>
             <div class="col-2 text-center menu-item">
-              <a routerLink="shop">SHOP</a>
+              <a routerLink="/shop">SHOP</a>
             </div>
             <div class="col-2 text-center menu-item">
               <a [href]="galleryLink">GALLERY</a>
             </div>
             <div class="col-2 text-center menu-item">
-              <a routerLink="about">ABOUT</a>
+              <a routerLink="/about">ABOUT</a>
             </div>
             <div class="col-1 text-center menu-item">
-              <a routerLink="checkout">
+              <a routerLink="/checkout">
                 <mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);"
                 [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after">shopping_cart</mat-icon>
               </a>
@@ -35,7 +35,7 @@
             <img class="logo" src="../../assets/img/logo.svg">
             <span *ngIf="title">{{title | uppercase}}</span>
           </div>
-          <a routerLink="checkout">
+          <a routerLink="/checkout">
             <mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);"
             [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after" >shopping_cart</mat-icon>
           </a>
@@ -54,7 +54,7 @@
           </div>
         </div>
       </a>
-      <a routerLink="shop" (click)="drawer.close()">
+      <a routerLink="/shop" (click)="drawer.close()">
         <div class="row">
           <div class="col-12 sidenav-item">
             <p class="text-center">SHOP</p>
@@ -68,14 +68,14 @@
           </div>
         </div>
       </a>
-      <a routerLink="about" (click)="drawer.close()">
+      <a routerLink="/about" (click)="drawer.close()">
         <div class="row">
           <div class="col-12 sidenav-item">
             <p class="text-center">ABOUT</p>
           </div>
         </div>
       </a>
-      <a routerLink="checkout" (click)="drawer.close()">
+      <a routerLink="/checkout" (click)="drawer.close()">
         <div class="row">
           <div class="col-12 sidenav-item">
             <p class="text-center">
