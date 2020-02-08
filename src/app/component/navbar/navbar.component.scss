@@ -14,9 +14,13 @@ $navbarHeight: 64px;
     height: $navbarHeight;
 }
 
+.show-title {
+    display: inline;
+}
+
 .logo {
-    width: 75px;
-    height: 75px;
+    width: 100px;
+    height: 100px;
 }
 
 .title {
@@ -39,6 +43,8 @@ $navbarHeight: 64px;
 
 .sidenav-item {
     border: 1px solid gray;
+    border-left: 0;
+    border-right: 0;
     height: 50px;
     line-height: 50px;
     padding-left: 25px;
@@ -55,6 +61,11 @@ $navbarHeight: 64px;
 a {
     color: rgb(75,75,75);
     text-decoration: none;
+}
+
+hr {
+    width: 100%;
+    border: 1px solid rgb(151, 151, 151, .5);
 }
 
 .menu {
@@ -80,9 +91,31 @@ a {
     bottom: 0;
 }
 
+
+.social-row {
+    position: absolute;
+    width: 100%; 
+    bottom: 20px;
+    color: rgb(75,75,75);
+    font-size: 36px;
+}
 @media only screen and (max-width: 600px) {
     .menu {
         width:100%
+    }
+    .logo {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media only screen and (max-width: 375px) {
+    .show-title {
+        display: none;
+    }
+    .logo {
+        width: 100px;
+        height: 100px;
     }
 }
 

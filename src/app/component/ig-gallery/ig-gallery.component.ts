@@ -7,7 +7,7 @@ import { DataService } from 'src/app/data.service';
   styleUrls: ['./ig-gallery.component.scss']
 })
 export class IgGalleryComponent implements OnInit {
-  sectionTitle="Gallery"
+  sectionTitle="Shop Now"
   pics=[
     "../../../assets/img/ig1.jpg",
     "../../../assets/img/ig2.jpg",

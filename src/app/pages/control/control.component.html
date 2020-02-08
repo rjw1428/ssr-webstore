@@ -1,6 +1,6 @@
 <div class="content-page">
   <h1>Control Room</h1>
-  <mat-tab-group>
+  <mat-tab-group (selectedTabChange)="onTabChange($event)" [selectedIndex]="selectedTab">
     <mat-tab label="Orders">
       <ng-template matTabContent>
         <orders-list></orders-list>

@@ -7,61 +7,83 @@
   <div class="row">
     <div class="col-12">
       <mat-card class="my-3 mat-elevation-z8">
-        <form [formGroup]="imageForm">
-          <div class="row">
-            <div class="col-8">
-              <p><strong>Image Control:</strong></p>
-              <div class="row">
-                <div class="col-10">
-                  <mat-form-field class="w-100">
-                    <mat-label>Homepage Banner:</mat-label>
-                    <input matInput formArray="homePage">
-                  </mat-form-field>
-                </div>
-                <div class="col-2">
-                  <button class="small-button" mat-raised-button color="warn">X</button>
+        <div class="row">
+          <div class="col-12">
+            <p><strong>Image Control:</strong></p>
+            <p>Homepage Banner:</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div *ngIf="headerImages" cdkDropList (cdkDropListDropped)="dropPicture($event)">
+              <div class="m-2" *ngFor="let pic of headerImages; let n=index"
+                (mousedown)="setSelectedImage(i, n)" cdkDrag cdkDragBoundary=".picture-containter" [cdkDragData]="i">
+                <div class="row">
+                  <div class="col-6 d-flex justify-content-center">
+                    <!-- Drag & Drop Place holder -->
+                    <!-- <div class="picture-placeholder" *cdkDragPlaceholder></div> -->
+
+                    <!-- Image -->
+                    <!-- <img class="img-thumbnail" *ngIf="pic.url"
+                    [ngClass]="{'item-img-selected': i==selectedPicture.itemNum && n==selectedPicture.picNum}"
+                    [src]="pic.url" [ngStyle]="{'transform': 'rotate('+pic.rotation+'deg)'}"> -->
+                    <!-- Loading Image -->
+                    <div *ngIf="!pic.url" class="picture-placeholder d-flex align-items-end">
+                      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                    </div>
+                  </div>
+                  <div class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
+                    <button class="small-button" mat-raised-button color="warn"
+                      (click)="onDeleteSelectedPicture()">X</button>
+                    <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()">
+                      <mat-icon>rotate_left</mat-icon>
+                    </button>
+                    <button class="small-button" mat-raised-button (click)="onRotatePictureRight()">
+                      <mat-icon>rotate_right</mat-icon>
+                    </button>
+                  </div>
                 </div>
               </div>
-              <button class="small-button" mat-raised-button color="accent">+</button>
             </div>
-            <div class="col-4">
-              <p>img preview</p>
-            </div>
+            <input style="display: none" type="file" (change)="onFileSelected($event, i)" #fileInput multiple>
+            <button class="small-button" mat-raised-button (click)="fileInput.click()">+</button>
           </div>
-          <div class="row">
-            <div class="col-8">
-              <mat-form-field class="w-100">
-                <mat-label>About Homepage Icon:</mat-label>
-                <input matInput formControlName="aboutUsHomeIcon">
-              </mat-form-field>
-            </div>
-            <div class="col-4">
-              <p>img preview</p>
-            </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <p>About Homepage Icon:</p>
           </div>
-          <div class="row">
-            <div class="col-8">
-              <mat-form-field class="w-100">
-                <mat-label>About Us Header:</mat-label>
-                <input matInput formControlName="aboutUsHeader">
-              </mat-form-field>
-            </div>
-            <div class="col-4">
-              <p>img preview</p>
-            </div>
+        </div>
+        <div class="row">
+          <div class="col-12 d-flex flex-row">
+            <button class="small-button" mat-raised-button>+</button>
           </div>
-          <div class="row">
-            <div class="col-8">
-              <mat-form-field class="w-100">
-                <mat-label>Shop Header:</mat-label>
-                <input matInput formControlName="shopHeader">
-              </mat-form-field>
-            </div>
-            <div class="col-4">
-              <p>img preview</p>
-            </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-12">
+            <p>About Us Header:</p>
           </div>
-        </form>
+        </div>
+        <div class="row">
+          <div class="col-12 d-flex flex-row">
+            <button class="small-button" mat-raised-button>+</button>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-12">
+            <p>Shop Header:</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 d-flex flex-row">
+            <button class="small-button" mat-raised-button>+</button>
+          </div>
+        </div>
       </mat-card>
     </div>
   </div>
@@ -109,6 +131,11 @@
           </mat-form-field>
         </form>
       </mat-card>
+    </div>
+  </div>
+  <div class="row w-100">
+    <div class="col-12 text-center pb-3">
+      <button mat-raised-button color="primary" (click)="onSaveData()">Save</button>
     </div>
   </div>
 </div>

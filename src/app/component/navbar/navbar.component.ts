@@ -8,20 +8,17 @@ import { Observable } from 'rxjs';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit, AfterViewInit {
-  title: string
-  galleryLink = ""
+  companyInfo: Observable<any>
   cartCount: number = 0
   constructor(private dataService: DataService) {
-    this.dataService.getCompanyInfo().subscribe(companyInfo => {
-      this.title = companyInfo['name']
-      this.galleryLink = companyInfo['instagram']
-    })
+
     this.dataService.onChangeCart.subscribe(count => {
       this.cartCount = count
     })
   }
 
   ngOnInit() {
+    this.companyInfo = this.dataService.getCompanyInfo()
     this.dataService.getShoppingCart()
   }
   

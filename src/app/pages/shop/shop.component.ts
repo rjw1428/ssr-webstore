@@ -130,11 +130,9 @@ export class ShopComponent implements OnInit {
   }
 
   setUrl() {
-    console.log("THERE")
     let paramsObj = this.selectedFilters.length > 0 ? this.selectedFilters
       .map(val => ({ [val.id]: val['options_raw']['id'] }))
       .reduce((obj, val) => ({ ...obj, [Object.keys(val).pop()]: Object.values(val).pop() })) : {}
-    console.log(paramsObj)
     this.router.navigate(["/shop"], { queryParams: paramsObj })
   }
 
@@ -169,9 +167,9 @@ export class ShopComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.snackBar.open("Item was added to your cart", "OK", {
-          duration: 2500,
-        });
+        this.snackBar.open("Item was added to your cart", "View Cart", {
+          duration: 3000,
+        }).onAction().subscribe(()=>this.router.navigate(['/checkout']));
       }
       this.setUrl()
     });

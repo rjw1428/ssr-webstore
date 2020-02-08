@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 export class AboutPageComponent implements OnInit, AfterViewInit{
   @Input() editable = false
   pageContent: Observable<any>
+  companyInfo: Observable<any>
   animateSlats: boolean = false
   animateQuotes: boolean = false
   viewLoaded: boolean = false;
@@ -39,6 +40,7 @@ export class AboutPageComponent implements OnInit, AfterViewInit{
 
   ngOnInit() {
     window.scrollTo(0, 0)
+    this.companyInfo = this.dataService.getCompanyInfo()
     this.pageContent = this.dataService.getBackendData('about').valueChanges().pipe(
       map((resp: any) => {
         resp.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(resp['videoUrl']) as string

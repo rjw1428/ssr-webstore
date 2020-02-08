@@ -23,10 +23,8 @@ export class MostPopularComponent implements OnInit {
         }),
         map((items: Item[]) => {
           return items = items.map(item => {
-            item.image.map(img => {
-              this.dataService.getThumbnail(img.name)
-                .then(url => item['thumbnail'] = url)
-            })
+            this.dataService.getThumbnail(item.image[0].name)
+              .then(url => item['thumbnail'] = url)
             return item
           })
         })

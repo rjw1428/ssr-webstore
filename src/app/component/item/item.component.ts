@@ -3,6 +3,7 @@ import { Item } from 'src/app/models/item';
 import { MatDialog } from '@angular/material/dialog';
 import { EnterItemPopupComponent } from './enter-item-popup/enter-item-popup.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 
 
@@ -23,7 +24,8 @@ export class ItemComponent implements OnInit {
   }
   constructor(
     public dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -39,9 +41,9 @@ export class ItemComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.snackBar.open("Item was added to your cart", "OK", {
-            duration: 2500,
-          });
+          this.snackBar.open("Item was added to your cart", "View Cart", {
+            duration: 3000,
+          }).onAction().subscribe(()=>this.router.navigate(['/checkout']));
         }
       });
     }

@@ -35,6 +35,11 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-12 opening mt-3">
+        <p *ngIf="(pageContent | async)?.closing as closing">{{closing}}, check us out on <a [href]="(companyInfo | async)?.instagram">instagram.</a></p>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-12 mb-5" #quotes>
         <quotes [animate]="animateQuotes"></quotes>
       </div>

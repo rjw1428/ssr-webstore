@@ -80,7 +80,7 @@
   <mat-form-field [formGroup]="filtersForm" *ngFor="let filter of filters; let i=index" style="width: 100%">
     <input matInput type="text" [formControlName]="filter.id" [placeholder]="filter.label" [matAutocomplete]="auto">
     <button mat-button *ngIf="this.filtersForm.get(filter.id).value" matSuffix mat-icon-button
-      (click)="clearFilterValue(filter.id)">
+      (click)="clearChip(filter)">
       <mat-icon>close</mat-icon>
     </button>
     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFilter">

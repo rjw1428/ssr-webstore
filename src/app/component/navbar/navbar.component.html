@@ -1,46 +1,48 @@
 <mat-toolbar class="background" color="primary">
   <div class="container-fluid ">
     <div class="row">
-      <div class="col-12 px-0">
-        <!-- LARGE SCREEN -->
-        <div class="d-none d-lg-block">
-          <div class="row d-flex align-items-center banner">
+      <div class="col-12 d-none d-lg-block px-0">
+        <div class="row">
+          <div class="col-1 d-flex align-items-end justify-content-end px-0">
             <a routerLink="">
-              <div class="col-3 title" style="margin-left: 30px;">
-                <img class="logo" src="../../assets/img/logo.svg">
-                <span *ngIf="title">{{title | uppercase}}</span>
-              </div>
+              <img class="logo" src="../../assets/img/logo.svg">
             </a>
-            <div class="col-2 text-center menu-item">
-              <a routerLink="/shop">SHOP</a>
-            </div>
-            <div class="col-2 text-center menu-item">
-              <a [href]="galleryLink">GALLERY</a>
-            </div>
-            <div class="col-2 text-center menu-item">
-              <a routerLink="/about">ABOUT</a>
-            </div>
-            <div class="col-1 text-center menu-item">
-              <a routerLink="/checkout">
-                <mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);"
-                [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after">shopping_cart</mat-icon>
-              </a>
-            </div>
           </div>
-        </div>
-        <!-- SMALL SCREEN -->
-        <div class="col-12 d-lg-none h-100 d-flex align-items-center justify-content-between px-0">
-          <mat-icon style="position: relative; top: -5px" (click)="drawer.toggle()">menu</mat-icon>
-          <div class="text-center d-lg-none title">
-            <img class="logo" src="../../assets/img/logo.svg">
-            <span *ngIf="title">{{title | uppercase}}</span>
+          <div class="col-3 col-xl-2 d-flex align-items-center title banner pl-0">
+            <a routerLink="">
+              <div>{{(companyInfo | async)?.name | uppercase}}</div>
+            </a>
           </div>
-          <a routerLink="/checkout">
-            <mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);"
-            [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after" >shopping_cart</mat-icon>
-          </a>
+          <div class="col-2 d-flex align-items-center justify-content-center banner">
+            <a routerLink="/shop">SHOP</a>
+          </div>
+          <div class="col-2 d-flex align-items-center justify-content-start banner">
+            <a routerLink="/about">ABOUT</a>
+          </div>
+          <div class="col-1 offset-3 offset-xl-4  d-flex align-items-center justify-content-center">
+            <a routerLink="/checkout">
+              <mat-icon style="font-size: 30px; color: rgb(255,255,255,.9);" [matBadge]="(cartCount>0)?cartCount:''"
+                matBadgeColor="warn" matBadgePosition="below after">
+                shopping_cart</mat-icon>
+            </a>
+          </div>
         </div>
       </div>
+
+      <!-- SMALL SCREEN -->
+      <div class="col-12 d-lg-none h-100 d-flex align-items-center justify-content-between px-0">
+        <mat-icon style="position: relative; top: -5px" (click)="drawer.toggle()">menu</mat-icon>
+        <div class="text-center d-lg-none title">
+          <img class="logo" src="../../assets/img/logo.svg">
+          <span class="show-title">{{(companyInfo | async)?.name | uppercase}}</span>
+        </div>
+        <a routerLink="/checkout">
+          <mat-icon style="padding-top: 10px; font-size: 30px; color: rgb(255,255,255,.9);"
+            [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after">shopping_cart
+          </mat-icon>
+        </a>
+      </div>
+
     </div>
   </div>
 </mat-toolbar>
@@ -61,13 +63,6 @@
           </div>
         </div>
       </a>
-      <a [href]="galleryLink" (click)="drawer.close()">
-        <div class="row">
-          <div class="col-12 sidenav-item">
-            <p class="text-center">GALLERY</p>
-          </div>
-        </div>
-      </a>
       <a routerLink="/about" (click)="drawer.close()">
         <div class="row">
           <div class="col-12 sidenav-item">
@@ -80,14 +75,25 @@
           <div class="col-12 sidenav-item">
             <p class="text-center">
               <mat-icon style="position: relative; top: 8px; font-size: 30px; margin-right: 10px;"
-              [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after">shopping_cart
+                [matBadge]="(cartCount>0)?cartCount:''" matBadgeColor="warn" matBadgePosition="below after">
+                shopping_cart
               </mat-icon>CHECKOUT
             </p>
           </div>
         </div>
       </a>
+      <div class="row social-row pb-3">
+        <div class="col-12 d-flex justify-content-around">
+          <a [href]="'mailto:'+(companyInfo | async)?.email"><i class="far fa-envelope fa-lg px-1"></i></a>
+          <a *ngIf="(companyInfo | async)?.instagram as ig" [href]="ig"><i class="fab fa-instagram fa-lg px-1"></i></a>
+          <a *ngIf="(companyInfo | async)?.facebook as fb" [href]="fb"><i class="fab fa-facebook fa-lg px-1"></i></a>
+          <a *ngIf="(companyInfo | async)?.twitter as twit" [href]="twit"><i class="fab fa-twitter fa-lg px-1"></i></a>
+          <a *ngIf="(companyInfo | async)?.youtube as yt" [href]="yt"><i class="fab fa-youtube fa-lg px-1"></i></a>
+        </div>
+        <hr>
+      </div>
       <div class="row bottom-item">
-        <div class="col-12 d-flex justify-content-around" (click)="drawer.toggle()">
+        <div class="col-12 d-flex justify-content-around pb-3" (click)="drawer.toggle()">
           <a routerLink="/info/terms">Terms</a>
           <a routerLink="/info/privacy">Privacy</a>
         </div>
@@ -96,5 +102,6 @@
   </mat-drawer>
   <mat-drawer-content class="side-content">
     <router-outlet></router-outlet>
+    <footer></footer>
   </mat-drawer-content>
 </mat-drawer-container>

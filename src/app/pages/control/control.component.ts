@@ -9,6 +9,8 @@ import { Option } from 'src/app/models/option';
 import { AddItemPopupComponent } from 'src/app/component/item/add-item-popup/add-item-popup.component';
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Upload } from 'src/app/models/upload';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-control',
@@ -16,6 +18,7 @@ import { Upload } from 'src/app/models/upload';
   styleUrls: ['./control.component.scss']
 })
 export class ControlComponent implements OnInit {
+  selectedTab: number = 0
   quotesForm: FormGroup[] = []
   aboutFormTitle: FormGroup
   aboutFormTop: FormGroup[] = []
@@ -36,6 +39,8 @@ export class ControlComponent implements OnInit {
     private dataService: DataService,
     public dialog: MatDialog,
     private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
@@ -74,6 +79,10 @@ export class ControlComponent implements OnInit {
     this.dataService.getBackendData('shop').valueChanges().subscribe(resp => {
       this.tagList = resp['filter'].filter(tag => tag.id !== 'price' && tag.id !== 'availability')
       this.featuredTitle = this.formBuilder.group({ featuredTitle: resp['featuredListTitle'] })
+    })
+
+    this.route.queryParamMap.subscribe((paramsMap: Params)=>{
+      this.selectedTab=paramsMap.params.page
     })
   }
 
@@ -226,5 +235,9 @@ export class ControlComponent implements OnInit {
 
   initializeFormGroup(group): FormGroup {
     return this.formBuilder.group(group)
+  }
+
+  onTabChange(tabChange: MatTabChangeEvent) {
+    this.router.navigate(['/admin'], {queryParams: {page: tabChange.index}})
   }
 }
