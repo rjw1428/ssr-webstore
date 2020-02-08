@@ -16,7 +16,6 @@ import { SectionTitleComponent } from './component/section-title/section-title.c
 import { IgGalleryComponent } from './component/ig-gallery/ig-gallery.component';
 import { MostPopularComponent } from './component/most-popular/most-popular.component';
 import { QuoteComponent } from './component/quotes/quote/quote.component';
-import { CurrencyPipe } from './pipes/currency.pipe';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { InfoPageComponent } from './pages/info-page/info-page.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -74,7 +73,6 @@ import { OtherComponent } from './pages/control/other/other.component';
     IgGalleryComponent,
     MostPopularComponent,
     QuoteComponent,
-    CurrencyPipe,
     InfoPageComponent,
     HomeComponent,
     AboutPageComponent,
