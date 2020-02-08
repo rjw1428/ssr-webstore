@@ -56,7 +56,6 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { ConfirmPurchaseFormComponent } from './component/confirm-purchase-form/confirm-purchase-form.component';
 import { SuccessPurchaseComponent } from './component/success-purchase/success-purchase.component';
 import { MatBadgeModule } from '@angular/material/badge';
-import { ReversePipe } from './pipes/reverse.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoginComponent } from './pages/login/login.component';
 import { OtherComponent } from './pages/control/other/other.component';
@@ -91,7 +90,6 @@ import { OtherComponent } from './pages/control/other/other.component';
     OrdersComponent,
     ConfirmPurchaseFormComponent,
     SuccessPurchaseComponent,
-    ReversePipe,
     LoginComponent,
     OtherComponent,
   ],

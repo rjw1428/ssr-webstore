@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
 import { Item } from 'src/app/models/item';
 import { MatDialog } from '@angular/material/dialog';
 import { EnterItemPopupComponent } from './enter-item-popup/enter-item-popup.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+
 
 @Component({
   selector: 'item',
@@ -11,7 +13,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ItemComponent implements OnInit {
   @Input() item: Item
-  @Input() showCart: Boolean=true
+  @Input() showCart: boolean = true
+  @Input() enablePopup: boolean = true
+  @Output() itemSelected = new EventEmitter<string>()
   popupWidth = '900px';
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
@@ -19,25 +23,28 @@ export class ItemComponent implements OnInit {
   }
   constructor(
     public dialog: MatDialog,
-    private snackBar: MatSnackBar,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(EnterItemPopupComponent, {
-      width: this.popupWidth,
-      data: {item: this.item, showCartButton: this.showCart}
-    });
+    this.itemSelected.emit(this.item.id)
+    if (this.enablePopup) {
+      const dialogRef = this.dialog.open(EnterItemPopupComponent, {
+        width: this.popupWidth,
+        data: { item: this.item, showCartButton: this.showCart }
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.snackBar.open("Item was added to your cart", "OK", {
-          duration: 2500,
-        });
-      }
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.snackBar.open("Item was added to your cart", "OK", {
+            duration: 2500,
+          });
+        }
+      });
+    }
   }
 }
 

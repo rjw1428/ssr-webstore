@@ -4,6 +4,7 @@
       <h4>Orders</h4>
     </div>
   </div>
+
   <div *ngFor="let order of (orders | async); let i=index">
     <mat-card class="my-3 mat-elevation-z8">
       <div class="row">
@@ -22,15 +23,10 @@
         </div>
         <div class="col-md-6 col-5">
           <mat-form-field style="width: 100%">
-            <textarea matInput 
-              placeholder="Notes"
-              [(ngModel)]="order.notes"
-              cdkTextareaAutosize 
-              #autosize="cdkTextareaAutosize"
-              cdkAutosizeMinRows="1" 
-              cdkAutosizeMaxRows="5">
+            <textarea matInput placeholder="Notes" [(ngModel)]="order.notes" cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5">
             </textarea>
-          </mat-form-field> 
+          </mat-form-field>
           <button mat-raised-button style="width: 50px" (click)="onSaveNote(order)">Save</button>
         </div>
         <div class="col-md-2 col-3">
@@ -38,9 +34,12 @@
             <button mat-raised-button color="warn" (click)="onCancelOrder(order)" style="width: 80px">Cancel</button>
           </div>
           <div class="row d-flex justify-content-center my-2">
-            <button mat-raised-button color="accent" style="width: 80px" *ngIf="order.status=='New'" (click)="onConfirm(order)">Confirm</button>
-            <button mat-raised-button color="primary" style="width: 80px" *ngIf="order.status=='Confirmed'" (click)="onShipped(order)">Shipped</button>
-            <button mat-raised-button color="primary" style="width: 80px" *ngIf="order.status=='Shipped'" (click)="onFinish(order)">Finish</button>
+            <button mat-raised-button color="accent" style="width: 80px" *ngIf="order.status=='New'"
+              (click)="onConfirm(order)">Confirm</button>
+            <button mat-raised-button color="primary" style="width: 80px" *ngIf="order.status=='Confirmed'"
+              (click)="onShipped(order)">Shipped</button>
+            <button mat-raised-button color="primary" style="width: 80px" *ngIf="order.status=='Shipped'"
+              (click)="onFinish(order)">Finish</button>
           </div>
           <div class="row d-flex justify-content-center my-2">
             <p><strong>Status: </strong>{{order.status}}</p>
@@ -61,3 +60,4 @@
       </div>
     </mat-card>
   </div>
+</div>

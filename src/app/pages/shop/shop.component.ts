@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { DataService } from 'src/app/data.service';
 import { Item } from 'src/app/models/item';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SortOption } from 'src/app/models/sort-option';
 import { Option } from 'src/app/models/option';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { EnterItemPopupComponent } from 'src/app/component/item/enter-item-popup/enter-item-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'shop',
@@ -21,11 +24,19 @@ export class ShopComponent implements OnInit {
   filteredItems: Item[] = []
   filtersForm: FormGroup
   selectedFilters: { id: string, label: string, options: string, options_raw: any }[] = []
+  popupWidth = '900px';
+  initialLoad = true;
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.popupWidth = (window.innerWidth < 992) ? "100vw" : "900px"
+  }
   constructor(
     private dataService: DataService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     this.filtersForm = this.formBuilder.group({})
   }
@@ -82,13 +93,18 @@ export class ShopComponent implements OnInit {
 
           //GET FILTERS FROM URL
           this.route.queryParamMap.subscribe((map: Params) => {
-            let appliedFilters = Object.keys(map.params).map(key => this.filters.find(filter => filter.id == key))
+            let itemId=map.params['id']
+            let appliedFilters = Object.keys(map.params).filter(key=>key!='id').map(key => this.filters.find(filter => filter.id == key))
             if (appliedFilters.length)
               appliedFilters.forEach(filter => {
                 let matchingFilter= this.filters.find(f=>f.id==filter.id)
                 let optionValue=matchingFilter.options.find(option=>option.id==map.params[filter.id])
                 this.filtersForm.get(filter.id).setValue(optionValue)
               })
+            if (itemId)
+              this.openDialog(itemId)
+
+            this.initialLoad = false
           })
         })
       })
@@ -109,10 +125,16 @@ export class ShopComponent implements OnInit {
     return filter ? filter.label : undefined
   }
 
+  onItemSelected(itemId: string) {
+    this.router.navigate(["/shop"], { queryParams: {id: itemId} })
+  }
+
   setUrl() {
+    console.log("THERE")
     let paramsObj = this.selectedFilters.length > 0 ? this.selectedFilters
       .map(val => ({ [val.id]: val['options_raw']['id'] }))
       .reduce((obj, val) => ({ ...obj, [Object.keys(val).pop()]: Object.values(val).pop() })) : {}
+    console.log(paramsObj)
     this.router.navigate(["/shop"], { queryParams: paramsObj })
   }
 
@@ -136,6 +158,23 @@ export class ShopComponent implements OnInit {
     if (sort.order == "desc")
       return +b - +a
     return +a - +b
+  }
+
+  openDialog(itemId): void {
+    let selectedItem=this.items.find(item=>item.id==itemId)
+    const dialogRef = this.dialog.open(EnterItemPopupComponent, {
+      width: this.popupWidth,
+      data: { item: selectedItem, showCartButton: true }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.snackBar.open("Item was added to your cart", "OK", {
+          duration: 2500,
+        });
+      }
+      this.setUrl()
+    });
   }
 
 }

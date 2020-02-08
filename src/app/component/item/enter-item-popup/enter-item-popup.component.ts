@@ -24,9 +24,10 @@ export class EnterItemPopupComponent implements OnInit {
 
   addToCart() {
     this.dataService.addToShoppingCart(this.item)
+    this.onClose(true)
   }
 
-  onNoClick(itemAdded?: Boolean): void {
-    this.dialogRef.close(itemAdded);
+  onClose(isItemAdded?: boolean): void {
+    this.dialogRef.close(isItemAdded);
   }
 }

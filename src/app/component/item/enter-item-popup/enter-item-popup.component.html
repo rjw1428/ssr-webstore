@@ -31,8 +31,8 @@
       </div>
       <div class="row" mat-dialog-actions>
         <div class="col-12 d-flex justify-content-around">
-          <button mat-raised-button [mat-dialog-close]>Close</button>
-          <button mat-raised-button [mat-dialog-close]="true" *ngIf="data.showCartButton" [disabled]="item.isSold"
+          <button mat-raised-button (click)="onClose()">Close</button>
+          <button mat-raised-button *ngIf="data.showCartButton" [disabled]="item.isSold"
             (click)="addToCart()">
             <mat-icon>shopping_cart</mat-icon>Add to Cart
           </button>

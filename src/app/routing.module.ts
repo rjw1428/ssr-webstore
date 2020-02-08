@@ -23,7 +23,8 @@ const routes: Routes = [
       { path: 'about', component: AboutPageComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'success', component: SuccessPurchaseComponent },
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', component: HomeComponent },
+      { path: '**', redirectTo: '' },
     ]
   }
 ];

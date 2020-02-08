@@ -33,7 +33,7 @@
           <div class="col-12">
             <ul class="transition-group" [transition-group]="'flip-list'">
               <li class="item on-small" *ngFor="let item of filteredItems" transition-group-item>
-                <item [item]="item"></item>
+                <item [item]="item" [enablePopup]="false" (itemSelected)="onItemSelected($event)"></item>
               </li>
             </ul>
           </div>
