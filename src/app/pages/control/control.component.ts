@@ -23,6 +23,7 @@ export class ControlComponent implements OnInit {
   aboutFormTitle: FormGroup
   aboutFormTop: FormGroup[] = []
   aboutFormBottomHeader: FormGroup
+  aboutFormClosing: FormGroup
   aboutFormBottom: FormGroup[] = []
   aboutFormVideo: FormGroup
   inventoryForms: FormGroup[] = []
@@ -55,6 +56,7 @@ export class ControlComponent implements OnInit {
       this.aboutFormTitle = this.formBuilder.group({ header: resp['header'] })
       this.aboutFormVideo = this.formBuilder.group({ videoUrl: resp['videoUrl'] })
       this.aboutFormBottomHeader = this.formBuilder.group({ bottomSectionTitle: resp['bottomSectionTitle'] })
+      this.aboutFormClosing = this.formBuilder.group({ closing: resp['closing'] })
       this.aboutFormTop = resp['topSection'].map(sect => this.formBuilder.group({ paragraph: sect }))
       this.aboutFormBottom = resp['bottomSection'].map(sect => this.formBuilder.group(({ paragraph: sect })))
     })
@@ -195,6 +197,7 @@ export class ControlComponent implements OnInit {
       header: this.aboutFormTitle.value['header'],
       videoUrl: this.aboutFormVideo.value['videoUrl'],
       bottomSectionTitle: this.aboutFormBottomHeader.value['bottomSectionTitle'],
+      closing: this.aboutFormClosing.value['closing'],
       topSection: this.aboutFormTop.map(form => form.value['paragraph']),
       bottomSection: this.aboutFormBottom.map(form => form.value['paragraph'])
     }

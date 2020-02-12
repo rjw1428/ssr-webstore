@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { DataService } from 'src/app/data.service';
 import { timingSafeEqual } from 'crypto';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Upload } from 'src/app/models/upload';
 
 @Component({
   selector: 'other-settings-tab',
@@ -13,10 +14,10 @@ export class OtherComponent implements OnInit {
   companyForm: FormGroup
   socialForm: FormGroup
 
-  headerImages: any[]=[]
-  aboutIcon: any
-  aboutHeader: any
-  shopHeader: any
+  headerImages: Upload[]=[]
+  aboutIcon: string
+  aboutHeader: string
+  shopHeader: string
   constructor(
     private dataService: DataService,
     private formBuilder: FormBuilder
@@ -37,23 +38,31 @@ export class OtherComponent implements OnInit {
         twitter: resp['twitter']
       })
     })
+
+    this.dataService.getSiteImagesIcons("about-banner.jpg").then(thumbnailUrl=>{
+      this.aboutHeader=thumbnailUrl
+    })
+    this.dataService.getSiteImagesIcons("about.jpg").then(thumbnailUrl=>{
+      this.aboutIcon=thumbnailUrl
+    })
+    this.dataService.getSiteImagesIcons("shop-banner.jpg").then(thumbnailUrl=>{
+      this.shopHeader=thumbnailUrl
+    })
   }
 
-  onFileSelected(event, itemIndex: number) {
+  onFileSelected(event) {
     let files = event.target.files as FileList
     for (let i = 0; i < files.length; i++) {
       //Add temp loading image
-      this.headerImages.push([] as any)
-
-    //   //Upload Image to backend
-    //   this.dataService.uploadItemImage(
-    //     new Upload(files.item(i)),
-    //     this.inventory[itemIndex]
-    //   )
+      // this.headerImages.push([] as any)
+      //Upload Image to backend
+      // this.dataService.uploadSiteImage(
+      //   new Upload(files.item(i))
+      // )
     }
   }
 
-  setSelectedImage(i: number, n: number) {
+  setSelectedImage(i: number) {
     // if (this.selectedPicture.itemNum == i && this.selectedPicture.picNum == n)
     //   this.selectedPicture = { itemNum: -1, picNum: -1 }
     // else

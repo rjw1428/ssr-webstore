@@ -26,10 +26,10 @@ export class DataService {
   }
 
   getThumbnail(imageName: string) {
-    let part=imageName.split(".")
+    let part = imageName.split(".")
     let name = part[0]
     let ending = part[1]
-    let path = "/inventory/thumbnails/"+name+"_200x200."+ending
+    let path = "/inventory/thumbnails/" + name + "_200x200." + ending
     return firebase.storage().ref(path).getDownloadURL()
   }
 
@@ -44,25 +44,41 @@ export class DataService {
     return this.afs.collection(this.companyId).doc(doc)
   }
 
+  getSiteImagesIcons(imageName: string) {
+    let part = imageName.split(".")
+    let name = part[0]
+    let ending = part[1]
+    let path = "/site/thumbnails/" + name + "_200x200." + ending
+    return firebase.storage().ref(path).getDownloadURL()
+  }
+
+  getSiteImages(imageName: string) {
+    let part = imageName.split(".")
+    let name = part[0]
+    let ending = part[1]
+    let path = "/site/thumbnails/" + name + "_200x200." + ending
+    return firebase.storage().ref(path).getDownloadURL()
+  }
+
   getOrders() {
     return this.afs.collection(this.companyId).doc('orders')
-    .collection("orders", ref => ref.where("active","==",true).orderBy("dateCreated", "desc"))
-    .valueChanges()
+      .collection("orders", ref => ref.where("active", "==", true).orderBy("dateCreated", "desc"))
+      .valueChanges()
   }
 
   updateOrder(order, updateObj) {
-    return this.afs.collection(this.companyId).doc('orders').collection("orders").doc(order.id).set(updateObj, {merge: true})
-    .then(rep=>{
-      this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
-    })
-    .catch(err=>{
-      this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
-    })
+    return this.afs.collection(this.companyId).doc('orders').collection("orders").doc(order.id).set(updateObj, { merge: true })
+      .then(rep => {
+        this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
+      })
+      .catch(err => {
+        this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
+      })
   }
 
   deleteOrder(orderId) {
     return this.afs.collection('alpineKnives').doc("orders").collection("orders").doc(orderId)
-    .set({active: false}, {merge: true})
+      .set({ active: false }, { merge: true })
   }
 
   getInventory(itemType) {
@@ -97,7 +113,36 @@ export class DataService {
   }
 
   setOrderId(id: string) {
-    this.orderId=id
+    this.orderId = id
+  }
+
+  uploadSiteImage(upload) {
+    let storageRef = firebase.storage().ref();
+    let uploadTask = storageRef.child(`site/${upload.file.name}`).put(upload.file);
+    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+      (snapshot) => {
+        upload.progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        console.log(upload.progress)
+      },
+      (error) => {
+        console.log(error)
+      },
+      () => {
+        console.log("UPLOAD COMPLETE")
+        firebase.storage().ref(uploadTask.snapshot.ref.fullPath)
+          .getDownloadURL().then(url => {
+            console.log(url)
+            //Remove temp loading image
+            // item.image.splice(item.image.findIndex(img => !img.name), 1)
+
+            // //Save newly uploaded image
+            // upload.url = url
+            // upload.name = upload.file.name
+            // upload.rotation = 0
+            // delete upload.file
+            // this.saveFileData(upload, item)
+          })
+      })
   }
 
   uploadItemImage(upload: Upload, item: Item) {
@@ -131,8 +176,7 @@ export class DataService {
             delete upload.file
             this.saveFileData(upload, item)
           })
-      }
-    );
+      });
   }
 
   saveFileData(upload: Upload, item: Item) {
@@ -185,6 +229,23 @@ export class DataService {
         console.log(err)
         this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
       })
+  }
+
+  sendEmail(order, message) {
+    this.afs.collection(this.companyId).doc("customerInfo").collection("emails").add({
+      to: [order.user.email],
+      message: {
+        subject: "Thank you for your purchase",
+        html: message,
+        text: message
+      }
+    }).then(resp => {
+      this.snackBar.open("Email has been triggered!", "OK", { duration: 2500 })
+    })
+    .catch(err => {
+      console.log(err)
+      this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
+    })
   }
 }
 

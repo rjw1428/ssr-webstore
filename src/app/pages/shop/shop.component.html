@@ -2,7 +2,7 @@
   <div class="container-fluid fill-page">
     <div class="row">
       <div class="col-12 mx-0 px-0 banner">
-        <img height="150" width="100%" src="../../../assets/img/shop-banner.jpg">
+        <img *ngIf="(headerImage | async)?.shopHeader as header" height="150" width="100%" [src]="header.url" [ngStyle]="{'transform': 'rotate('+header.rotation+'deg)'}">
       </div>
     </div>
     <div class="row my-4">

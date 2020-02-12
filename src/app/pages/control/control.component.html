@@ -37,7 +37,6 @@
       </ng-template>
     </mat-tab>
   </mat-tab-group>
-  <footer></footer>
 </div>
 
 <ng-template #editableInventory>
@@ -325,6 +324,19 @@
         </div>
       </div>
       <button mat-raised-button color="accent" (click)="onAddParagraph(aboutFormBottom)">+</button>
+    </mat-card>
+    <mat-card class="my-3 mat-elevation-z8">
+      <div class="row w-100">
+        <div class="col-12">
+          <div [formGroup]="aboutFormClosing" *ngIf="aboutFormClosing">
+            <mat-form-field class="w-100">
+              <mat-label>Check Us Out:</mat-label>
+              <input formControlName="closing" matInput>
+            </mat-form-field>
+            <p style="font-style: italic; opacity: .5;">"check us out at instgram." will be added to the end of this line.</p>
+          </div>
+        </div>
+      </div>
     </mat-card>
   </div>
 </ng-template>

@@ -9,6 +9,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { EnterItemPopupComponent } from 'src/app/component/item/enter-item-popup/enter-item-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Image } from 'src/app/models/image';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'shop',
@@ -26,6 +28,7 @@ export class ShopComponent implements OnInit {
   selectedFilters: { id: string, label: string, options: string, options_raw: any }[] = []
   popupWidth = '900px';
   initialLoad = true;
+  headerImage: Observable<any>
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
     this.popupWidth = (window.innerWidth < 992) ? "100vw" : "900px"
@@ -42,6 +45,8 @@ export class ShopComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.headerImage=this.dataService.getBackendData('siteImages').valueChanges()
+    
     this.dataService.getInventory('knives').valueChanges()
       .subscribe((items: Item[]) => {
         this.items = items.map(item => {

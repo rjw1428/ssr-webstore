@@ -16,8 +16,8 @@
         <div class="row">
           <div class="col-12">
             <div *ngIf="headerImages" cdkDropList (cdkDropListDropped)="dropPicture($event)">
-              <div class="m-2" *ngFor="let pic of headerImages; let n=index"
-                (mousedown)="setSelectedImage(i, n)" cdkDrag cdkDragBoundary=".picture-containter" [cdkDragData]="i">
+              <div class="m-2" *ngFor="let pic of headerImages; let n=index" (mousedown)="setSelectedImage(n)"
+                cdkDrag cdkDragBoundary=".picture-containter" [cdkDragData]="n">
                 <div class="row">
                   <div class="col-6 d-flex justify-content-center">
                     <!-- Drag & Drop Place holder -->
@@ -45,22 +45,34 @@
                 </div>
               </div>
             </div>
-            <input style="display: none" type="file" (change)="onFileSelected($event, i)" #fileInput multiple>
+            <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput multiple>
             <button class="small-button" mat-raised-button (click)="fileInput.click()">+</button>
           </div>
         </div>
-
+        <hr>
         <div class="row">
           <div class="col-12">
             <p>About Homepage Icon:</p>
           </div>
         </div>
         <div class="row">
-          <div class="col-12 d-flex flex-row">
-            <button class="small-button" mat-raised-button>+</button>
+          <div class="col-6 d-flex justify-content-center">
+            <!-- Image -->
+            <img class="img-thumbnail" *ngIf="aboutIcon"
+            [src]="aboutIcon">
+          </div>
+          <div class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
+            <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput>
+            <button mat-raised-button color="warn" (click)="fileInput.click()">Change</button>
+            <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()">
+              <mat-icon>rotate_left</mat-icon>
+            </button>
+            <button class="small-button" mat-raised-button (click)="onRotatePictureRight()">
+              <mat-icon>rotate_right</mat-icon>
+            </button>
           </div>
         </div>
-
+        <hr>
 
         <div class="row">
           <div class="col-12">
@@ -68,11 +80,23 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12 d-flex flex-row">
-            <button class="small-button" mat-raised-button>+</button>
+          <div class="col-6 d-flex justify-content-center">
+            <!-- Image -->
+            <img class="img-thumbnail" *ngIf="aboutIcon"
+            [src]="aboutHeader">
+          </div>
+          <div class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
+            <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput>
+            <button mat-raised-button color="warn" (click)="fileInput.click()">Change</button>
+            <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()">
+              <mat-icon>rotate_left</mat-icon>
+            </button>
+            <button class="small-button" mat-raised-button (click)="onRotatePictureRight()">
+              <mat-icon>rotate_right</mat-icon>
+            </button>
           </div>
         </div>
-
+        <hr>
 
         <div class="row">
           <div class="col-12">
@@ -80,8 +104,20 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12 d-flex flex-row">
-            <button class="small-button" mat-raised-button>+</button>
+          <div class="col-6 d-flex justify-content-center">
+            <!-- Image -->
+            <img class="img-thumbnail" *ngIf="aboutIcon"
+            [src]="shopHeader">
+          </div>
+          <div class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
+            <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput>
+            <button mat-raised-button color="warn" (click)="fileInput.click()">Change</button>
+            <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()">
+              <mat-icon>rotate_left</mat-icon>
+            </button>
+            <button class="small-button" mat-raised-button (click)="onRotatePictureRight()">
+              <mat-icon>rotate_right</mat-icon>
+            </button>
           </div>
         </div>
       </mat-card>

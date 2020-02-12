@@ -33,6 +33,8 @@ export class OrdersComponent implements OnInit {
 
   onConfirm(order) {
     this.dataService.updateOrder(order, {status: "Confirmed"})
+    let email=`Hi ${order.user.firstName}, <br><br>Thank you for purchase. We are writing to inform you that we have received your order and it is currently being worked on by one of our skilled blacksmiths.<br>We will notify you once your product has shipped.If you have any questions in the mean time, please feel free to <a href=mailto:test@test.com>contact us</a><br><br>Cheers,<br>Alpine Custom Knives<br>Richmond Va`
+    this.dataService.sendEmail(order, email)
   }
 
   onShipped(order) {

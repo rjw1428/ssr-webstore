@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DataService } from 'src/app/data.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'about',
@@ -8,9 +10,14 @@ import { Router } from '@angular/router';
 })
 export class AboutComponent implements OnInit {
   sectionTitle="about us"
-  constructor(private router: Router) { }
+  image: Observable<any>
+  constructor(
+    private router: Router,
+    private dataService: DataService
+    ) { }
 
   ngOnInit() {
+    this.image=this.dataService.getBackendData('siteImages').valueChanges()
   }
 
   navigate() {

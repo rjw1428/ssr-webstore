@@ -16,6 +16,7 @@ export class AboutPageComponent implements OnInit, AfterViewInit{
   animateSlats: boolean = false
   animateQuotes: boolean = false
   viewLoaded: boolean = false;
+  headerImage: Observable<any>
   @ViewChild("slants", { static: false }) slants: ElementRef
   @ViewChild("quotes", { static: false }) quotes: ElementRef
   @HostListener('window:scroll', ['$event'])
@@ -40,6 +41,7 @@ export class AboutPageComponent implements OnInit, AfterViewInit{
 
   ngOnInit() {
     window.scrollTo(0, 0)
+    this.headerImage=this.dataService.getBackendData('siteImages').valueChanges()
     this.companyInfo = this.dataService.getCompanyInfo()
     this.pageContent = this.dataService.getBackendData('about').valueChanges().pipe(
       map((resp: any) => {
@@ -51,4 +53,13 @@ export class AboutPageComponent implements OnInit, AfterViewInit{
   ngAfterViewInit() {
     this.viewLoaded = true
   }
+
+  // setHeaderImg() {
+  //   if (this.headerImage) {
+  //     let style= {
+  //       'background-image': 'url('+this.headerImage['aboutHeader'].url+')', 
+  //       'transform': 'rotate('+this.headerImage['aboutHeader'].rotation+'deg)'
+  //     }
+  //   }
+  // }
 }

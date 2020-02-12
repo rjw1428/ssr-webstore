@@ -1,5 +1,6 @@
 <div class="content-page" *ngIf="!editable">
-  <div class="banner d-flex">
+  <!-- *ngIf="(headerImage | async)?.aboutHeader as img" [ngStyle]="setHeaderImg()" -->
+  <div class="banner d-flex" >
     <h1 class="overlay my-auto w-100">{{ (pageContent | async)?.header }}</h1>
   </div>
   <div class="container">
