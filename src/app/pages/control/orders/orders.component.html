@@ -16,7 +16,7 @@
       </div>
       <div class="row">
         <div class="col-4">
-          <p class="email" (click)="sendEmail(order.user.email)">{{order.user.email}}</p>
+          <p class="email" (click)="setEmailShortcut(order.user.email)">{{order.user.email}}</p>
           <p class="name my-1"><strong>{{order.user.firstName}} {{order.user.lastName}}</strong></p>
           <p class="mb-1"><small>{{order.user.street}}</small></p>
           <p><small>{{order.user.city}}, {{order.user.state}} {{order.user.zip}}</small></p>

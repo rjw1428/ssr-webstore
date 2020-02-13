@@ -51,19 +51,6 @@ export class CheckoutComponent implements OnInit {
 
   onCheckout() {
     this.checkoutMode = true
-    // const dialogRef = this.dialog.open(PurchaseFormComponent, {
-    //   data: this.cart,
-    //   width: this.popupWidth
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.cart = this.dataService.clearShoppingCart()
-    //     this.snackBar.open("Thank you for your purchase!", "OK", {
-    //       duration: 2500
-    //     });
-    //   }
-    // });
   }
 
   onClearCart() {

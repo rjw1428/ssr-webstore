@@ -1,7 +1,11 @@
 <div class="content-page" *ngIf="!editable">
-  <!-- *ngIf="(headerImage | async)?.aboutHeader as img" [ngStyle]="setHeaderImg()" -->
-  <div class="banner d-flex" >
-    <h1 class="overlay my-auto w-100">{{ (pageContent | async)?.header }}</h1>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 px-0" style="height:300px; position: relative; width: 100%">
+        <img *ngIf="(headerImage | async)?.aboutHeader as img" [src]="img.url" style="width: 100%; height: 100%">
+        <h1 class="overlay">{{ (pageContent | async)?.header }}</h1>
+      </div>
+    </div>
   </div>
   <div class="container">
     <div class="row">
@@ -14,8 +18,8 @@
     </div>
     <div class="row" *ngIf="(pageContent | async)?.videoUrl as videoUrl">
       <div class="col-12 text-center">
-        <iframe class="video" [src]="videoUrl" frameborder="0"
-          allow="accelerometer; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe class="video" [src]="videoUrl" frameborder="0" allow="accelerometer; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
       </div>
     </div>
     <div class="row" *ngIf="(pageContent | async)?.bottomSectionTitle as bottomSectionTitle">
@@ -24,12 +28,12 @@
       </div>
     </div>
     <div class="row" *ngIf="(pageContent | async)?.bottomSection as bottomSection">
-        <div class="col-12 opening split-col my-4 d-none d-lg-block">
-            <p *ngFor="let section of bottomSection">{{section}}</p>
-        </div>
-        <div class="col-12 opening my-4 d-lg-none">
-            <p *ngFor="let section of bottomSection">{{section}}</p>
-        </div>
+      <div class="col-12 opening split-col my-4 d-none d-lg-block">
+        <p *ngFor="let section of bottomSection">{{section}}</p>
+      </div>
+      <div class="col-12 opening my-4 d-lg-none">
+        <p *ngFor="let section of bottomSection">{{section}}</p>
+      </div>
       <div class="slants" #slants>
         <div [ngClass]="{'slant-left':true,'animate-left':animateSlats}"></div>
         <div [ngClass]="{'slant-right':true,'animate-right':animateSlats}"></div>
@@ -37,7 +41,8 @@
     </div>
     <div class="row">
       <div class="col-12 opening mt-3">
-        <p *ngIf="(pageContent | async)?.closing as closing">{{closing}}, check us out on <a [href]="(companyInfo | async)?.instagram">instagram.</a></p>
+        <p *ngIf="(pageContent | async)?.closing as closing">{{closing}}, check us out on <a
+            [href]="(companyInfo | async)?.instagram">instagram.</a></p>
       </div>
     </div>
     <div class="row">
@@ -55,14 +60,9 @@
       <mat-form-field class="w-100">
         <input matInput [value]="(pageContent | async)?.header">
       </mat-form-field>
-      <mat-form-field *ngFor="let section of (pageContent | async)?.topSection"  class="w-100">
+      <mat-form-field *ngFor="let section of (pageContent | async)?.topSection" class="w-100">
         <mat-label>Statement:</mat-label>
-        <textarea 
-          matInput 
-          [value]="section" 
-          cdkTextareaAutosize 
-          #autosize="cdkTextareaAutosize"
-          cdkAutosizeMinRows="1" 
+        <textarea matInput [value]="section" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
           cdkAutosizeMaxRows="5">
         </textarea>
       </mat-form-field>

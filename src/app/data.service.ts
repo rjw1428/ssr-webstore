@@ -5,7 +5,7 @@ import 'firebase/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Item } from './models/item';
 import { Upload } from './models/upload';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { of, Subject } from 'rxjs';
 
@@ -52,13 +52,13 @@ export class DataService {
     return firebase.storage().ref(path).getDownloadURL()
   }
 
-  getSiteImages(imageName: string) {
-    let part = imageName.split(".")
-    let name = part[0]
-    let ending = part[1]
-    let path = "/site/thumbnails/" + name + "_200x200." + ending
-    return firebase.storage().ref(path).getDownloadURL()
-  }
+  // getSiteImages(imageName: string) {
+  //   let part = imageName.split(".")
+  //   let name = part[0]
+  //   let ending = part[1]
+  //   let path = "/site/thumbnails/" + name + "_200x200." + ending
+  //   return firebase.storage().ref(path).getDownloadURL()
+  // }
 
   getOrders() {
     return this.afs.collection(this.companyId).doc('orders')
@@ -116,7 +116,7 @@ export class DataService {
     this.orderId = id
   }
 
-  uploadSiteImage(upload) {
+  uploadSiteImage(upload, id, imageArray?) {
     let storageRef = firebase.storage().ref();
     let uploadTask = storageRef.child(`site/${upload.file.name}`).put(upload.file);
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
@@ -132,15 +132,20 @@ export class DataService {
         firebase.storage().ref(uploadTask.snapshot.ref.fullPath)
           .getDownloadURL().then(url => {
             console.log(url)
-            //Remove temp loading image
-            // item.image.splice(item.image.findIndex(img => !img.name), 1)
 
-            // //Save newly uploaded image
-            // upload.url = url
-            // upload.name = upload.file.name
-            // upload.rotation = 0
-            // delete upload.file
-            // this.saveFileData(upload, item)
+            //Save newly uploaded image
+            upload.url = url
+            upload.name = upload.file.name
+            upload.rotation = 0
+            delete upload.file
+
+            // Remove temp loading image
+            imageArray[imageArray.findIndex(img => !img.name)]=JSON.parse(JSON.stringify(upload))
+
+            if (id=="homepageBanner")
+              this.saveToBackend('siteImages', { [id]: JSON.parse(JSON.stringify(imageArray)) })
+            else
+              this.saveToBackend('siteImages', { [id]: JSON.parse(JSON.stringify(upload)) })
           })
       })
   }
@@ -203,7 +208,6 @@ export class DataService {
   }
 
   updateInventory(itemCategory: string, item: Item) {
-    console.log(item)
     this.afs.collection(this.companyId).doc('inventory').collection(itemCategory).doc(item.id).set(item)
       .then(resp => {
         this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
@@ -219,11 +223,12 @@ export class DataService {
       .set({ active: 'false' }, { merge: true })
   }
 
-  saveToBackend(loc, obj) {
+  saveToBackend(loc, obj, hideAlert?) {
     this.getBackendData(loc)
       .update(obj)
       .then(resp => {
-        this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
+        if (hideAlert)
+          this.snackBar.open("Changes successfully saved!", "OK", { duration: 2500 })
       })
       .catch(err => {
         console.log(err)
@@ -231,21 +236,67 @@ export class DataService {
       })
   }
 
-  sendEmail(order, message) {
-    this.afs.collection(this.companyId).doc("customerInfo").collection("emails").add({
-      to: [order.user.email],
-      message: {
-        subject: "Thank you for your purchase",
-        html: message,
-        text: message
-      }
-    }).then(resp => {
-      this.snackBar.open("Email has been triggered!", "OK", { duration: 2500 })
+  getOrderById(id) {
+    return this.afs.collection(this.companyId).doc('orders').collection('orders').doc(id).valueChanges()
+  }
+
+  sendEmail(order, templateId) {
+    this.getBackendData('emailTemplates').valueChanges().pipe(take(1)).subscribe(emailTemplates => {
+      this.getCompanyInfo().pipe(take(1)).subscribe(companyInfo => {
+        let outputMessage = emailTemplates[templateId]['body']
+          .replace(/{{contactUs}}/g, "<a href='mailto:" + companyInfo['email'] + "'>Contact Us</a>")
+          .replace(/{{userName}}/g, order.user.firstName)
+          .replace(/{{orderNumber}}/g, order.trackingNumber)
+          .replace(/{{instagram}}/g, "<a href='" + companyInfo['instagram'] + "'>Instagram</a>")
+          .replace(/{{order}}/g, this.orderSummary(order))
+        this.afs.collection(this.companyId).doc("customerInfo").collection("emails").add({
+          to: [order.user.email],
+          message: {
+            subject: emailTemplates[templateId]['subject'],
+            html: outputMessage,
+            text: outputMessage,
+          }
+        }).then(resp => {
+          if (templateId == "confirm") {
+            this.afs.collection(this.companyId).doc('orders').collection("orders").doc(order.id).set({ status: "Confirmed" }, { merge: true })
+            this.snackBar.open("Email has been triggered!", "OK", { duration: 2500 })
+          }
+          else if (templateId == "shipped") {
+            this.afs.collection(this.companyId).doc('orders').collection("orders").doc(order.id).set({ status: "Shipped", trackingNumber: order.trackingNumber }, { merge: true })
+            this.snackBar.open("Email has been triggered!", "OK", { duration: 2500 })
+          }
+        })
+          .catch(err => {
+            console.log(err)
+            this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
+          })
+      })
     })
-    .catch(err => {
-      console.log(err)
-      this.snackBar.open("An Error occurred while trying to save", "OK", { duration: 5000 })
+  }
+
+  sendAlert(order) {
+    this.getCompanyInfo().pipe(take(1)).subscribe(companyInfo => {
+      this.afs.collection(this.companyId).doc("customerInfo").collection("emails").add({
+        to: [companyInfo['email']],
+        message: {
+          subject: "💸 New Order",
+          html: '<h3>New Order:'+order.id+'</h3>'+this.orderSummary(order)+'<br> ~Sent by Wilk with love ✌️',
+          text: '<h3>New Order:'+order.id+'</h3>'+this.orderSummary(order)+'<br> ~Sent by Wilk with love ✌️',
+        }
+      })
     })
+  }
+
+  orderSummary(order): string {
+    let output = "<br>"
+    order.items.forEach(item => {
+      output += "<img src='" + item.thumbnail + "'><p>" + item.description + "</p><br>"
+    })
+    let orderTotal = order.items
+      .map(item => item.price)
+      .reduce((acc, curr) => acc += curr)
+    output += orderTotal ? "<strong>Total: $" + orderTotal.toFixed(2) + "</strong>" : ""
+    return output
   }
 }
 

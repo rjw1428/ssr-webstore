@@ -59,12 +59,6 @@ export class PurchaseFormComponent implements OnInit {
     this.totalPrice = this.cart.length > 0 ? this.cart
       .map(item => item.price)
       .reduce((acc: number, curr) => acc += curr) : 0
-
-    // const x=this.fns.httpsCallable('test')
-    // let doc=x({uid:"k9IGk8IoIUYDvCHJX7Lg82ztGx73"})
-    // doc.toPromise().then(doc=>
-    //   console.log(doc)
-    // )
   }
 
   ngAfterViewInit() {
@@ -83,12 +77,14 @@ export class PurchaseFormComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result)
         this.dataService.setOrderId(result)
-        this.router.navigate(['success'], { queryParams: { order: result}})
-        // this.snackBar.open("Item was added to your cart", "OK", {
-        //   duration: 2500,
-        // });
+        this.dataService.getOrderById(result).subscribe(order => {
+          if (order['id']) {
+            this.dataService.sendAlert(order)
+            this.dataService.sendEmail(order, "newOrder")
+          }
+          this.router.navigate(['success'], { queryParams: { order: result } })
+        })
       }
     });
   }

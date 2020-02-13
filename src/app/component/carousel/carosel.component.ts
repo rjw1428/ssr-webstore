@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from 'src/app/data.service';
 
 @Component({
   selector: 'carosel',
@@ -11,9 +12,12 @@ export class CaroselComponent implements OnInit {
     "../../assets/img/carosel2.jpg",
     "../../assets/img/carosel3.jpg",
   ]
-  constructor() { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit() {
+    this.dataService.getBackendData('siteImages').valueChanges().subscribe(vals=>{
+      this.slides=vals['homepageBanner']
+    })
   }
 
 }

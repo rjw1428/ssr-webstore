@@ -7,117 +7,138 @@
   <div class="row">
     <div class="col-12">
       <mat-card class="my-3 mat-elevation-z8">
+        <p><strong>Image Control:</strong></p>
         <div class="row">
-          <div class="col-12">
-            <p><strong>Image Control:</strong></p>
-            <p>Homepage Banner:</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <div *ngIf="headerImages" cdkDropList (cdkDropListDropped)="dropPicture($event)">
-              <div class="m-2" *ngFor="let pic of headerImages; let n=index" (mousedown)="setSelectedImage(n)"
-                cdkDrag cdkDragBoundary=".picture-containter" [cdkDragData]="n">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-12">
+                <p>Homepage Banner:</p>
                 <div class="row">
-                  <div class="col-6 d-flex justify-content-center">
-                    <!-- Drag & Drop Place holder -->
-                    <!-- <div class="picture-placeholder" *cdkDragPlaceholder></div> -->
+                  <div class="col-12 picture-containter">
+                    <div *ngIf="headerImages" cdkDropList (cdkDropListDropped)="dropPicture($event)">
+                      <div class="m-2" *ngFor="let pic of headerImages; let n=index" (mousedown)="setSelectedImage(n)"
+                        cdkDrag cdkDragBoundary=".picture-containter" [cdkDragData]="n">
+                        <div class="row">
+                          <div class="col-lg-4 col-6 d-flex justify-content-start">
+                            <!-- Drag & Drop Place holder -->
+                            <div class="picture-placeholder" *cdkDragPlaceholder></div>
 
-                    <!-- Image -->
-                    <!-- <img class="img-thumbnail" *ngIf="pic.url"
-                    [ngClass]="{'item-img-selected': i==selectedPicture.itemNum && n==selectedPicture.picNum}"
-                    [src]="pic.url" [ngStyle]="{'transform': 'rotate('+pic.rotation+'deg)'}"> -->
-                    <!-- Loading Image -->
-                    <div *ngIf="!pic.url" class="picture-placeholder d-flex align-items-end">
-                      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <!-- Image -->
+                            <img class="pic-icon img-thumbnail" *ngIf="pic.url"
+                              [ngClass]="{'item-img-selected': selectedHeaderImg==n}"
+                              [src]="pic.thumbnail?pic.thumbnail:pic.url" (click)="selectHeaderImage(n)"
+                              [ngStyle]="{'transform': 'rotate('+pic.rotation+'deg)'}">
+
+                            <!-- Loading Image -->
+                            <div *ngIf="!pic.url" class="picture-placeholder d-flex align-items-end">
+                              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            </div>
+                          </div>
+                          <div *ngIf="selectedHeaderImg==n"
+                            class="col-lg-8 col-6 d-flex flex-row align-items-center justify-content-around px-0">
+                            <button class="small-button" mat-raised-button color="warn"
+                              (click)="onDeleteSelectedPicture(n)">X</button>
+                            <button class="small-button" mat-raised-button (click)="onRotatePictureLeft(pic)">
+                              <mat-icon>rotate_left</mat-icon>
+                            </button>
+                            <button class="small-button" mat-raised-button (click)="onRotatePictureRight(pic)">
+                              <mat-icon>rotate_right</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
-                    <button class="small-button" mat-raised-button color="warn"
-                      (click)="onDeleteSelectedPicture()">X</button>
-                    <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()">
-                      <mat-icon>rotate_left</mat-icon>
-                    </button>
-                    <button class="small-button" mat-raised-button (click)="onRotatePictureRight()">
-                      <mat-icon>rotate_right</mat-icon>
-                    </button>
+                    <div class="row">
+                      <div class="col-12 d-flex justify-content-center">
+                        <input style="display: none" type="file" (change)="onFileSelected($event, 'homepageBanner')"
+                          #fileInput multiple>
+                        <button class="small-button text-center" mat-raised-button
+                          (click)="fileInput.click()">+</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput multiple>
-            <button class="small-button" mat-raised-button (click)="fileInput.click()">+</button>
           </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-12">
-            <p>About Homepage Icon:</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6 d-flex justify-content-center">
-            <!-- Image -->
-            <img class="img-thumbnail" *ngIf="aboutIcon"
-            [src]="aboutIcon">
-          </div>
-          <div class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
-            <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput>
-            <button mat-raised-button color="warn" (click)="fileInput.click()">Change</button>
-            <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()">
-              <mat-icon>rotate_left</mat-icon>
-            </button>
-            <button class="small-button" mat-raised-button (click)="onRotatePictureRight()">
-              <mat-icon>rotate_right</mat-icon>
-            </button>
-          </div>
-        </div>
-        <hr>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-12">
+                <p>About Homepage Icon:</p>
+              </div>
+            </div>
+            <div class="row" *ngIf="aboutIcon">
+              <div class="col-6 d-flex justify-content-center">
+                <!-- Image -->
+                <img class="img-thumbnail" [src]="aboutIcon.thumbnail" (click)="setSelectedImage(aboutIcon)"
+                  [ngClass]="{'item-img-selected': aboutIcon.selected}"
+                  [ngStyle]="{'transform': 'rotate('+aboutIcon.rotation+'deg)'}">
+              </div>
+              <div *ngIf="aboutIcon.selected" class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
+                <input style="display: none" type="file" (change)="onFileSelected($event, aboutIcon.id)" #fileInput>
+                <button mat-raised-button color="warn" (click)="fileInput.click()">Change</button>
+                <button class="small-button" mat-raised-button
+                  (click)="onRotatePictureLeft(aboutIcon)">
+                  <mat-icon>rotate_left</mat-icon>
+                </button>
+                <button class="small-button" mat-raised-button
+                  (click)="onRotatePictureRight(aboutIcon)">
+                  <mat-icon>rotate_right</mat-icon>
+                </button>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-12">
+                <p>About Us Header:</p>
+              </div>
+            </div>
+            <div class="row" *ngIf="aboutHeader">
+              <div class="col-6 d-flex justify-content-center">
+                <!-- Image -->
+                <img class="img-thumbnail" [ngClass]="{'item-img-selected': aboutHeader.selected}"
+                  [src]="aboutHeader.thumbnail" (click)="setSelectedImage(aboutHeader)">
+              </div>
+              <div *ngIf="aboutHeader.selected" class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
+                <input style="display: none" type="file" (change)="onFileSelected($event, aboutHeader.id)" #fileInput>
+                <button mat-raised-button color="warn" (click)="fileInput.click()">Change</button>
+                <button class="small-button" mat-raised-button
+                  (click)="onRotatePictureLeft(aboutHeader)">
+                  <mat-icon>rotate_left</mat-icon>
+                </button>
+                <button class="small-button" mat-raised-button
+                  (click)="onRotatePictureRight(aboutHeader)">
+                  <mat-icon>rotate_right</mat-icon>
+                </button>
+              </div>
+            </div>
+            <hr>
 
-        <div class="row">
-          <div class="col-12">
-            <p>About Us Header:</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6 d-flex justify-content-center">
-            <!-- Image -->
-            <img class="img-thumbnail" *ngIf="aboutIcon"
-            [src]="aboutHeader">
-          </div>
-          <div class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
-            <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput>
-            <button mat-raised-button color="warn" (click)="fileInput.click()">Change</button>
-            <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()">
-              <mat-icon>rotate_left</mat-icon>
-            </button>
-            <button class="small-button" mat-raised-button (click)="onRotatePictureRight()">
-              <mat-icon>rotate_right</mat-icon>
-            </button>
-          </div>
-        </div>
-        <hr>
-
-        <div class="row">
-          <div class="col-12">
-            <p>Shop Header:</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6 d-flex justify-content-center">
-            <!-- Image -->
-            <img class="img-thumbnail" *ngIf="aboutIcon"
-            [src]="shopHeader">
-          </div>
-          <div class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
-            <input style="display: none" type="file" (change)="onFileSelected($event)" #fileInput>
-            <button mat-raised-button color="warn" (click)="fileInput.click()">Change</button>
-            <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()">
-              <mat-icon>rotate_left</mat-icon>
-            </button>
-            <button class="small-button" mat-raised-button (click)="onRotatePictureRight()">
-              <mat-icon>rotate_right</mat-icon>
-            </button>
+            <div class="row">
+              <div class="col-12">
+                <p>Shop Header:</p>
+              </div>
+            </div>
+            <div class="row" *ngIf="shopHeader">
+              <div class="col-6 d-flex justify-content-center">
+                <!-- Image -->
+                <img class="img-thumbnail" [src]="shopHeader.thumbnail"
+                  [ngClass]="{'item-img-selected': shopHeader.selected}" (click)="setSelectedImage(shopHeader)"
+                  [ngStyle]="{'transform': 'rotate('+shopHeader.rotation+'deg)'}">
+              </div>
+              <div *ngIf="shopHeader.selected" class="col-6 d-flex flex-row align-items-center justify-content-around px-0">
+                <input style="display: none" type="file" (change)="onFileSelected($event, shopHeader.id)" #fileInput>
+                <button mat-raised-button color="warn" (click)="fileInput.click()">Change</button>
+                <button  class="small-button" mat-raised-button
+                  (click)="onRotatePictureLeft(shopHeader)">
+                  <mat-icon>rotate_left</mat-icon>
+                </button>
+                <button class="small-button" mat-raised-button
+                  (click)="onRotatePictureRight(shopHeader)">
+                  <mat-icon>rotate_right</mat-icon>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </mat-card>
