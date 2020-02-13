@@ -1,9 +1,13 @@
 <section-title [sectionTitle]="sectionTitle"></section-title>
 
 <div class="container">
-    <div class="row">
-        <div class="col-12 d-flex justify-content-center align-items-center mb-5" *ngIf="(image | async)?.aboutIcon as img">
-            <img [src]="img.url" (click)="navigate()" [ngStyle]="{'transform': 'rotate('+img.rotation+'deg)'}">
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center align-items-center mb-5" *ngIf="(image | async)?.aboutIcon as img">
+      <div class="bigger-frame">
+        <div class="img-frame">
+          <img [src]="img.url" (click)="navigate()" [ngStyle]="{'transform': 'rotate('+img.rotation+'deg)'}">
         </div>
+      </div>
     </div>
+  </div>
 </div>

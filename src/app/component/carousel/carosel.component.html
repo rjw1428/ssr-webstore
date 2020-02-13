@@ -10,7 +10,9 @@
 
         <div class="carousel-inner" *ngIf="slides">
           <div [ngClass]="{'carousel-item':true, 'active':n==0}" *ngFor="let slide of slides; let n=index">
-            <img class="w-100" [src]="slide.url" alt="Second slide" *ngIf="slide.url">
+            <div class="img-frame">
+              <img class="w-100 h-100" [src]="slide.url" alt="Second slide" *ngIf="slide.url">
+            </div>
           </div>
         </div>
 
