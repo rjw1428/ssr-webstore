@@ -10,6 +10,7 @@ import { ConfirmPurchaseFormComponent } from '../confirm-purchase-form/confirm-p
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ok } from 'assert';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'purchase-form',
@@ -78,13 +79,16 @@ export class PurchaseFormComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.dataService.setOrderId(result)
-        this.dataService.getOrderById(result).subscribe(order => {
+        this.dataService.getOrderById(result).pipe(first()).subscribe(order => {
           if (order['id']) {
             this.dataService.sendAlert(order)
             this.dataService.sendEmail(order, "newOrder")
           }
           this.router.navigate(['success'], { queryParams: { order: result } })
-        })
+        },
+          (err) => console.log(err),
+          () => console.log("order complete")
+        )
       }
     });
   }
