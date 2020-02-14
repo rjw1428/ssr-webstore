@@ -52,14 +52,6 @@ export class DataService {
     return firebase.storage().ref(path).getDownloadURL()
   }
 
-  // getSiteImages(imageName: string) {
-  //   let part = imageName.split(".")
-  //   let name = part[0]
-  //   let ending = part[1]
-  //   let path = "/site/thumbnails/" + name + "_200x200." + ending
-  //   return firebase.storage().ref(path).getDownloadURL()
-  // }
-
   getOrders() {
     return this.afs.collection(this.companyId).doc('orders')
       .collection("orders", ref => ref.where("active", "==", true).orderBy("dateCreated", "desc"))
@@ -155,7 +147,6 @@ export class DataService {
   }
 
   pushUpload(upload: Upload, item: Item) {
-    console.log(item)
     let storageRef = firebase.storage().ref();
     let uploadTask = storageRef.child(`inventory/${upload.file.name}`).put(upload.file);
 

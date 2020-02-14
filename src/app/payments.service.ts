@@ -62,7 +62,6 @@ export class PaymentsService {
 
   async signOut() {
     await this.auth.auth.signOut()
-    return this.router.navigate(['/checkout'])
   }
 
   updateUserData(user) {

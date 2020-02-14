@@ -2,16 +2,14 @@
   <div class="row">
     <div class="col-12 px-0">
       <div id="carousel" class="carousel slide" data-ride="carousel">
-        <!-- <ol class="carousel-indicators">
-          <li data-target="#carousel" data-slide-to="0" class="active"></li>
-          <li data-target="#carousel" data-slide-to="1"></li>
-          <li data-target="#carousel" data-slide-to="2"></li>
-        </ol> -->
+        <ol class="carousel-indicators">
+          <li data-target="#carousel" [attr.data-slide-to]="n" [ngClass]="{'active':n==0}" *ngFor="let slide of slides; let n=index"></li>
+        </ol>
 
         <div class="carousel-inner" *ngIf="slides">
           <div [ngClass]="{'carousel-item':true, 'active':n==0}" *ngFor="let slide of slides; let n=index">
             <div class="img-frame">
-              <img class="w-100 h-100" [src]="slide.url" alt="Second slide" *ngIf="slide.url">
+              <img class="w-100 h-100" [src]="slide.url" alt="Second slide" *ngIf="slide.url"  [ngStyle]="{'transform': 'rotate('+slide.rotation+'deg)'}">
             </div>
           </div>
         </div>

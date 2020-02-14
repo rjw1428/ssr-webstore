@@ -79,10 +79,11 @@ export class PurchaseFormComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.dataService.setOrderId(result)
-        this.dataService.getOrderById(result).pipe(first()).subscribe(order => {
-          if (order['id']) {
+        let sub=this.dataService.getOrderById(result).subscribe(order => {
+          if (order['dateCreated']) {
             this.dataService.sendAlert(order)
             this.dataService.sendEmail(order, "newOrder")
+            sub.unsubscribe()
           }
           this.router.navigate(['success'], { queryParams: { order: result } })
         },

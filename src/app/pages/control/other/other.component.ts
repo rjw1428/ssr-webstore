@@ -42,7 +42,9 @@ export class OtherComponent implements OnInit {
       })
     })
     this.dataService.getBackendData('siteImages').valueChanges().subscribe(images => {
-      Object.keys(images).filter(key => key != "homepageBanner").forEach(imgKey => {
+      Object.keys(images)
+      .filter(key => key != "homepageBanner")
+      .forEach(imgKey => {
         this.dataService.getSiteImagesIcons(images[imgKey]['name'])
           .then(thumbnailUrl => {
             images[imgKey]['id'] = imgKey
@@ -100,8 +102,6 @@ export class OtherComponent implements OnInit {
       this.aboutIcon['selected'] = !currentValue
     else if (this.selectedImageKey == "shopHeader")
       this.shopHeader['selected'] = !currentValue
-
-    this.selectedHeaderImg =-1
   }
 
   onRotatePictureLeft(imgObj) {
@@ -157,9 +157,7 @@ export class OtherComponent implements OnInit {
     siteImages['homepageBanner'] = this.headerImages.map(siteImage=>{
       return siteImage
     })
-
-    let x=JSON.parse(JSON.stringify(siteImages))
-    console.log(x)
-    this.dataService.saveToBackend('siteImages', x, true)
+    
+    this.dataService.saveToBackend('siteImages', JSON.parse(JSON.stringify(siteImages)), true)
   }
 }

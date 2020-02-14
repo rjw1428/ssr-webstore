@@ -16,17 +16,20 @@
                 <div class="row">
                   <div class="col-12 picture-containter">
                     <div *ngIf="headerImages" cdkDropList (cdkDropListDropped)="dropPicture($event)">
-                      <div class="m-2" *ngFor="let pic of headerImages; let n=index" (mousedown)="setSelectedImage(n)"
-                        cdkDrag cdkDragBoundary=".picture-containter" [cdkDragData]="n">
-                        <div class="row">
-                          <div class="col-lg-4 col-6 d-flex justify-content-start">
+                        <div class="row m-2" cdkDrag cdkDragBoundary=".picture-containter" [cdkDragData]="n"
+                        *ngFor="let pic of headerImages; let n=index">
+                          <div class="col-1 px-0 mx-0 d-flex justify-content-end align-items-center" cdkDragHandle>
+                            <mat-icon> drag_indicator</mat-icon>
+                          </div>
+                          <div class="col-6 d-flex justify-content-start"  (mousedown)="setSelectedImage(n)">
                             <!-- Drag & Drop Place holder -->
-                            <div class="picture-placeholder" *cdkDragPlaceholder></div>
+                            <div class="picture-placeholder ml-5" *cdkDragPlaceholder></div>
 
                             <!-- Image -->
                             <img class="pic-icon img-thumbnail" *ngIf="pic.url"
                               [ngClass]="{'item-img-selected': selectedHeaderImg==n}"
-                              [src]="pic.thumbnail?pic.thumbnail:pic.url" (click)="selectHeaderImage(n)"
+                              [src]="pic.thumbnail?pic.thumbnail:pic.url" 
+                              (click)="selectHeaderImage(n)"
                               [ngStyle]="{'transform': 'rotate('+pic.rotation+'deg)'}">
 
                             <!-- Loading Image -->
@@ -35,7 +38,7 @@
                             </div>
                           </div>
                           <div *ngIf="selectedHeaderImg==n"
-                            class="col-lg-8 col-6 d-flex flex-row align-items-center justify-content-around px-0">
+                            class="col-5 d-flex flex-row align-items-center justify-content-around px-0">
                             <button class="small-button" mat-raised-button color="warn"
                               (click)="onDeleteSelectedPicture(n)">X</button>
                             <button class="small-button" mat-raised-button (click)="onRotatePictureLeft(pic)">
@@ -45,14 +48,13 @@
                               <mat-icon>rotate_right</mat-icon>
                             </button>
                           </div>
-                        </div>
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-12 d-flex justify-content-center">
+                      <div class="col-6 d-flex justify-content-center">
                         <input style="display: none" type="file" (change)="onFileSelected($event, 'homepageBanner')"
                           #fileInput multiple>
-                        <button class="small-button text-center" mat-raised-button
+                        <button class="small-button text-center" color="accent" mat-raised-button
                           (click)="fileInput.click()">+</button>
                       </div>
                     </div>
