@@ -70,10 +70,10 @@ export class PurchaseFormComponent implements OnInit {
     this.cardForm.mount(this.card.nativeElement)
   }
 
-  openDialog(user): void {
+  openDialog(checkoutForm): void {
     const dialogRef = this.dialog.open(ConfirmPurchaseFormComponent, {
       width: this.popupWidth,
-      data: { cart: this.cart, user: user, card: this.cardForm, total: this.totalPrice }
+      data: { cart: this.cart, form: checkoutForm, card: this.cardForm, total: this.totalPrice }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -97,13 +97,9 @@ export class PurchaseFormComponent implements OnInit {
   triggerPayment() {
     let cardValidation = this.card.nativeElement.classList as DOMTokenList
     if (this.checkoutForm.valid && !cardValidation.contains("StripeElement--empty")) {
-      // CREATE ANONYMOUS USER
+      // IF CARD VALID, OPEN CONFIRMATION FORM
       if (!cardValidation.contains("StripeElement--invalid")) {
-        this.paymentService.signInAnonymous(this.checkoutForm.value)
-          .then(user => {
-            this.openDialog(user)
-          })
-          .catch(err => console.log("Unable to create user"))
+        this.openDialog(this.checkoutForm.value)
       } else {
         this.snackBar.open("The card information you've provided seems to be invalid.", "OK")
       }

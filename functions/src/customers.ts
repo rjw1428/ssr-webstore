@@ -22,6 +22,7 @@ import * as functions from 'firebase-functions';
 // })
 
 export const createStripeCustomer = functions.https.onCall(async (data) => {
+        console.log(data)
         const userRef = db.collection('alpineKnives')
             .doc('customerInfo')
             .collection('accounts')
@@ -29,7 +30,7 @@ export const createStripeCustomer = functions.https.onCall(async (data) => {
     
         return userRef.get()
             .then(userDoc => {
-                console.log(data)
+                console.log(userDoc)
                 return createCustomer(data)
                     .then(customer => {
                         const userUpdate = { stripeCustomerId: customer.id }

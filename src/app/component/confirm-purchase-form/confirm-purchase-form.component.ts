@@ -20,53 +20,54 @@ export class ConfirmPurchaseFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let user = this.data.user
-    let card = this.data.card
-    const createStripeCustomer = this.fns.httpsCallable("addStripeCustomer")
-    createStripeCustomer(user).toPromise()
-      .then(stripeId => {
-        // console.log(stripeId)
-        this.paymentService.stripe.createToken(card)
-          .then(result => {
-            // console.log(result.token)
-            let createCard = this.fns.httpsCallable('createSource')
-            createCard({ stripeId: stripeId, token: result.token }).toPromise()
-              .then(cardResp => {
-                // console.log(cardResp)
-                return user['stripeId'] = stripeId
-              })
-              .catch(err => console.log("Unable to save card"))
-          })
-          .catch(err => console.log("Stripe token unable to be made"))
-      })
-      .catch(err => console.log("Unable to create stripe Id"))
   }
 
-
-  makePayment() {
-    let stripeId = this.data.user['stripeId']
-    let createCharge = this.fns.httpsCallable('createCharge')
+  async makePayment() {
     this.loading = true
-    createCharge({
-      customer: stripeId,
-      amount: this.data.total * 100,
-    })
-      .toPromise()
-      .then(paymentReponse => {
-        console.log(paymentReponse.status)
-        if (paymentReponse.status == "succeeded") {
-          this.paymentService.saveOrder(this.data.user, this.data.cart, this.data.total).then(orderId => {
-            this.dialogRef.close(orderId)
-          })
-        }
-        else {
-          this.loading = false;
-          this.snackBar.open("Payment was unable to be processed. No Charge was processed. Please try again.", "OK")
-        }
-      })
-      .catch(err => {
-        this.loading = false;
-        this.snackBar.open("Payment was unable to be processed. No Charge was processed. Please try again.", "OK")
-      })
+    try {
+      //CREATE FIREBASE USER && GET CREDIT CARD TOKEN
+      const user = this.paymentService.signInAnonymous(this.data.form)
+      const stripeTokenResult = this.paymentService.stripe.createToken(this.data.card)
+      const bulkPromise = await Promise.all([user, stripeTokenResult])
+      if (!bulkPromise[0])
+        throw "Unable to create user account"
+      if (!bulkPromise[1])
+        throw "Unable to create stripe token"
+      console.log(bulkPromise)
+
+      //WITH FIREBASE USER ID, CREATE STRIPE ID
+      const createStripeCustomer = this.fns.httpsCallable("addStripeCustomer")
+      const stripeId = await createStripeCustomer(bulkPromise[0]).toPromise()
+      if (!stripeId)
+        throw "Unable to create stripe account"
+      
+      //WITH STRIPE ID AND TOKEN, CREATE THE PAYMENT SOURCE
+      const createCard = this.fns.httpsCallable('createSource')
+      const cardResponse = await createCard({ stripeId: stripeId, token: bulkPromise[1].token }).toPromise()
+      if (!cardResponse)
+        throw "Unable to create stripe payment source"
+      console.log(cardResponse)
+
+      //ONCE SOURCE IS CREATED, CREATE A CHARGE
+      const createCharge = this.fns.httpsCallable('createCharge')
+      const paymentReponse = await createCharge({ customer: stripeId, amount: this.data.total * 100 }).toPromise()
+      if (paymentReponse.status != "succeeded")
+        throw "Payment Failed"
+      console.log(paymentReponse)
+
+      //ONCE CHARGE IS SUCCESSFULL, SAVE TO FIREBASE
+      const orderId = await this.paymentService.saveOrder(bulkPromise[0], this.data.cart, this.data.total)
+      if (!orderId)
+        throw "Payment Made, Failure to Save Order"
+      this.dialogRef.close(orderId)
+      console.log(orderId)
+
+    }
+    catch (err) {
+      console.log(err)
+      this.loading = false;
+      this.snackBar.open("Payment was unable to be processed. No Charge was processed. Please try again.", "OK")
+      return err
+    }
   }
 }
