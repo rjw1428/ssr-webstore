@@ -7,6 +7,8 @@ export const db = admin.firestore()
 const settings = { timestampsInSnapshots: true };
 db.settings(settings)
 
+//SET THIS BY RUNNING COMMAND:
+// firebase functions:config:set stripe.secret="your-test-secret-key"
 export const stripeSecret = functions.config().stripe.secret
 
 export const stripe = new Stripe(stripeSecret, {
