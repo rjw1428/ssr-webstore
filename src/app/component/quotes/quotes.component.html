@@ -2,8 +2,9 @@
 
 <!-- LARGE SCREEN FORMAT -->
 <div class="container d-none d-lg-block">
-  <div class="row">
-    <div class="col-4" [ngClass]="{'fadeInOut':animate}" *ngFor="let quote of (pageContent | async)?.quotes">
+  <div class="row d-flex justify-content-center">
+    <div class="test" style="max-width: 25%; min-width: 50%;" [ngClass]="{'fadeInOut':animate}"
+      *ngFor="let quote of (pageContent | async)?.quotes">
       <quote [quote]="quote"></quote>
     </div>
   </div>
@@ -11,8 +12,8 @@
 
 <!-- SMALL SCREEN FORMAT -->
 <div class="container d-lg-none">
-  <div class="row">
-    <div class="col-12  my-3" [ngClass]="{'fadeInOut':animate}" *ngFor="let quote of (pageContent | async)?.quotes">
+  <div class="row d-flex justify-content-center">
+    <div class="col-12 my-3" style="width: 100%;" [ngClass]="{'fadeInOut':animate}" *ngFor="let quote of (pageContent | async)?.quotes">
       <quote [quote]="quote"></quote>
     </div>
 
