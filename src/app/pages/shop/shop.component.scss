@@ -22,39 +22,10 @@
     .transition-group {
         padding: 0;
         margin: 0;
+        text-align: center;
     }
-    .on-small {
+    .item {
         margin: 10px;
         width: 150px;
     }
 }
-
-// .fadeInOut {
-//     animation-name: fade2;
-//     animation-duration: 500ms;
-//     animation-iteration-count: 1;
-//     animation-fill-mode: none;
-//   }
-
-//   @keyframes fade2 {
-//     0% {
-//       opacity: 0;
-//       transform: scale(0);
-//     }
-  
-//     85% {
-//       opacity: .85;
-//       transform: scale(1.1);
-//     }
-  
-//     100% {
-//       opacity: 1;
-//       transform: scale(1);
-//     }
-//   }
-  
-//   @for $i from 0 through 20 {
-//     .fadeInOut:nth-child(#{$i + 1}) {
-//       animation-delay: 0.1s * $i;
-//     }
-//   }

@@ -3,8 +3,8 @@
 <!-- LARGE SCREEN FORMAT -->
 <div class="container d-none d-lg-block">
     <div class="row">
-        <div class="col-12 d-flex flex-row justify-content-center">
-            <item class="px-4" [item]="item" *ngFor="let item of (topInventory | async)"></item>
+        <div class="col-12 d-flex justify-content-center align-items-center">
+            <item class="mx-4" [item]="item" *ngFor="let item of (topInventory | async)" style="width: 200px; height: 200px"></item>
         </div>
     </div>
 </div>
@@ -13,8 +13,8 @@
 <!-- SMALL SCREEN FORMAT -->
 <div class="container d-lg-none">
     <div class="row">
-        <div class="col-4 py-4 fadeInOut" *ngFor="let item of (topInventory | async)">
-            <item [item]="item"></item>
+        <div class="col-12 d-flex justify-content-center align-items-center fadeInOut">
+            <item class="mx-2" [item]="item" *ngFor="let item of (topInventory | async)" style="width: 150px; height: 150px"></item>
         </div>
     </div>
 </div>
