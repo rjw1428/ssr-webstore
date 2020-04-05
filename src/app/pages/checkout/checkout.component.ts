@@ -4,6 +4,7 @@ import { Item } from 'src/app/models/item';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PurchaseFormComponent } from 'src/app/component/purchase-form/purchase-form.component';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkout',
@@ -32,11 +33,16 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cart = this.dataService.getShoppingCart().map(item => {
-      this.dataService.getThumbnail(item.image[0].name)
-        .then(url => item['thumbnail'] = url)
-      return item
-    })
+    this.dataService.getShoppingCart().pipe(
+      map(items => {
+        items.map(item => {
+          this.dataService.getThumbnail(item.image[0].name)
+            .then(url => item['thumbnail'] = url)
+          return item
+        })
+        return items
+      })).subscribe(items=>this.cart=items)
+
     this.totalPrice = this.cart.length > 0 ? this.cart
       .map(item => item.price)
       .reduce((acc: number, curr) => acc += curr) : 0
@@ -45,7 +51,9 @@ export class CheckoutComponent implements OnInit {
   removeItem(index: number) {
     if (confirm("Are you sure you want to remove this item from your cart?")) {
       this.dataService.removeShoppingCartItem(index)
-      this.cart = this.dataService.getShoppingCart()
+      this.dataService.getShoppingCart().subscribe(items => {
+        this.cart = items
+      })
     }
   }
 

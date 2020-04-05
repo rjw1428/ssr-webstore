@@ -7,7 +7,7 @@ import { Item } from './models/item';
 import { Upload } from './models/upload';
 import { map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { of, Subject } from 'rxjs';
+import { of, Subject, Observable } from 'rxjs';
 
 
 @Injectable({
@@ -97,11 +97,17 @@ export class DataService {
     return []
   }
 
-  getShoppingCart() {
+  getShoppingCart(): Observable<Item[]> {
     if (localStorage['shoppingCart'])
       this.shoppingCart = JSON.parse(localStorage['shoppingCart'])
-    this.onChangeCart.next(this.shoppingCart.length)
-    return this.shoppingCart
+    //VALIDATE THAT THE SHOPPING CART ITEM IS VALID
+    return this.getInventory('knives').valueChanges().pipe(
+      map((resp: Item[]) => {
+        let cart = this.shoppingCart.filter(knive => resp.map(knive => knive.id).includes(knive.id))
+        this.onChangeCart.next(cart.length)
+        this.shoppingCart = cart
+        return cart
+      }))
   }
 
   setOrderId(id: string) {
@@ -132,9 +138,9 @@ export class DataService {
             delete upload.file
 
             // Remove temp loading image
-            imageArray[imageArray.findIndex(img => !img.name)]=JSON.parse(JSON.stringify(upload))
+            imageArray[imageArray.findIndex(img => !img.name)] = JSON.parse(JSON.stringify(upload))
 
-            if (id=="homepageBanner")
+            if (id == "homepageBanner")
               this.saveToBackend('siteImages', { [id]: JSON.parse(JSON.stringify(imageArray)) })
             else
               this.saveToBackend('siteImages', { [id]: JSON.parse(JSON.stringify(upload)) })
@@ -271,8 +277,8 @@ export class DataService {
         to: [companyInfo['email']],
         message: {
           subject: "💸 New Order",
-          html: '<h3>New Order:'+order.id+'</h3>'+this.orderSummary(order)+'<br> ~Sent by Wilk with love ✌️',
-          text: '<h3>New Order:'+order.id+'</h3>'+this.orderSummary(order)+'<br> ~Sent by Wilk with love ✌️',
+          html: '<h3>New Order:' + order.id + '</h3>' + this.orderSummary(order) + '<br> ~Sent by Wilk with love ✌️',
+          text: '<h3>New Order:' + order.id + '</h3>' + this.orderSummary(order) + '<br> ~Sent by Wilk with love ✌️',
         }
       })
     })

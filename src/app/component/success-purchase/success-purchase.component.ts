@@ -26,7 +26,9 @@ export class SuccessPurchaseComponent implements OnInit, AfterViewInit {
     window.scrollTo(0, 0)
     this.paymentService.signOut()
     this.companyInfo=this.dataService.getCompanyInfo()
-    this.items = this.dataService.getShoppingCart()
+    this.dataService.getShoppingCart().subscribe((items:Item[])=>{
+      this.items = items
+    })
     this.dataService.clearShoppingCart()
 
     this.total = this.items.length > 0 ? this.items

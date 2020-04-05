@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.companyInfo = this.dataService.getCompanyInfo()
-    this.dataService.getShoppingCart()
+    this.dataService.getShoppingCart().subscribe()
   }
   
   ngAfterViewInit() {
