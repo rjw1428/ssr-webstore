@@ -4,7 +4,7 @@ import { Item } from 'src/app/models/item';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SortOption } from 'src/app/models/sort-option';
 import { Option } from 'src/app/models/option';
-import { map, take } from 'rxjs/operators';
+import { map, take, switchMap } from 'rxjs/operators';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { EnterItemPopupComponent } from 'src/app/component/item/enter-item-popup/enter-item-popup.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -45,35 +45,63 @@ export class ShopComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.headerImage=this.dataService.getBackendData('siteImages').valueChanges()
-    
-    this.dataService.getInventory('knives').valueChanges()
-      .subscribe((items: Item[]) => {
+    window.scrollTo(0, 0)
+    this.headerImage = this.dataService.getBackendData('siteImages').valueChanges()
+
+    this.dataService.getInventory('knives').valueChanges().pipe(
+      map((items: Item[]) => {
+        //GET ALL ITEM THUNBMAILS
         this.items = items.map(item => {
           this.dataService.getThumbnail(item.image[0].name)
             .then(url => item['thumbnail'] = url)
           return item
         })
-        this.dataService.getBackendData('shop').valueChanges().subscribe(resp => {
-          this.sorts = resp['sort'] as SortOption[]
-          this.selectedSort = this.sorts[0]
-          this.filters = resp['filter']
-          this.filteredItems = this.items.sort((a: Item, b: Item) => this.sortItems(a, b, this.sorts[0]))
-          this.filtersForm = this.initializeFilterFormGroup(this.filters)
-
-          //FILTER ON VALUE CHANGES
-          this.filtersForm.valueChanges.subscribe(vals => {
+        return this.items
+      }),
+      switchMap(items => {
+        //GET FILTER OPTION (APPLY DEFAULT SORT TO FILTERED ITEMS LIST)
+        return this.dataService.getBackendData('shop').valueChanges().pipe(
+          map(resp => {
+            this.sorts = resp['sort'] as SortOption[]
+            this.selectedSort = this.sorts[0]
+            this.filters = resp['filter']
+            this.filteredItems = items.sort((a: Item, b: Item) => this.sortItems(a, b, this.sorts[0]))
+            this.filtersForm = this.initializeFilterFormGroup(this.filters)
+            return this.filteredItems
+          }))
+      }),
+      switchMap(items => {
+        //GET & SET PARAMETERS FROM URL (HAS TO GO AFTER ITEMS ARE CREATED)
+        return this.route.queryParamMap.pipe(
+          map((map: Params) => {
+            let itemId = map.params['id']
+            let appliedFilters = Object.keys(map.params).filter(key => key != 'id').map(key => this.filters.find(filter => filter.id == key))
+            if (appliedFilters.length) {
+              this.selectedFilters= appliedFilters.map(filter => {
+                let matchingFilter = this.filters.find(f => f.id == filter.id)
+                let optionValue = matchingFilter.options.find(option => option.id == map.params[filter.id])
+                this.filteredItems = this.items.filter(item =>  item.tags[filter.id] == optionValue.id)
+                this.filtersForm.get(filter.id).setValue(optionValue)
+                return this.createFilterChip(filter.id, optionValue)
+              })
+            }
+            if (itemId) {
+              this.openDialog(itemId)
+            }
+            return this.filteredItems
+          })
+        )
+      }),
+      switchMap(items => {
+        // FILTER ON VALUE CHANGES
+        return this.filtersForm.valueChanges.pipe(
+          map(vals => {
             Object.keys(vals).filter(key => vals[key])
               .forEach((newFilter: string, i: number) => {
-                this.selectedFilters[i] = ({
-                  id: newFilter,
-                  label: newFilter.substr(0, 1).toUpperCase() + newFilter.substr(1),
-                  options_raw: vals[newFilter],
-                  options: vals[newFilter].label,
-                })
+                this.selectedFilters[i] = this.createFilterChip(newFilter, vals[newFilter])
               })
             if (this.selectedFilters.length > 0) {
-              this.filteredItems = this.items.filter(item => {
+              items = this.items.filter(item => {
                 return this.selectedFilters.map(filter => {
                   if (filter.id == "availability")
                     return JSON.parse(filter['options_raw'].id) == !item.isSold
@@ -91,29 +119,15 @@ export class ShopComponent implements OnInit {
               })
             }
             else {
-              this.filteredItems = this.items
+              items = this.items
             }
             this.setUrl()
-          })
-
-          //GET FILTERS FROM URL
-          this.route.queryParamMap.subscribe((map: Params) => {
-            let itemId=map.params['id']
-            let appliedFilters = Object.keys(map.params).filter(key=>key!='id').map(key => this.filters.find(filter => filter.id == key))
-            if (appliedFilters.length)
-              appliedFilters.forEach(filter => {
-                let matchingFilter= this.filters.find(f=>f.id==filter.id)
-                let optionValue=matchingFilter.options.find(option=>option.id==map.params[filter.id])
-                this.filtersForm.get(filter.id).setValue(optionValue)
-              })
-            if (itemId)
-              this.openDialog(itemId)
-
-            this.initialLoad = false
-          })
-        })
+            return items
+          }))
+      })).subscribe(items => {
+        this.initialLoad = false
+        this.filteredItems = items
       })
-    window.scrollTo(0, 0)
   }
 
   clearFilterValue(filterId) {
@@ -131,7 +145,7 @@ export class ShopComponent implements OnInit {
   }
 
   onItemSelected(itemId: string) {
-    this.router.navigate(["/shop"], { queryParams: {id: itemId} })
+    this.router.navigate(["/shop"], { queryParams: { id: itemId } })
   }
 
   setUrl() {
@@ -164,7 +178,7 @@ export class ShopComponent implements OnInit {
   }
 
   openDialog(itemId): void {
-    let selectedItem=this.items.find(item=>item.id==itemId)
+    let selectedItem = this.items.find(item => item.id == itemId)
     const dialogRef = this.dialog.open(EnterItemPopupComponent, {
       width: this.popupWidth,
       data: { item: selectedItem, showCartButton: true }
@@ -174,10 +188,18 @@ export class ShopComponent implements OnInit {
       if (result) {
         this.snackBar.open("Item was added to your cart", "View Cart", {
           duration: 3000,
-        }).onAction().subscribe(()=>this.router.navigate(['/checkout']));
+        }).onAction().subscribe(() => this.router.navigate(['/checkout']));
       }
       this.setUrl()
     });
   }
 
+  createFilterChip(filterId, options) {
+    return {
+      id:  filterId,
+      label:  filterId.substr(0, 1).toUpperCase() +  filterId.substr(1),
+      options_raw: options,
+      options: options.label
+    }
+  }
 }

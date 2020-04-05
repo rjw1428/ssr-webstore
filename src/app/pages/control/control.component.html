@@ -116,7 +116,7 @@
                 <!-- Image -->
                 <img class="img-thumbnail" *ngIf="pic.url"
                   [ngClass]="{'item-img-selected': i==selectedPicture.itemNum && n==selectedPicture.picNum}"
-                  [src]="pic.url" [ngStyle]="{'transform': 'rotate('+pic.rotation+'deg)'}">
+                  [src]="pic.url" [ngStyle]="{'transform': 'scaleX('+pic.scale+') rotate('+pic.rotation+'deg)' }">
 
                 <!-- Loading Image -->
                 <div *ngIf="!pic.url" class="picture-placeholder d-flex align-items-end">
@@ -141,6 +141,10 @@
                 <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()"
                   *ngIf="i==selectedPicture.itemNum">
                   <mat-icon>rotate_left</mat-icon>
+                </button>
+                <button class="small-button" mat-raised-button (click)="onFlipImage()"
+                  *ngIf="i==selectedPicture.itemNum">
+                  <mat-icon>flip</mat-icon>
                 </button>
               </div>
             </div>

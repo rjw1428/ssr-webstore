@@ -42,7 +42,7 @@
                     <div class="picture-placeholder" *cdkDragPlaceholder></div>
                     <img class="img-thumbnail" *ngIf="pic.url" [ngClass]="{'item-img-selected':n==selectedPicture}"
                       [src]="pic.url"
-                      [ngStyle]="{'transform': 'rotate('+pic.rotation+'deg)'}">
+                      [ngStyle]="{'transform': 'scaleX('+pic.scale+') rotate('+pic.rotation+'deg)'}">
                     <div *ngIf="!pic.url" class="picture-placeholder d-flex align-items-end">
                       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                     </div>
@@ -65,6 +65,10 @@
                     <button class="small-button" mat-raised-button (click)="onRotatePictureLeft()"
                       *ngIf="selectedPicture>-1">
                       <mat-icon>rotate_left</mat-icon>
+                    </button>
+                    <button class="small-button" mat-raised-button (click)="onFlipImage()"
+                      *ngIf="selectedPicture>-1">
+                      <mat-icon>flip</mat-icon>
                     </button>
                   </div>
                 </div>

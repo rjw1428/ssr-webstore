@@ -6,7 +6,7 @@
         <div class="carousel-inner">
           <div class="carousel-item text-center" *ngFor="let img of item.image; let i=index"
             [ngClass]="{'active':i==0}">
-            <img class="item-image" [src]="img.url" [ngStyle]="{'transform': 'rotate('+img.rotation+'deg)'}">
+            <img class="item-image" [src]="img.url" [ngStyle]="{'transform': 'scaleX('+img.scale+') rotate('+img.rotation+'deg)'}">
           </div>
         </div>
 
@@ -20,7 +20,7 @@
       </div>
     </div>
     <img *ngIf="item.image.length==1" class="item-image" [src]="item.image[0].url"
-      [ngStyle]="{'transform': 'rotate('+item.image[0].rotation+'deg)'}">
+      [ngStyle]="{'transform': 'scaleX('+item.image[0].scale+') rotate('+item.image[0].rotation+'deg)'}">
     <div class="col-md-4 col-12">
       <div mat-dialog-content>
         <h5>About This Knife:</h5>

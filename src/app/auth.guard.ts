@@ -17,8 +17,8 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Promise<boolean> {
 
-    if (location.hostname === "localhost")
-      return true
+    // if (location.hostname === "localhost")
+    //   return true
       
     const user = await this.firebaseAuth.auth.currentUser
     const isLoggedIn = !!user

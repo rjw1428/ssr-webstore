@@ -6,6 +6,7 @@ export class Upload {
     progress: number;
     createdAt: Date = new Date();
     rotation: number;
+    scale: -1 | 1
   
     constructor(file: File) {
       this.file = file;

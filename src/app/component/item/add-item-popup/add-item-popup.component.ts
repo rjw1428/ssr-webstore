@@ -59,16 +59,22 @@ export class AddItemPopupComponent implements OnInit {
   }
 
   onRotatePictureLeft() {
-    this.data.item.image[this.selectedPicture].rotation-=90
+    this.data.item.image[this.selectedPicture].rotation -= 90
   }
 
   onRotatePictureRight() {
-    this.data.item.image[this.selectedPicture].rotation+=90
+    this.data.item.image[this.selectedPicture].rotation += 90
+  }
+
+  onFlipImage() {
+    if (this.data.item.image[this.selectedPicture].scale != -1)
+      this.data.item.image[this.selectedPicture].scale = -1
+    else this.data.item.image[this.selectedPicture].scale = 1
   }
 
   dropPicture(event: CdkDragDrop<any>) {
     this.selectedPicture = event.currentIndex
-    moveItemInArray( this.data.item.image, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.data.item.image, event.previousIndex, event.currentIndex);
   }
 
   onAddDescriptionParagraph() {
@@ -89,7 +95,7 @@ export class AddItemPopupComponent implements OnInit {
 
   updateTempStorage() {
     this.dataService.getBackendData('temp').update({
-      inventory: [{image: this.data.item.image}]
+      inventory: [{ image: this.data.item.image }]
     })
   }
 
@@ -101,7 +107,7 @@ export class AddItemPopupComponent implements OnInit {
 
   onClose() {
     this.dataForm.value.tags = this.filterForm.value
-    return {...this.dataForm.value, image: this.data.item.image}
+    return { ...this.dataForm.value, image: this.data.item.image }
   }
 
   onSubmit() {

@@ -175,6 +175,7 @@ export class DataService {
             upload.url = url
             upload.name = upload.file.name
             upload.rotation = 0
+            upload.scale = 1
             delete upload.file
             this.saveFileData(upload, item)
           })

@@ -159,6 +159,12 @@ export class ControlComponent implements OnInit {
     this.inventory[this.selectedPicture.itemNum].image[this.selectedPicture.picNum].rotation += 90
   }
 
+  onFlipImage() {
+    if (this.inventory[this.selectedPicture.itemNum].image[this.selectedPicture.picNum].scale != -1)
+    this.inventory[this.selectedPicture.itemNum].image[this.selectedPicture.picNum].scale = -1
+    else this.inventory[this.selectedPicture.itemNum].image[this.selectedPicture.picNum].scale = 1
+  }
+
   onDeleteSelectedPicture() {
     if (confirm("Are you sure you want to remove this picture from your item?")) {
       let removedItem = this.inventory[this.selectedPicture.itemNum]
