@@ -41,11 +41,15 @@ export class CheckoutComponent implements OnInit {
           return item
         })
         return items
-      })).subscribe(items=>this.cart=items)
+      })).subscribe(items => {
+        this.cart = items
 
-    this.totalPrice = this.cart.length > 0 ? this.cart
-      .map(item => item.price)
-      .reduce((acc: number, curr) => acc += curr) : 0
+        this.totalPrice = items.length == 0
+          ? 0
+          : this.cart
+            .map(item => item.price)
+            .reduce((acc: number, curr) => acc += curr)
+      })
   }
 
   removeItem(index: number) {

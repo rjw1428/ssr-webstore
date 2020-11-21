@@ -235,7 +235,8 @@ export class DataService {
   }
 
   getOrderById(id) {
-    return this.afs.collection(this.companyId).doc('orders').collection('orders').doc(id).valueChanges()
+    return this.afs.collection(this.companyId).doc('orders')
+      .collection('orders').doc(id).valueChanges()
   }
 
   sendEmail(order, templateId) {

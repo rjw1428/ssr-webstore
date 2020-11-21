@@ -4,41 +4,32 @@ import { Item } from 'src/app/models/item';
 import { Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PaymentsService } from 'src/app/payments.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-success-purchase',
   templateUrl: './success-purchase.component.html',
   styleUrls: ['./success-purchase.component.scss']
 })
-export class SuccessPurchaseComponent implements OnInit, AfterViewInit {
-  items: Item[] = []
-  total: number
+export class SuccessPurchaseComponent implements OnInit {
+  items$: Observable<Item[]>
+  total$: Observable<number>
   companyInfo: Observable<any>
   orderId: string
   constructor(
     private dataService: DataService,
     private paymentService: PaymentsService
-    ) {
+  ) {
 
   }
 
   ngOnInit() {
     window.scrollTo(0, 0)
     this.paymentService.signOut()
-    this.companyInfo=this.dataService.getCompanyInfo()
-    this.dataService.getShoppingCart().subscribe((items:Item[])=>{
-      this.items = items
-    })
-    this.dataService.clearShoppingCart()
-
-    this.total = this.items.length > 0 ? this.items
-      .map(item => item.price)
-      .reduce((acc: number, curr) => acc += curr) : 0
-
-    this.orderId=this.dataService.orderId
+    this.companyInfo = this.dataService.getCompanyInfo()
+    this.orderId = this.dataService.orderId
+    const orderRef = this.dataService.getOrderById(this.orderId)
+    this.total$ = orderRef.pipe(map(resp => resp['amount']))
+    this.items$ =  orderRef.pipe(map(resp => resp['items']))
   }
-
-  ngAfterViewInit() {
-  }
-
 }
