@@ -27,8 +27,12 @@ export class DataService {
 
   getThumbnail(imageName: string) {
     let part = imageName.split(".")
-    let name = part[0]
-    let ending = part[1]
+    let name = part.filter((p, i) => {
+      debugger
+      return i != part.length - 1
+    }).join(".")
+    let ending = part[part.length - 1]
+    console.log({ size: part.length, name, ending })
     let path = "/inventory/thumbnails/" + name + "_200x200." + ending
     return firebase.storage().ref(path).getDownloadURL()
   }

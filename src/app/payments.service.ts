@@ -17,13 +17,9 @@ import { Item } from './models/item';
 export class PaymentsService {
   stripe = Stripe(environment.stripe.apiKey)
   elements: any
-  api = "https://us-central1-ssr-shopping.cloudfunctions.net/date"
   constructor(
-    private fns: AngularFireFunctions,
     private auth: AngularFireAuth,
-    private afs: AngularFirestore,
-    private router: Router,
-    private http: HttpClient,
+    private afs: AngularFirestore
   ) {
     this.elements = this.stripe.elements()
   }
