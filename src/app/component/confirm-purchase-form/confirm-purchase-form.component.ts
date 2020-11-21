@@ -25,6 +25,7 @@ export class ConfirmPurchaseFormComponent implements OnInit {
 
   async makePayment() {
     this.loading = true
+    let directMessage
     try {
       //CREATE FIREBASE USER && GET CREDIT CARD TOKEN
       const user = this.paymentService.signInAnonymous(this.data.form)
@@ -34,28 +35,32 @@ export class ConfirmPurchaseFormComponent implements OnInit {
         throw "Unable to create user account"
       if (!bulkPromise[1])
         throw "Unable to create stripe token"
-      // console.log(bulkPromise)
+      if (bulkPromise[1].error) {
+        directMessage = bulkPromise[1].error.message
+        throw bulkPromise[1].error.message
+      }
+      // console.log({bulkPromise})
 
       //WITH FIREBASE USER ID, CREATE STRIPE ID
       const createStripeCustomer = this.fns.httpsCallable("addStripeCustomer")
       const stripeId = await createStripeCustomer(bulkPromise[0]).toPromise()
       if (!stripeId)
         throw "Unable to create stripe account"
-      // console.log(stripeId)
+      // console.log({stripeId})
 
       //WITH STRIPE ID AND TOKEN, CREATE THE PAYMENT SOURCE
       const createCard = this.fns.httpsCallable('createSource')
       const cardResponse = await createCard({ stripeId: stripeId, token: bulkPromise[1].token }).toPromise()
       if (!cardResponse)
         throw "Unable to create stripe payment source"
-      // console.log(cardResponse)
+      // console.log({cardResponse})
 
       //ONCE SOURCE IS CREATED, CREATE A CHARGE
       const createCharge = this.fns.httpsCallable('createCharge')
       const paymentReponse = await createCharge({ customer: stripeId, amount: this.data.total * 100 }).toPromise()
       if (paymentReponse.status != "succeeded")
         throw "Payment Failed"
-      // console.log(paymentReponse)
+      // console.log({paymentReponse})
 
       //ONCE CHARGE IS SUCCESSFULL, SAVE TO FIREBASE
       const orderId = await this.paymentService.saveOrder(bulkPromise[0], this.data.cart, this.data.total)
@@ -67,7 +72,10 @@ export class ConfirmPurchaseFormComponent implements OnInit {
     catch (err) {
       console.log(err)
       this.loading = false;
-      this.snackBar.open("Payment was unable to be processed. No Charge was processed. Please try again.", "OK")
+      const message = directMessage
+        ? directMessage
+        : "Payment was unable to be processed. No Charge was processed. Please try again."
+      this.snackBar.open(message, "OK")
       return err
     }
   }
